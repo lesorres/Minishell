@@ -4,8 +4,9 @@ void	scroll_history(char *str)
 {
 	int	l;
 	
-	str = read_line(0);
-	l = ft_strlen(str);
+
+	// str = read_line(0);
+	// l = ft_strlen(str);
 	l = read(1, str, 100);
 	if (!strcmp(str, UP)) // || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
 	{
@@ -31,7 +32,8 @@ void	scroll_history(char *str)
 int main(int argc, char const **argv)
 {
 	int     fd = 0;
-	char    *str;
+	// char    *str;
+	char	str[2000];
 	int     l;
 	struct  termios term;
 	char    *term_name = "xterm-256color";
