@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
+#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/05/16 20:28:04 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/05/16 20:29:57 by fhyman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,7 @@ RM = rm -f
 AR = ar rc
 OBJS = $(INPUT:.c=.o)
 .c.o:
-	cc $(FLAGS) -c $< -o $(<:.c=.o)
+	cc -c $< -o $(<:.c=.o)
 all: $(NAME)
 $(NAME): $(OBJS)
 	$(MAKE) -C ./libft
