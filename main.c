@@ -1,51 +1,92 @@
 #include "minishell.h"
 
-char	*ft_realloc(char *ptr, unsigned int size)
+void	scroll_history(char *str, int fd, t_termline *tline)
 {
-	char			*new;
-	unsigned int	i;
-	new = (char*)malloc(size * sizeof(char));
-	i = 0;
-	while (i < size && ptr[i] != '\0')
-	{
-		new[i] = ptr[i];
-		i++;
-	}
-	free(ptr);
-	return (new);
 }
 
-char	*read_line(int fd)
-{
-	int     ret;
-	char    *buf;
-	int     i;
-	int		num;
+// void	execute(t_command *com)
+// {
+// 	if (com->echo != -1)
+// 		cmd_echo()
+// }
 
-	num = 1;
-	buf = (char *)malloc(num);
-	ret = 1;
-	i = 0;
-	while (ret > 0)
-	{
-		ret = read(fd, &buf[i], 1);
-		if (buf[i] != '\n' && ret > 0)
+int main(int argc, char const **argv)
+{
+	t_command com;
+	t_termline tline;
+	int		fd;
+	char	str[2000];
+	int     l;
+	struct  termios term;
+	fd = open("HISTORY", O_RDWR);
+
+	tline.cursor = PROMPT;
+	tline.num_symb = PROMPT;
+	tcgetattr(0, &term);
+	term.c_lflag &= ~(ECHO);
+	term.c_lflag &= ~(ICANON);
+	tcsetattr(0, TCSANOW, &term);
+	tgetent(0, TERM_NAME);
+	while (strcmp(str, "\4"))
+	{	
+		write(1, "#minishell> ", PROMPT);
+		ft_putstr_fd(save_cursor, 1);
+		while (strcmp(str, "\n") || strcmp(str, "\4"))
 		{
-			buf = ft_realloc(buf, ++num);
-			// printf("%c", buf[i]);
-			i++;
+			if (tline.num_symb < tline.cursor)
+				tline.num_symb = tline.cursor;
+			l = read(1, str, 100);
+			str[l] = 0;
+			if (!strcmp(str, UP) || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
+			{
+				ft_putstr_fd(restore_cursor, 1);
+				ft_putstr_fd(tgetstr("ce", 0), 1);
+				write(1, "prev", 4);
+			}
+			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
+			{
+				ft_putstr_fd(restore_cursor, 1);
+				ft_putstr_fd(tgetstr("ce", 0), 1);
+				write(1, "next", 4);
+			}
+			else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
+			{	
+				if (tline.cursor > PROMPT)
+				{
+					tline.cursor--;
+					tline.num_symb--;
+					ft_putstr_fd(cursor_left, 1);
+					ft_putstr_fd(tgetstr("dc", 0), 1);
+				}
+			}
+			else if (!strcmp(str, LEFT))
+			{
+				if (tline.cursor > PROMPT)
+				{
+					tline.cursor--;
+					ft_putstr_fd(cursor_left, 1);
+					// ft_putstr_fd(tgetstr("le", 0), 1);
+				}
+			}
+			else if (!strcmp(str, RiGHT))
+			{
+				if (tline.num_symb > tline.cursor)
+				{
+					tline.cursor++;
+					ft_putstr_fd(cursor_right, 1);
+					// ft_putstr_fd(tgetstr("ri", 0), 1);
+				}
+			}
+			else
+				tline.cursor += write(1, str, l);
+			// fd = write(fd, str, l);
 		}
+		// str[0] = 0;
+		// scroll_history(str, fd);
+			// scroll_history(str, fd, &tline);
 	}
-	buf[i] = '\0';
-	return (buf);
-}
-
-int main(int argc, char **argv)
-{
-	int fd;
-
-	fd = open(argv[1], O_RDONLY);
-	// read_line(fd);
-	printf("%s\n", read_line(fd));
+	// execute(&com);
+	write(1, "\n", 1);
+	close (fd);
 	return (0);
 }
