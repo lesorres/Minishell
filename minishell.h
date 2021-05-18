@@ -12,10 +12,11 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h> 
-# include "libft_ash/libft.h"
-# include "get_next_line.h"
+# include "libft/libft.h"
+// # include "get_next_line.h"
 # include <curses.h>
 # include <term.h>
+# include "parser_header.h"
 
 // typedef struct s_flags
 // {
@@ -36,8 +37,16 @@ typedef struct s_command
 	int		exit;
 }   t_command;
 
+typedef struct s_all
+{
+	t_cmd		cmd;
+}				t_all;
+
 int		ft_strcmp(char *s1, char *s2);
-int	ft_putchar(char c);
+int		ft_putchar(char c);
 char	*read_line(int fd);
+void	parser(char **line, t_all *all);
+
+# define PRINT void b(){print("%d", 123);}
 
 #endif
