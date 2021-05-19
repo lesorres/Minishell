@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:13:59 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/16 21:02:22 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/17 19:44:02 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ typedef struct	s_s_cmd
 {
 	// int		av_arg_num;
 	int		arg_num;
+	char	*name;
 	char	**arg;
 	char	**redir;
 	int		echo_n;
@@ -31,7 +32,7 @@ typedef struct	s_cmd
 {
 	// int		av_s_cmd_num;
 	int		cmd_num;
-	t_s_cmd	**s_cmd; //	s_cmd	**s_cmd_arr;
+	t_s_cmd	*s_cmd; //	s_cmd	**s_cmd_arr;
 	// char	*out_fl;
 	// char	*inpt_fl;
 	// char	*err_fl;
