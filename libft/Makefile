@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
+#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/11/01 17:49:52 by kmeeseek          #+#    #+#              #
-#    Updated: 2020/11/26 17:07:06 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/05/16 21:47:12 by fhyman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ $(NAME): $(OFILES)
 	ranlib $(NAME)
 
 %.o: %.c libft.h
-	gcc -Wall -Wextra -Werror -c $< -o $@ -I.
+	@gcc -Wall -Wextra -Werror -c $< -o $@ -I.
 clean:
 	rm -f $(OFILES)
 fclean:	clean
