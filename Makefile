@@ -6,7 +6,7 @@
 #    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/05/19 19:15:35 by fhyman           ###   ########.fr        #
+#    Updated: 2021/05/19 20:12:24 by fhyman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIB = ./libft/libft.a
 
 HEAD = *.h
 
-INPUT = main1.c ft_strcmp.c
+INPUT = main1.c
 
 FLAGS = -ltermcap -g -Wall -Werror -Wextra 
 
@@ -34,7 +34,7 @@ all: $(NAME)
 $(NAME): $(OBJS)
 	$(MAKE) -C ./libft
 	gcc $(OBJS) $(LIB) $(FLAGS) -o $(NAME)
-	$(NORM)
+#	$(NORM)
 clean:
 	$(MAKE) clean -C ./libft
 	$(RM) $(OBJS)
