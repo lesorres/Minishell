@@ -18,10 +18,8 @@ int main(int argc, char const **argv)
 	char	str[2000];
 	int     l;
 	struct  termios term;
-	fd = open("HISTORY", O_RDWR);
 
-	tline.cursor = PROMPT;
-	tline.num_symb = PROMPT;
+	fd = open(".HISTORY", O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
@@ -29,6 +27,9 @@ int main(int argc, char const **argv)
 	tgetent(0, TERM_NAME);
 	while (strcmp(str, "\4"))
 	{	
+		tline.cursor = PROMPT;
+		tline.num_symb = PROMPT;
+		
 		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
 		while (strcmp(str, "\n") || strcmp(str, "\4"))
@@ -65,7 +66,7 @@ int main(int argc, char const **argv)
 				{
 					tline.cursor--;
 					ft_putstr_fd(cursor_left, 1);
-					// ft_putstr_fd(tgetstr("le", 0), 1);
+					ft_putstr_fd(tgetstr("le", 0), 1);
 				}
 			}
 			else if (!strcmp(str, RiGHT))
@@ -74,7 +75,7 @@ int main(int argc, char const **argv)
 				{
 					tline.cursor++;
 					ft_putstr_fd(cursor_right, 1);
-					// ft_putstr_fd(tgetstr("ri", 0), 1);
+					ft_putstr_fd(tgetstr("ri", 0), 1);
 				}
 			}
 			else

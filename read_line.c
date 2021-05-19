@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "./minishell.h"
 
 char	*ft_realloc(char *ptr, unsigned int size)
 {
