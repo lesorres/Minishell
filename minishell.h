@@ -4,16 +4,11 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <string.h> 
-# include "libft_ash/libft.h"
+# include "libft/libft.h"
 # include "get_next_line.h"
 # include "execute_header.h"
 # include <curses.h>
 # include <term.h>
-
-// typedef struct s_flags
-// {
-//     char *flag;
-// } t_flags;
 
 
 typedef struct s_command

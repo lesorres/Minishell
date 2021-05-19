@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:13:59 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/13 16:49:39 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/16 21:02:22 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,23 +18,24 @@
 # include <string.h>
 # include <stdlib.h>
 
-typedef struct	s_smpl_cmd
+typedef struct	s_s_cmd
 {
-	int		av_arg_num;
+	// int		av_arg_num;
 	int		arg_num;
-	char	**arg_arr;
-}				t_smpl_cmd;
+	char	**arg;
+	char	**redir;
+	int		echo_n;
+}				t_s_cmd;
 
 typedef struct	s_cmd
 {
-	int		av_smpl_cmd_num;
-	int		smpl_cmd_num;
-	char	**smpl_cmd_arr;
-	char	*out_fl;
-	char	*inpt_fl;
-	char	*err_fl;
-	int		background; //нужен ли?
-	
+	// int		av_s_cmd_num;
+	int		cmd_num;
+	t_s_cmd	**s_cmd; //	s_cmd	**s_cmd_arr;
+	// char	*out_fl;
+	// char	*inpt_fl;
+	// char	*err_fl;
+	// int		background; //нужен ли?
 	//что за функции в структуре? - стр 5 - https://www.cs.purdue.edu/homes/grr/SystemsProgrammingBook/Book/Chapter5-WritingYourOwnShell.pdf
 }				t_cmd;
 

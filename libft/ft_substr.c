@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/22 19:09:10 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/04/25 13:50:48 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/16 20:47:30 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		result[i] = s[i + start];
 		i++;
 	}
+	free (s);
 	result[i] = '\0';
 	return (result);
 }

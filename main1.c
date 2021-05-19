@@ -1,96 +1,92 @@
 #include "minishell.h"
 
-void	scroll_history(char *str)
+void	scroll_history(char *str, int fd, t_termline *tline)
 {
-	int	l;
-	int fd = open("test", O_RDONLY);
-
-	// str = read_line(fd);
-	// l = ft_strlen(str);
-	
-	l = read(1, str, 100);
-	if (!strcmp(str, UP) || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
-	{
-		ft_putstr_fd(restore_cursor, 1);
-		ft_putstr_fd(tigetstr("ed"), 1);
-		write(1, "prev", 4);
-	}
-	else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
-	{
-		ft_putstr_fd(restore_cursor, 1);
-		ft_putstr_fd(tigetstr("ed"), 1);
-		write(1, "next", 4);
-	}
-	else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
-	{
-		ft_putstr_fd(cursor_left, 1);
-		ft_putstr_fd(tgetstr("dc", 0), 1);
-	}
-	else
-		write(1, str, l);
-	// close (fd);
 }
 
-void	print_prompt()
-{
-	static int first_time = 1;
-	const char *clear_screen_ansi;
-
-	clear_screen_ansi = " \e[1;1H\e[2J";
-	if (first_time)
-	{
-		write(1, clear_screen_ansi, 12);
-		first_time = 0;
-	}
-	write(1, "#minishell> ", 12);
-}
+// void	execute(t_command *com)
+// {
+// 	if (com->echo != -1)
+// 		cmd_echo()
+// }
 
 int main(int argc, char const **argv)
 {
-	int     fd = 0;
-	// char    *str;
+	t_command com;
+	t_termline tline;
+	int		fd;
 	char	str[2000];
 	int     l;
 	struct  termios term;
-	char    *term_name = "xterm-256color";
+	fd = open("HISTORY", O_RDWR);
 
+	tline.cursor = PROMPT;
+	tline.num_symb = PROMPT;
 	tcgetattr(0, &term);
 	term.c_lflag &= ~(ECHO);
 	term.c_lflag &= ~(ICANON);
 	tcsetattr(0, TCSANOW, &term);
-	tgetent(0, term_name);
-
+	tgetent(0, TERM_NAME);
 	while (strcmp(str, "\4"))
-	{
-		print_prompt();
+	{	
+		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
-		// do 
-		// {
-		// 	l = read(0, str, 100);
-		// 	if (!strcmp(str, "\e[A") || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
-		// 	{
-		// 		ft_putstr_fd(restore_cursor, 1);
-		// 		ft_putstr_fd(tigetstr("ed"), 1);
-		// 		write(1, "prev", 4);
-		// 	}
-		// 	else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
-		// 	{
-		// 		ft_putstr_fd(restore_cursor, 1);
-		// 		ft_putstr_fd(tigetstr("ed"), 1);
-		// 		write(1, "next", 4);
-		// 	}
-		// 	else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
-		// 	{
-		// 		ft_putstr_fd(cursor_left, 1);
-		// 		ft_putstr_fd(tgetstr("dc", 0), 1);
-		// 	}
-		// 	else
-		// 		write(1, str, l);
-		// } while (strcmp(str, "\n") || strcmp(str, "\4"));
-		scroll_history(str);
 		while (strcmp(str, "\n") || strcmp(str, "\4"))
-			scroll_history(str);
+		{
+			if (tline.num_symb < tline.cursor)
+				tline.num_symb = tline.cursor;
+			l = read(1, str, 100);
+			str[l] = 0;
+			if (!strcmp(str, UP) || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
+			{
+				ft_putstr_fd(restore_cursor, 1);
+				ft_putstr_fd(tgetstr("ce", 0), 1);
+				write(1, "prev", 4);
+			}
+			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
+			{
+				ft_putstr_fd(restore_cursor, 1);
+				ft_putstr_fd(tgetstr("ce", 0), 1);
+				write(1, "next", 4);
+			}
+			else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
+			{	
+				if (tline.cursor > PROMPT)
+				{
+					tline.cursor--;
+					tline.num_symb--;
+					ft_putstr_fd(cursor_left, 1);
+					ft_putstr_fd(tgetstr("dc", 0), 1);
+				}
+			}
+			else if (!strcmp(str, LEFT))
+			{
+				if (tline.cursor > PROMPT)
+				{
+					tline.cursor--;
+					ft_putstr_fd(cursor_left, 1);
+					// ft_putstr_fd(tgetstr("le", 0), 1);
+				}
+			}
+			else if (!strcmp(str, RiGHT))
+			{
+				if (tline.num_symb > tline.cursor)
+				{
+					tline.cursor++;
+					ft_putstr_fd(cursor_right, 1);
+					// ft_putstr_fd(tgetstr("ri", 0), 1);
+				}
+			}
+			else
+				tline.cursor += write(1, str, l);
+			// fd = write(fd, str, l);
+		}
+		// str[0] = 0;
+		// scroll_history(str, fd);
+			// scroll_history(str, fd, &tline);
 	}
+	// execute(&com);
 	write(1, "\n", 1);
+	close (fd);
 	return (0);
 }
