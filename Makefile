@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
+#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/05/19 20:12:24 by fhyman           ###   ########.fr        #
+#    Updated: 2021/05/20 17:31:47 by kmeeseek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,8 @@ $(NAME): $(OBJS)
 	$(MAKE) -C ./libft
 	gcc $(OBJS) $(LIB) $(FLAGS) -o $(NAME)
 #	$(NORM)
+parser:
+	gcc parser_main.c parcer.c minishell.h libft/libft.a
 clean:
 	$(MAKE) clean -C ./libft
 	$(RM) $(OBJS)
