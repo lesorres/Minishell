@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
+#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/05/20 18:56:32 by fhyman           ###   ########.fr        #
+#    Updated: 2021/05/20 19:48:48 by kmeeseek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,6 +37,8 @@ $(NAME): $(OBJS)
 #	$(NORM)
 parser:
 	gcc parser_main.c parcer.c minishell.h libft/libft.a -g
+s_parser:
+	gcc parser_main.c parcer.c minishell.h libft/libft.a -g -fsanitize=address
 clean:
 	$(MAKE) clean -C ./libft
 	$(RM) $(OBJS)
