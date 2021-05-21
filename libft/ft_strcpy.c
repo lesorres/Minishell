@@ -3,12 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/22 18:48:13 by kmeeseek          #+#    #+#             */
-/*   Updated: 2020/11/22 18:56:36 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/21 20:46:38 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "libft.h"
 
 char	*ft_strcpy(char *s1, const char *s2)
 {
