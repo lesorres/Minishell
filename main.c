@@ -43,6 +43,7 @@ static int len(char **str)
 	return (i);
 }
 
+
 int add_last_line(char ***input, char *line)
 {
     char    **out;
@@ -75,6 +76,7 @@ char **create_arr(int i)
 void	init_all(t_all *all)
 {
 	all->hist_arr = create_arr(0);
+	all->tline.str = NULL;
 }
 
 void	rewrite_hist(t_all *all, char *line)
@@ -103,11 +105,41 @@ void	init_hist(t_all *all)
 	close(fd);
 }
 
+static int line_len(char *str)
+{
+    int	i;
+
+	i = 0;
+	while (str && str[i])
+		i++;
+	return (i);
+}
+
+int add_l_char(char **line, char ch) //нужно переписать
+{
+    int i;
+    char *out;
+    char *tmp;
+
+    tmp = *line;
+    i = line_len(tmp);
+    i += 1;
+    if(!(out = malloc(sizeof(char) * (i + 1))))
+        return (0);
+    out[i] = '\0';
+    out[--i] = ch;
+    while (i--)
+        out[i] = tmp[i];
+    free(*line);
+    *line = out;
+    return (1);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	t_cmd cmd;
 	t_all	all;
-	t_termline tline;
+	// t_termline tline;
 	char	*str;
 	int     l;
 	int		i;
@@ -125,23 +157,24 @@ int main(int argc, char **argv, char **envp)
 	// tline.line_num = count_hist_lines(fd);
 	while (strcmp(str, "\4"))
 	{	
-		tline.cursor = PROMPT;
-		tline.symb_num = PROMPT;
+		init_all(&all);
+		all.tline.cursor = PROMPT;
+		all.tline.symb_num = PROMPT;
 		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
 		str[0] = 0;
 		count = 0;
 		while (strcmp(str, "\n") && strcmp(str, "\4"))
 		{
-			if (tline.symb_num < tline.cursor)
-				tline.symb_num = tline.cursor;
-			l = read(1, str, 100);
+			if (all.tline.symb_num < all.tline.cursor)
+				all.tline.symb_num = all.tline.cursor;
+			l = read(1, str, 20);
 			str[l] = 0;
 			if (!strcmp(str, UP) || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
 			{
 				ft_putstr_fd(restore_cursor, 1);
 				ft_putstr_fd(tgetstr("ce", 0), 1);
-				// write(1, "prev", 4);
+				write(1, "prev", 4);
 				// ft_strcpy(tline.hist_line, all.hist_arr[i]);
 				// printf();
 			}
@@ -153,43 +186,47 @@ int main(int argc, char **argv, char **envp)
 			}
 			else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
 			{	
-				if (tline.cursor > PROMPT)
+				if (all.tline.cursor > PROMPT)
 				{
-					tline.cursor--;
-					tline.symb_num--;
+					all.tline.cursor--;
+					all.tline.symb_num--;
 					ft_putstr_fd(cursor_left, 1);
 					ft_putstr_fd(tgetstr("dc", 0), 1);
 				}
 			}
 			else if (!strcmp(str, LEFT))
 			{
-				if (tline.cursor > PROMPT)
+				if (all.tline.cursor > PROMPT)
 				{
-					tline.cursor--;
+					all.tline.cursor--;
 					ft_putstr_fd(tgetstr("le", 0), 1);
 				}
 			}
 			else if (!strcmp(str, RiGHT))
 			{
-				if (tline.symb_num > tline.cursor)
+				if (all.tline.symb_num > all.tline.cursor)
 				{
-					tline.cursor++;
+					all.tline.cursor++;
 					ft_putstr_fd(tgetstr("nd", 0), 1);
 				}
 			}
 			else
 			{
-				tline.cursor += write(1, str, l);
+				all.tline.cursor += write(1, str, l);
+				add_l_char(&all.tline.str, *str);
 				count++;
 			}
+			// printf("new: %s\n", str);
 			// fd += write(fd, str, l);
 		}
-		// printf("str - %s\n", &str[2]);
-		// printf("str - %p\n", &str);
-		// printf("str - %c\n", str[2]);
+		init_hist(&all);
+    	rewrite_hist(&all, str);
+		// printf("str - %s\n", all.tline.str);
+		// printf("str - %p\n", all.tline.str);
+		// printf("str - %c\n", all.tline.str);
 		// str[count] = '\0';
 		// printf("%i\n", count);
-		// parser(&str[1], &all);
+		parser(all.tline.str, &all);
 		// printf("pars - %s\n", all.cmd[0].arg[0]);
 		// printf("hist line - %s\n", all.hist_arr[k++]);
 		// scroll_history(str, fd);
