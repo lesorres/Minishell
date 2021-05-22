@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parcer.c                                           :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/22 16:12:26 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/22 18:54:35 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,38 +59,18 @@ void	realloc_cmd(t_all *all)
 
 	i = 0;
 	all->cmd_n = 7;
-	all->cmd = malloc(sizeof(t_cmd) * all->cmd_n);
-	ft_bzero(all->cmd, all->cmd_n);
-	// printf("%p", all->cmd);
+	all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd));
+	// all->cmd = malloc(sizeof(t_cmd) * all->cmd_n);
+	// ft_bzero(all->cmd, all->cmd_n);
 	// if (!all->cmd)
 	// 	error();
 	// all->cmd[all->cmd_n] = 0;
 	while (i < all->cmd_n)
 	{
 		all->cmd[i].arg = ft_calloc(all->cmd_n, sizeof(char*));
-		// printf("%i - %p\n", i, all->cmd[i].arg[0]);
-		// printf("%i - %p\n", i, all->cmd[i].arg[1]);
-		// printf("%i - %p\n", i, all->cmd[i].arg[2]);
-		// printf("%i - %p\n", i, all->cmd[i].arg[3]);
-		// ft_bzero(all->cmd[i].arg, all->cmd_n);
-		// all->cmd[i].arg[all->cmd_n - 1] = NULL;
-		// printf("%i - %p\n", i, all->cmd[i].arg[0]);
-		// printf("%i - %p\n", i, all->cmd[i].arg[1]);
-		// printf("%i - %p\n", i, all->cmd[i].arg[2]);
-		// printf("%i - %p\n", i, all->cmd[i].arg[3]);
-		all->cmd[i].redir = ft_calloc(all->cmd_n, sizeof(char*)); //malloc(sizeof(char*) * all->cmd_n);
-		// ft_bzero(all->cmd[i].redir, all->cmd_n);
-		// all->cmd[i].redir[all->cmd_n - 1] = NULL;
+		all->cmd[i].redir = ft_calloc(all->cmd_n, sizeof(char*));
 		i++;
 	}
-		// printf("4 - %p\n", all->cmd[0].arg[4]);
-		// printf("4 - %s\n", all->cmd[0].arg[4]);
-		// printf("5 - %p\n", all->cmd[0].arg[5]);
-		// printf("5 - %s\n", all->cmd[0].arg[5]);
-		// printf("6 - %p\n", all->cmd[0].arg[6]);
-		// printf("6 - %s\n", all->cmd[0].arg[6]);
-		// printf("7 - %p\n", all->cmd[0].arg[7]);
-		// printf("7 - %s\n", all->cmd[0].arg[7]);
  }
 
 // void new_cmd()
@@ -115,18 +95,6 @@ void	parser(char *line, t_all *all)
  	while(line[i])
 	{
 		k = 0;
-		/*if (line[i] == ' ')
-		{
-			n++;
-			k = 0;
-		}
-		if (line[i] == ';')
-		{
-			j++;
-			n = 0;
-			k = 0;
-		}
-		k++;*/
 		while (line[i] == ' ')
 			i++;
 		tmp = malloc(line_len);
@@ -141,16 +109,18 @@ void	parser(char *line, t_all *all)
 				tmp[k++] = line[i++];
 		}
 		tmp[k] = '\0';
-		int l = ft_strlen(tmp);
+		if (line[i - 1] == ';')
+		{
+			j++;
+			n = 0;
+		}
+		else
+		{
 		all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
 		ft_strcpy(all->cmd[j].arg[n], tmp);
 		free(tmp);
 		n++;
 		all->cmd->arg_n = n;
-		if (line[i - 1] == ';')
-		{
-			j++;
-			n = 0;
 		}
 		// int z = make_line(all->cmd[j].arg[n], line[i]);
 		// all->cmd[j].arg[n][k] = line[i];
@@ -166,11 +136,17 @@ void	parser(char *line, t_all *all)
 			printf("%i - %i\n", n, all->cmd[j].arg_n);
 			n++;
 		}
-			// printf("%p\n", all->cmd[0].arg[0]);
-			// printf("%i - %s\n", n, all->cmd[0].arg[0]);
-			// printf("%i - %i\n", n, all->cmd[0].arg_n);
 		j++;
 		n = 0;
+		// printf("4 - %s\n", all->cmd[j].arg[4]);
+		// printf("4 - %p\n", all->cmd[j].arg[4]);
+		// printf("5 - %p\n", all->cmd[j].arg[5]);
+		// printf("5 - %s\n", all->cmd[j].arg[5]);
+		// printf("6 - %p\n", all->cmd[j].arg[6]);
+		// printf("6 - %s\n", all->cmd[j].arg[6]);
+		// printf("7 - %p\n", all->cmd[j].arg[7]);
+		// printf("7 - %s\n", all->cmd[j].arg[7]);
+		// printf("%s\n", all->cmd[j].arg[7]);
 	}
 }
 // void insert_arg(char * arg);
