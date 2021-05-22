@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
+#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/05/22 16:35:21 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/05/22 18:38:13 by fhyman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ LIB = ./libft/libft.a
 
 HEAD = *.h
 
-INPUT = main.c
+INPUT = main.c get_next_line.c get_next_line_utils.c 
 
 FLAGS = -ltermcap -g -Wall -Werror -Wextra 
 
