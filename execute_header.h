@@ -12,9 +12,12 @@
 # define CTRL_DWN "\e[1;5B"
 # define TERM_NAME "xterm-256color"
 # define PROMPT 12
+# define PATH_LEN 1024
 
 typedef struct s_termline
 {
     int     cursor;
-    int     num_symb;
+    int     symb_num;
+    int     line_num;
+    char    *hist_line;
 }   t_termline;
