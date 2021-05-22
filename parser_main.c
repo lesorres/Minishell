@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/17 20:21:19 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/22 13:25:49 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 
 int	main()
 {
-	PRINT;
-	// char *str;
-	// char **table;
-	// t_all all;
+	char *str;
+	t_all all;
 
-	// str = malloc(sizeof(char) * 50);
-	// str = "echo Hello ; cat test.txt";
-	// parser(&str, &all);
+	str = malloc(sizeof(char) * 50);
+	str = "echo Hello ; cat test.txt ; cd";
+	parser(str, &all);
+	// free (str);
 
 	// printf("%s", all.cmd.s_cmd[0].arg[1]);
 	// printf("%s", all.cmd.s_cmd[0].arg[2]);
