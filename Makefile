@@ -6,7 +6,7 @@
 #    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/05/20 19:48:48 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/05/22 16:33:33 by kmeeseek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,7 @@ $(NAME): $(OBJS)
 parser:
 	gcc parser_main.c parcer.c minishell.h libft/libft.a -g
 s_parser:
-	gcc parser_main.c parcer.c minishell.h libft/libft.a -g -fsanitize=address
+	gcc parser_main.c parser.c minishell.h libft/libft.a -g -fsanitize=address
 clean:
 	$(MAKE) clean -C ./libft
 	$(RM) $(OBJS)
