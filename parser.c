@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/22 18:54:35 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/23 14:28:38 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,16 +59,16 @@ void	realloc_cmd(t_all *all)
 
 	i = 0;
 	all->cmd_n = 7;
+	// all->cmd[i].arg_n = 7;
 	all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd));
-	// all->cmd = malloc(sizeof(t_cmd) * all->cmd_n);
-	// ft_bzero(all->cmd, all->cmd_n);
 	// if (!all->cmd)
 	// 	error();
 	// all->cmd[all->cmd_n] = 0;
 	while (i < all->cmd_n)
 	{
-		all->cmd[i].arg = ft_calloc(all->cmd_n, sizeof(char*));
-		all->cmd[i].redir = ft_calloc(all->cmd_n, sizeof(char*));
+		all->cmd[i].arg_n = 7;
+		all->cmd[i].arg = ft_calloc(all->cmd[i].arg_n, sizeof(char*));
+		all->cmd[i].redir = ft_calloc(all->cmd[i].arg_n, sizeof(char*));
 		i++;
 	}
  }
@@ -118,10 +118,10 @@ void	parser(char *line, t_all *all)
 		{
 		all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
 		ft_strcpy(all->cmd[j].arg[n], tmp);
-		free(tmp);
 		n++;
 		all->cmd->arg_n = n;
 		}
+		free(tmp);
 		// int z = make_line(all->cmd[j].arg[n], line[i]);
 		// all->cmd[j].arg[n][k] = line[i];
 	}
