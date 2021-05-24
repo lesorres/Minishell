@@ -31,6 +31,7 @@ typedef struct s_all
 	char	**hist_arr;
     int     cmd_n;
     t_cmd   *cmd;
+	t_termline tline;
 }				t_all;
 
 int		ft_strcmp(char *s1, char *s2);
@@ -43,6 +44,7 @@ void	parser(char *line, t_all *all);
 int 	cmd_echo(t_cmd *cmd, char **argv, char **envp);
 int 	cmd_cd(t_cmd *cmd, char **argv, char **envp);
 void    cmd_env(char **envp);
-void    cmd_pwd(t_cmd *cmd, char **arg, char **envp);
+int		cmd_pwd(t_all *all, char **arg, char **envp);
+void    buildin_func(t_all *all, char **arg, char **envp);
 
 #endif
