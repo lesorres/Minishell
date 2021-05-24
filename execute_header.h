@@ -16,8 +16,10 @@
 
 typedef struct s_termline
 {
-    int     cursor;
-    int     symb_num;
-    int     line_num;
-    char    *hist_line;
+	int     cursor;
+	int     symb_num;
+	int     line_num;
+	int		curr_line;
+	char    *hist_line;
+	char    *str;
 }   t_termline;
