@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/22 16:06:14 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/24 20:41:39 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	main()
 	t_all all;
 
 	str = malloc(sizeof(char) * 50);
-	str = "echo Hello ; cat test.txt ; cd";
+	str = "echo Hello ; cd"; //cat test.txt ; 
 	// str = "env";
 	parser(str, &all);
 	// free (str);

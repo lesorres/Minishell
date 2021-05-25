@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/23 19:22:19 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/24 22:19:20 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,11 +73,49 @@ void	realloc_cmd(t_all *all)
 // 	}
 //  }
 
-void 	cmd_mem_alloc(t_all *all, int i)
+// void 	cmd_mem_alloc(t_all *all, int i, int n)
+// {
+// 	all->cmd[i].arg = ft_calloc(n, sizeof(char *)); //не забудь проверку на NULL
+// 	// all->cmd[i].redir = ft_calloc(all->cmd[i].arg_n, sizeof(char *)); //не забудь проверку на NULL
+// }
+
+void 	cmd_mem_alloc(t_all *all, int j)
 {
-	all->cmd[i].arg_n = all->cmd[i].arg_n + 3;
-	all->cmd[i].arg = ft_calloc(all->cmd[i].arg_n, sizeof(char *)); //не забудь проверку на NULL
-	// all->cmd[i].redir = ft_calloc(all->cmd[i].arg_n, sizeof(char *)); //не забудь проверку на NULL
+	int		i;
+	int		old_arg_n;
+	char	**tmp;
+
+	i = 0;
+	old_arg_n = all->cmd[j].arg_n;
+	all->cmd[j].arg_n = all->cmd[j].arg_n + 1;
+	if (!all->cmd[j].arg)
+	{
+		all->cmd[j].arg = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
+	// 	while (i < old_arg_n) //не нужно тк и так все заполняется нулями
+	// 	{
+	// 		all->cmd[j].arg = 0;
+	// 		// cmd_mem_alloc (all, i);
+	// 		i++;
+	// 	}
+	}
+	else
+	{
+		tmp = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
+		while (i < old_arg_n)
+		{
+			tmp[i] = all->cmd[j].arg[i];
+			i++;
+		}
+		all->cmd[j].arg = tmp;
+		free(tmp); //работает неверно
+		// i = 0;
+		// while (old_cmd_n < all->cmd_n)
+		// {
+		// 	all->cmd[old_cmd_n].arg_n = 0;
+		// 	cmd_mem_alloc (all, old_cmd_n);
+		// 	old_cmd_n++;
+		// }
+	}
 }
 
 void 	cmd_arr_mem_alloc(t_all *all)
@@ -87,17 +125,12 @@ void 	cmd_arr_mem_alloc(t_all *all)
 	t_cmd *tmp;
 
 	i = 0;
-	old_cmd_n = all->cmd_n;
-	all->cmd_n = all->cmd_n + 4;
+	old_cmd_n = all->cmd_n - 1;
+	all->cmd_n = all->cmd_n + 1;
 	if (!all->cmd)
 	{
 		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
-		while (i < all->cmd_n)
-		{
-			all->cmd[i].arg_n = 0;
-			cmd_mem_alloc (all, i);
-			i++;
-		}
+			all->cmd[0].arg_n = 1;
 	}
 	else
 	{
@@ -105,16 +138,17 @@ void 	cmd_arr_mem_alloc(t_all *all)
 		while (i < old_cmd_n)
 		{
 			// tmp->name = all->cmd->name;
-			tmp->arg_n = all->cmd->arg_n;
-			tmp->arg = all->cmd->arg;
+			tmp->arg_n = all->cmd[i].arg_n;
+			tmp->arg = all->cmd[i].arg;
 			// tmp->redir = all->cmd->redir;
 			// tmp->echo_n = all->cmd->echo_n;
 			// tmp->doub = all->cmd->doub;
 			// tmp->sing = all->cmd->sing;
 			i++;
 		}
+		// free(all->cmd); //работает неверно
 		all->cmd = tmp;
-		free(tmp);
+		all->cmd[old_cmd_n].arg_n = 1;
 		// i = 0;
 		// while (old_cmd_n < all->cmd_n)
 		// {
@@ -127,25 +161,24 @@ void 	cmd_arr_mem_alloc(t_all *all)
 
 void	parser(char *line, t_all *all)
 {
-	int i;
-	int j;
-	int k;
-	int n;
+	int i;					//счетчик line
+	int j;					//номер команды
+	int k;					//счетчик tmp
+	int n;					//номер аргумента
 	int	line_len;
 	char *tmp;
 
 	i = 0;
 	j = 0;
 	n = 0;
-	all->cmd_n = 0;
+	all->cmd_n = 1;
+	// all->cmd[i].arg_n = 0;
 	line = ft_strtrim(line, " ");
 	line_len = ft_strlen(line);
 	// first_mem_alloc(all);
 	cmd_arr_mem_alloc(all);
 	while(line[i])
 	{
-		// if (j % 3 == 0)
-		// 	cmd_arr_mem_alloc(all);
 		k = 0;
 		while (line[i] == ' ')
 			i++;
@@ -164,14 +197,16 @@ void	parser(char *line, t_all *all)
 		if (line[i - 1] == ';')
 		{
 			j++;
+			cmd_arr_mem_alloc(all);
 			n = 0;
 		}
-		else
+		else //здесь записываем слова в массив
 		{
+			cmd_mem_alloc(all, j);
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
 			ft_strcpy(all->cmd[j].arg[n], tmp);
 			n++;
-			all->cmd->arg_n = n;
+			// all->cmd->arg_n = n;
 		}
 		free(tmp);
 		// int z = make_line(all->cmd[j].arg[n], line[i]);
