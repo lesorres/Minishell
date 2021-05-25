@@ -220,28 +220,33 @@ int main(int argc, char **argv, char **envp)
 				ft_putstr_fd(restore_cursor, 1);
 				ft_putstr_fd(tgetstr("ce", 0), 1);
 				hist_fd = open(".HISTORY", O_RDONLY);
+				tmp = all.tline.str;
 				all.tline.str = get_hist_line(tline.curr_line, hist_fd);
+				free (tmp);
 				all.tline.cursor = ft_strlen(all.tline.str) + PROMPT;
 				all.tline.symb_num = ft_strlen(all.tline.str) + PROMPT;
 				count = ft_strlen(all.tline.str);
 				if (tline.curr_line-- > 0)
 					write(1, all.tline.str, ft_strlen(all.tline.str));
-				else if (tline.curr_line == 0)
+				else
 					write(1, all.tline.str, ft_strlen(all.tline.str));
 				close(hist_fd);
 			}
 			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
 			{
 				int		hist_fd;
+				char	*tmp;
 
 				ft_putstr_fd(restore_cursor, 1);
 				ft_putstr_fd(tgetstr("ce", 0), 1);
 				hist_fd = open(".HISTORY", O_RDONLY);
+				tmp = all.tline.str;
 				all.tline.str = get_hist_line(tline.curr_line, hist_fd);
+				free (tmp);
 				all.tline.cursor = ft_strlen(all.tline.str) + PROMPT;
 				all.tline.symb_num = ft_strlen(all.tline.str) + PROMPT;
 				count = ft_strlen(all.tline.str);
-				if (tline.curr_line++ <= tline.line_num)
+				if (tline.curr_line++ < tline.line_num)
 					write(1, all.tline.str, ft_strlen(all.tline.str));
 				else
 					write(1, all.tline.str, ft_strlen(all.tline.str));
@@ -281,14 +286,16 @@ int main(int argc, char **argv, char **envp)
 				count++;
 			}
 		}
-		write(fd, all.tline.str, ft_strlen(all.tline.str));
+		printf("%d\n", (int)all.tline.str[count]);
+		if (all.tline.str[0] != '\n')
+			write(fd, all.tline.str, ft_strlen(all.tline.str));
 		all.tline.str[count - 1] = 0;
 		free(all.tline.str);
 		tline.line_num++;
 		// parser(all.tline.str, &all);
 	}
-	// execute(&com);
-	// buildin_func(&all, argv, envp);
+	// execute(&all);
+	buildin_func(&all, argv, envp);
 	write(1, "\n", 1);
 	// close (fd);
 	free (str);
