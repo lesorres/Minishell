@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/24 22:19:20 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/25 22:49:48 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@ void 	cmd_mem_alloc(t_all *all, int j)
 			i++;
 		}
 		all->cmd[j].arg = tmp;
-		free(tmp); //работает неверно
+		// free(tmp);
 		// i = 0;
 		// while (old_cmd_n < all->cmd_n)
 		// {
@@ -146,9 +146,11 @@ void 	cmd_arr_mem_alloc(t_all *all)
 			// tmp->sing = all->cmd->sing;
 			i++;
 		}
-		// free(all->cmd); //работает неверно
 		all->cmd = tmp;
+		// free(tmp);
 		all->cmd[old_cmd_n].arg_n = 1;
+		all->cmd[old_cmd_n - 1].null = 0;
+		all->cmd[old_cmd_n].null = 1;
 		// i = 0;
 		// while (old_cmd_n < all->cmd_n)
 		// {
@@ -216,26 +218,23 @@ void	parser(char *line, t_all *all)
 		// 	cmd_arr_mem_alloc(all);
 	n = 0;
 	j = 0;
-	while (all->cmd[j].arg[n])
+	while (!all->cmd[j - 1].null && all->cmd[j].arg[n])
 	{
 		while (all->cmd[j].arg[n])
 		{
-			printf("%p\n", all->cmd[j].arg[n]);
-			printf("%i - %s\n", n, all->cmd[j].arg[n]);
-			printf("%i - %i\n", n, all->cmd[j].arg_n);
+			printf("adr = |%p|\n", all->cmd[j].arg[n]);
+			printf("str(#%i) = %s\n", n, all->cmd[j].arg[n]);
+			// printf("%i - %i\n", n, all->cmd[j].arg_n);
 			n++;
 		}
 		j++;
 		n = 0;
-		// printf("4 - %s\n", all->cmd[j].arg[4]);
-		// printf("4 - %p\n", all->cmd[j].arg[4]);
-		// printf("5 - %p\n", all->cmd[j].arg[5]);
-		// printf("5 - %s\n", all->cmd[j].arg[5]);
-		// printf("6 - %p\n", all->cmd[j].arg[6]);
-		// printf("6 - %s\n", all->cmd[j].arg[6]);
-		// printf("7 - %p\n", all->cmd[j].arg[7]);
-		// printf("7 - %s\n", all->cmd[j].arg[7]);
-		// printf("%s\n", all->cmd[j].arg[7]);
 	}
+	// printf("adr = |%p|\n", all->cmd[0].arg[0]);
+	// printf("str(%i) = %s\n", 0, all->cmd[0].arg[0]);
+	// printf("adr = |%p|\n", all->cmd[0].arg[1]);
+	// printf("str(%i) = %s\n", 0, all->cmd[0].arg[1]);
+	// printf("adr = |%p|\n", all->cmd[1].arg[0]);
+	// printf("str(%i) = %s\n", 0, all->cmd[1].arg[0]);
 }
 // void insert_arg(char * arg);
