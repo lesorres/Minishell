@@ -63,11 +63,6 @@ char **create_arr(int i)
     return (out); 
 }
 
-void	init_all(t_all *all)
-{
-	all->hist_arr = create_arr(0);
-	all->tline.str = NULL;
-}
 
 void	rewrite_hist(t_all *all, char *line)
 {
@@ -172,7 +167,13 @@ char	*get_hist_line(int num, int fd)
 	return (str);
 }
 
-int main(int argc, char **argv, char **envp)
+// void	init_all(t_all *all)
+// {
+// 	all->hist_arr = create_arr(0);
+// 	all->tline.str = malloc(1024);
+// }
+
+int main(int argc, char **arg, char **envp)
 {
 	t_cmd 	cmd;
 	t_all	all;
@@ -193,12 +194,10 @@ int main(int argc, char **argv, char **envp)
 	tgetent(0, TERM_NAME);
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
-	// init_all(&all);
-	// init_hist(&all);
-	// rewrite_hist(&all, str);
 	while (strcmp(str, "\4"))
 	{	
 		all.tline.str = malloc(1024);
+		all.tline.save_line = malloc(1024);
 		all.tline.cursor = PROMPT;
 		all.tline.symb_num = PROMPT;
 		write(1, "#minishell> ", PROMPT);
@@ -221,15 +220,18 @@ int main(int argc, char **argv, char **envp)
 				ft_putstr_fd(tgetstr("ce", 0), 1);
 				hist_fd = open(".HISTORY", O_RDONLY);
 				tmp = all.tline.str;
-				all.tline.str = get_hist_line(tline.curr_line, hist_fd);
-				free (tmp);
-				all.tline.cursor = ft_strlen(all.tline.str) + PROMPT;
-				all.tline.symb_num = ft_strlen(all.tline.str) + PROMPT;
-				count = ft_strlen(all.tline.str);
-				if (tline.curr_line-- > 0)
+				if (tline.curr_line > 0)
+				{
+					tline.curr_line--;
+					all.tline.str = get_hist_line(tline.curr_line, hist_fd);
+					free (tmp);
+					all.tline.cursor = ft_strlen(all.tline.str) + PROMPT;
+					all.tline.symb_num = ft_strlen(all.tline.str) + PROMPT;
+					count = ft_strlen(all.tline.str);
 					write(1, all.tline.str, ft_strlen(all.tline.str));
-				else
-					write(1, all.tline.str, ft_strlen(all.tline.str));
+				}
+				// else if (tline.curr_line == tline.line_num)
+				// 	write(1, all.tline.save_line, ft_strlen(all.tline.save_line));
 				close(hist_fd);
 			}
 			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
@@ -241,15 +243,18 @@ int main(int argc, char **argv, char **envp)
 				ft_putstr_fd(tgetstr("ce", 0), 1);
 				hist_fd = open(".HISTORY", O_RDONLY);
 				tmp = all.tline.str;
-				all.tline.str = get_hist_line(tline.curr_line, hist_fd);
-				free (tmp);
-				all.tline.cursor = ft_strlen(all.tline.str) + PROMPT;
-				all.tline.symb_num = ft_strlen(all.tline.str) + PROMPT;
-				count = ft_strlen(all.tline.str);
-				if (tline.curr_line++ < tline.line_num)
+				if (tline.curr_line < tline.line_num && all.tline.str[0] != '\n')
+				{
+					tline.curr_line++;
+					all.tline.str = get_hist_line(tline.curr_line, hist_fd);
+					free (tmp);
+					all.tline.cursor = ft_strlen(all.tline.str) + PROMPT;
+					all.tline.symb_num = ft_strlen(all.tline.str) + PROMPT;
+					count = ft_strlen(all.tline.str);
 					write(1, all.tline.str, ft_strlen(all.tline.str));
-				else
-					write(1, all.tline.str, ft_strlen(all.tline.str));
+				}
+				else if (tline.curr_line == tline.line_num)
+					write(1, all.tline.save_line, ft_strlen(all.tline.save_line));
 				close(hist_fd);
 			}
 			else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
@@ -258,6 +263,7 @@ int main(int argc, char **argv, char **envp)
 				{
 					all.tline.cursor--;
 					all.tline.symb_num--;
+					all.tline.str[count--] = '\0';
 					ft_putstr_fd(cursor_left, 1);
 					ft_putstr_fd(tgetstr("dc", 0), 1);
 				}
@@ -281,23 +287,28 @@ int main(int argc, char **argv, char **envp)
 			else
 			{
 				all.tline.cursor += write(1, str, l);
+				all.tline.save_line[count] = str[0];
+				all.tline.save_line[count + 1] = 0;
 				all.tline.str[count] = str[0];
 				all.tline.str[count + 1] = 0;
 				count++;
 			}
 		}
-		printf("%d\n", (int)all.tline.str[count]);
+		// printf("%d\n", (int)all.tline.save_line[count]);
 		if (all.tline.str[0] != '\n')
 			write(fd, all.tline.str, ft_strlen(all.tline.str));
 		all.tline.str[count - 1] = 0;
 		free(all.tline.str);
 		tline.line_num++;
-		// parser(all.tline.str, &all);
+		parser(all.tline.str, &all);
+		buildin_func(&all, arg, envp);
+		// printf("before cmd_pwd: %s\n", all.cmd[0].arg[0]);
+		// cmd_pwd(&all, arg, envp);
+		// printf("%s\n", all.cmd[0].arg[0]);
 	}
 	// execute(&all);
-	buildin_func(&all, argv, envp);
+	// buildin_func(&all, argv, envp);
 	write(1, "\n", 1);
-	// close (fd);
 	free (str);
 	free_hisr_arr(&all);
 	return (0);

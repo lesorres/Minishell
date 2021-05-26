@@ -6,16 +6,16 @@ void cmd_echo(t_all *all, char **argv)
     int     j;
     
     i = 1;
-    while (argv[i])
+    while (all->cmd[0].arg[i])
     {
         // j = 0;
         // while (argv[i][j])
         {
-            printf("%s\n", argv[i]);
-            // if (strcmp(argv[1], "-n"))
-            //     i = 2;    
-            // else
-            //     write(1, "\n", 1);
+            write(1, all->cmd[0].arg[i], ft_strlen(all->cmd[0].arg[i]));
+            if (strcmp(all->cmd[0].arg[i], "-n"))
+                i = 2;    
+            else
+                write(1, "\n", 1);
             i++;
         }
     }
@@ -25,13 +25,19 @@ void cmd_cd(t_all *all, char **argv, char **envp)
 {
     int     dir;
 
-    if (argv[1])
+    if (all->cmd[0].arg[1])
     {
-        dir = chdir(argv[1]);
+        dir = chdir(all->cmd[0].arg[1]);
         // printf("%s", dir);
     }
-    else if (!argv[1])
-        chdir("/");
+    else if (!all->cmd[0].arg[1])
+    {
+        char    *tmp_user;
+        // tmp_user = malloc(PATH_LEN);
+        tmp_user = getenv("USER");
+        char    *tmp_path = ft_strjoin("/Users/", tmp_user);
+        chdir(tmp_path);
+    }
 }
 
 int		ft_putstr(char *str)
@@ -52,13 +58,10 @@ void    cmd_pwd(t_all *all, char **arg, char **envp)
     char    *tmp;
 
     path = malloc(PATH_LEN + 1);
-    // if (!path)
-        // return (-1);
     tmp = getcwd(path, PATH_LEN);
     write(1, tmp, ft_strlen(tmp));
     write(1, "\n", 1);
     free(path);
-	// return (1);
     (void)arg;
 }
 
@@ -69,7 +72,7 @@ void    cmd_env(char **envp)
     i = 0;
     while (envp[i])
     {
-        printf("%s\n", envp[i]);
+        printf("%d - %s\n", i, envp[i]);
         i++;
     }
 }
