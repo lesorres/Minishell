@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/25 22:49:48 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/26 21:12:15 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ void	realloc_cmd(t_all *all)
 // 	}
 //  }
 
-// void 	cmd_mem_alloc(t_all *all, int i, int n)
+// void 	arr_mem_alloc(t_all *all, int i, int n)
 // {
 // 	all->cmd[i].arg = ft_calloc(n, sizeof(char *)); //не забудь проверку на NULL
 // 	// all->cmd[i].redir = ft_calloc(all->cmd[i].arg_n, sizeof(char *)); //не забудь проверку на NULL
 // }
 
-void 	cmd_mem_alloc(t_all *all, int j)
+void 	arr_mem_alloc(t_all *all, int j)
 {
 	int		i;
 	int		old_arg_n;
@@ -94,7 +94,7 @@ void 	cmd_mem_alloc(t_all *all, int j)
 	// 	while (i < old_arg_n) //не нужно тк и так все заполняется нулями
 	// 	{
 	// 		all->cmd[j].arg = 0;
-	// 		// cmd_mem_alloc (all, i);
+	// 		// arr_mem_alloc (all, i);
 	// 		i++;
 	// 	}
 	}
@@ -112,13 +112,13 @@ void 	cmd_mem_alloc(t_all *all, int j)
 		// while (old_cmd_n < all->cmd_n)
 		// {
 		// 	all->cmd[old_cmd_n].arg_n = 0;
-		// 	cmd_mem_alloc (all, old_cmd_n);
+		// 	arr_mem_alloc (all, old_cmd_n);
 		// 	old_cmd_n++;
 		// }
 	}
 }
 
-void 	cmd_arr_mem_alloc(t_all *all)
+void 	cmd_mem_alloc(t_all *all)
 {
 	int i;
 	int old_cmd_n;
@@ -155,7 +155,7 @@ void 	cmd_arr_mem_alloc(t_all *all)
 		// while (old_cmd_n < all->cmd_n)
 		// {
 		// 	all->cmd[old_cmd_n].arg_n = 0;
-		// 	cmd_mem_alloc (all, old_cmd_n);
+		// 	arr_mem_alloc (all, old_cmd_n);
 		// 	old_cmd_n++;
 		// }
 	}
@@ -178,7 +178,7 @@ void	parser(char *line, t_all *all)
 	line = ft_strtrim(line, " ");
 	line_len = ft_strlen(line);
 	// first_mem_alloc(all);
-	cmd_arr_mem_alloc(all);
+	cmd_mem_alloc(all);
 	while(line[i])
 	{
 		k = 0;
@@ -199,12 +199,12 @@ void	parser(char *line, t_all *all)
 		if (line[i - 1] == ';')
 		{
 			j++;
-			cmd_arr_mem_alloc(all);
+			cmd_mem_alloc(all);
 			n = 0;
 		}
 		else //здесь записываем слова в массив
 		{
-			cmd_mem_alloc(all, j);
+			arr_mem_alloc(all, j);
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
 			ft_strcpy(all->cmd[j].arg[n], tmp);
 			n++;
@@ -215,7 +215,7 @@ void	parser(char *line, t_all *all)
 		// all->cmd[j].arg[n][k] = line[i];
 	}
 		// if (all->cmd_n % 3 == 0)
-		// 	cmd_arr_mem_alloc(all);
+		// 	cmd_mem_alloc(all);
 	n = 0;
 	j = 0;
 	while (!all->cmd[j - 1].null && all->cmd[j].arg[n])
