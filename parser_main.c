@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/26 21:08:50 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/27 21:48:06 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,12 @@ int	main()
 	char *str;
 	t_all all;
 
-	str = ft_strdup("echo hello ; cat test.txt something else and so on"); //cat test.txt ;
+	str = ft_strdup("echo hi cd ; d sdsdsd ; jkdjfkdjf"); //cat test.txt ;
 	parser(str, &all);
 	// free (str);
-
 	// printf("%s", all.cmd.s_cmd[0].arg[1]);
 	// printf("%s", all.cmd.s_cmd[0].arg[2]);
 	// printf("%s", all.cmd.s_cmd[1].arg[1]);
 	// printf("%s", all.cmd.s_cmd[1].arg[2]);
-
 	return (0);
 }

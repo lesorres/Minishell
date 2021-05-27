@@ -6,25 +6,17 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/26 21:12:15 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/27 21:46:53 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
-
-// gcc parser_main.c parcer.c minishell.h libft/libft.a
-
-void	realloc_cmd(t_all *all)
-{
-	
-}
 
 // int add_char(char *arg, char c)
 // {
 // 	int len;
 // 	int new_len;
 // 	char *ret;
-
 // 	len = ft_strlen(arg);
 // 	new_len = len + 2;
 // 	if (!(ret = malloc(sizeof(char) * (new_len))))
@@ -53,26 +45,6 @@ void	realloc_cmd(t_all *all)
 // 	return(1);
 // }
 
-//  void 	first_mem_alloc(t_all *all)
-//  {
-// 	int i;
-
-// 	i = 0;
-// 	all->cmd_n = all->cmd_n + 7;
-// 	// all->cmd[i].arg_n = 7;
-// 	all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd));
-// 	// if (!all->cmd)
-// 	// 	error();
-// 	// all->cmd[all->cmd_n] = 0;
-// 	while (i < all->cmd_n)
-// 	{
-// 		all->cmd[i].arg_n = 7;
-// 		all->cmd[i].arg = ft_calloc(all->cmd[i].arg_n, sizeof(char*));
-// 		all->cmd[i].redir = ft_calloc(all->cmd[i].arg_n, sizeof(char*));
-// 		i++;
-// 	}
-//  }
-
 // void 	arr_mem_alloc(t_all *all, int i, int n)
 // {
 // 	all->cmd[i].arg = ft_calloc(n, sizeof(char *)); //не забудь проверку на NULL
@@ -91,12 +63,6 @@ void 	arr_mem_alloc(t_all *all, int j)
 	if (!all->cmd[j].arg)
 	{
 		all->cmd[j].arg = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
-	// 	while (i < old_arg_n) //не нужно тк и так все заполняется нулями
-	// 	{
-	// 		all->cmd[j].arg = 0;
-	// 		// arr_mem_alloc (all, i);
-	// 		i++;
-	// 	}
 	}
 	else
 	{
@@ -131,26 +97,23 @@ void 	cmd_mem_alloc(t_all *all)
 	{
 		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 			all->cmd[0].arg_n = 1;
+			all->cmd[1].null = 1;
 	}
 	else
 	{
 		tmp = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 		while (i < old_cmd_n)
 		{
-			// tmp->name = all->cmd->name;
 			tmp->arg_n = all->cmd[i].arg_n;
 			tmp->arg = all->cmd[i].arg;
-			// tmp->redir = all->cmd->redir;
-			// tmp->echo_n = all->cmd->echo_n;
-			// tmp->doub = all->cmd->doub;
-			// tmp->sing = all->cmd->sing;
 			i++;
 		}
+		if (all->cmd)
+			free(all->cmd);
 		all->cmd = tmp;
-		// free(tmp);
 		all->cmd[old_cmd_n].arg_n = 1;
-		all->cmd[old_cmd_n - 1].null = 0;
-		all->cmd[old_cmd_n].null = 1;
+		all->cmd[all->cmd_n - 1].null = 1;
+		all->cmd[old_cmd_n].null = 0;
 		// i = 0;
 		// while (old_cmd_n < all->cmd_n)
 		// {
@@ -174,10 +137,8 @@ void	parser(char *line, t_all *all)
 	j = 0;
 	n = 0;
 	all->cmd_n = 1;
-	// all->cmd[i].arg_n = 0;
 	line = ft_strtrim(line, " ");
 	line_len = ft_strlen(line);
-	// first_mem_alloc(all);
 	cmd_mem_alloc(all);
 	while(line[i])
 	{
@@ -190,7 +151,6 @@ void	parser(char *line, t_all *all)
 			if (line[i] == ';')
 			{
 				i++;
-				// k++;
 			}
 			else
 				tmp[k++] = line[i++];
@@ -218,7 +178,7 @@ void	parser(char *line, t_all *all)
 		// 	cmd_mem_alloc(all);
 	n = 0;
 	j = 0;
-	while (!all->cmd[j - 1].null && all->cmd[j].arg[n])
+	while (!all->cmd[j].null && all->cmd[j].arg[n])
 	{
 		while (all->cmd[j].arg[n])
 		{
