@@ -32,10 +32,9 @@ void cmd_cd(t_all *all, char **argv, char **envp)
     }
     else if (!all->cmd[0].arg[1])
     {
-        char    *tmp_user;
+        char    *tmp_path;
         // tmp_user = malloc(PATH_LEN);
-        tmp_user = getenv("USER");
-        char    *tmp_path = ft_strjoin("/Users/", tmp_user);
+        tmp_path = getenv("HOME");
         chdir(tmp_path);
     }
 }
@@ -77,6 +76,30 @@ void    cmd_env(char **envp)
     }
 }
 
+void    cmd_export(t_all *all, char **argv, char **envp)
+{
+    int     num_line;
+    int     line;
+    
+    num_line = 0;
+    line = 0;
+    while (envp[num_line])
+    {
+        // printf("%d - %s\n", num_line, envp[num_line]);
+        num_line++;
+    }
+    all->tline.env_arr = (char **)malloc(sizeof(char *) * (num_line));
+    while (num_line)
+    {
+        all->tline.env_arr[line] = ft_strdup(envp[line]);
+        line++;
+        num_line--;
+    }
+    int i = 0;
+    while (all->tline.env_arr[i])
+        printf("%s\n", all->tline.env_arr[i++]);
+}
+
 // void    buildin_func(t_all *all, char **arg, char **envp)
 // {
 //     if (strcmp(arg[0], "cd "))
@@ -101,12 +124,10 @@ void    buildin_func(t_all *all, char **arg, char **envp)
         cmd_cd(all, arg, envp);
     else if (!strcmp(all->cmd[0].arg[0], "echo"))
         cmd_echo(all, arg);
-    // printf("%s\n", all->cmd->arg[0]);
-    // write(1, all->cmd[0].arg[0], ft_strlen(arg[0]));
     if (!strcmp(all->cmd[0].arg[0], "pwd"))
         cmd_pwd(all, arg, envp);
-    // else if (strcmp(all->cmd->arg[0], "export"))
-    //     cmd_export(all, arg, envp);
+    else if (!strcmp(all->cmd->arg[0], "export"))
+        cmd_export(all, arg, envp);
     // else if (strcmp(all->cmd->arg[0], "unset "))
     //     cmd_unset(all, arg, envp);
     else if (!strcmp(all->cmd[0].arg[0], "env"))
