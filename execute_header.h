@@ -20,6 +20,9 @@ typedef struct s_termline
 	int     symb_num;
 	int     line_num;
 	int		curr_line;
+	int		env_line_num;
+	char	*print_line;
 	char    *hist_line;
 	char    *str;
+	char	**env_arr;
 }   t_termline;
