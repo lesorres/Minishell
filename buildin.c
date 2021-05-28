@@ -64,62 +64,76 @@ void    cmd_pwd(t_all *all, char **arg, char **envp)
     (void)arg;
 }
 
-void    cmd_env(char **envp)
+void    sort_env(t_all *all)
+{
+    int     i;
+    int     j;
+    char    *tmp_line;
+
+    i = 0;
+    while (i++ < all->tline.env_line_num)
+    {
+        j = 0;
+        while (j < all->tline.env_line_num - 1)
+        {
+            if (ft_strcmp(all->tline.env_arr[i], all->tline.env_arr[i + 1] > 0))
+            {
+                tmp_line = malloc(sizeof(ft_strlen(all->tline.env_arr[i])));
+                tmp_line = all->tline.env_arr[i + 1];
+                all->tline.env_arr[i + 1] = all->tline.env_arr[i];
+                all->tline.env_arr[i] = tmp_line;
+                free(tmp_line);
+            }
+            j++;
+        }
+    }
+}
+
+void    add_new_env_param(t_all *all)
+{
+    
+}
+
+void    cmd_env(t_all *all, char **envp)
 {
     int     i;
 
     i = 0;
-    while (envp[i])
-    {
-        printf("%d - %s\n", i, envp[i]);
-        i++;
-    }
-}
-
-void    cmd_export(t_all *all, char **argv, char **envp)
-{
-    int     num_line;
-    int     line;
-    
-    num_line = 0;
-    line = 0;
-    while (envp[num_line])
-    {
-        // printf("%d - %s\n", num_line, envp[num_line]);
-        num_line++;
-    }
-    all->tline.env_arr = (char **)malloc(sizeof(char *) * (num_line));
-    while (num_line)
-    {
-        all->tline.env_arr[line] = ft_strdup(envp[line]);
-        line++;
-        num_line--;
-    }
-    int i = 0;
     while (all->tline.env_arr[i])
         printf("%s\n", all->tline.env_arr[i++]);
 }
 
-// void    buildin_func(t_all *all, char **arg, char **envp)
-// {
-//     if (strcmp(arg[0], "cd "))
-//         cmd_cd(all, arg, envp);
-//     else if (strcmp(arg[0], "echo "))
-//         cmd_echo(all, arg);
-//     else if (strcmp(arg[0], "pwd"))
-//         cmd_pwd(all, arg, envp);
-//     else if (strcmp(arg[0], "export"))
-//         cmd_export(all, arg, envp);
-//     else if (strcmp(arg[0], "unset "))
-//         cmd_unset(all, arg, envp);
-//     else if (strcmp(arg[0], "env"))
-//         cmd_env(envp);
-//     else if (strcmp(arg[0], "exit"))
-//         cmd_exit(arg);
-// }
+void    cmd_export(t_all *all, char **argv)
+{
+    if (!all->cmd[0].arg[1])
+        sort_env(all);
+    else
+        add_new_env_param(all);
+}
+
+void    get_envp(t_all *all, char **envp)
+{
+    int     line;
+    
+    all->tline.env_line_num = 0;
+    line = 0;
+    while (envp[all->tline.env_line_num])
+        all->tline.env_line_num++;
+    all->tline.env_arr = (char **)malloc(sizeof(char *) * (all->tline.env_line_num));
+    while (all->tline.env_line_num)
+    {
+        all->tline.env_arr[line] = ft_strdup(envp[line]);
+        line++;
+        all->tline.env_line_num--;
+    }
+    // int i = 0;
+    // while (all->tline.env_arr[i])
+    //     printf("%s\n", all->tline.env_arr[i++]);
+}
 
 void    buildin_func(t_all *all, char **arg, char **envp)
 {
+    get_envp(all, envp);
     if (!strcmp(all->cmd[0].arg[0], "cd"))
         cmd_cd(all, arg, envp);
     else if (!strcmp(all->cmd[0].arg[0], "echo"))
@@ -127,11 +141,11 @@ void    buildin_func(t_all *all, char **arg, char **envp)
     if (!strcmp(all->cmd[0].arg[0], "pwd"))
         cmd_pwd(all, arg, envp);
     else if (!strcmp(all->cmd->arg[0], "export"))
-        cmd_export(all, arg, envp);
+        cmd_export(all, arg);
     // else if (strcmp(all->cmd->arg[0], "unset "))
     //     cmd_unset(all, arg, envp);
     else if (!strcmp(all->cmd[0].arg[0], "env"))
-        cmd_env(envp);
+        cmd_env(all, envp);
     // else if (strcmp(all->cmd->arg[0], "exit"))
     //     cmd_exit(arg);
 }
