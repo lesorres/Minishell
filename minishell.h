@@ -41,10 +41,11 @@ void	parser(char *line, t_all *all);
 
 /*  buildin commands  */
 
-int 	cmd_echo(t_cmd *cmd, char **argv, char **envp);
-int 	cmd_cd(t_cmd *cmd, char **argv, char **envp);
-void    cmd_env(char **envp);
-int		cmd_pwd(t_all *all, char **arg, char **envp);
+void	cmd_echo(t_all *all, char **argv);
+void	cmd_cd(t_all *all, char **argv, char **envp);
+void    cmd_env(t_all *all, char **envp);
+void    cmd_export(t_all *all, char **argv);
+void	cmd_pwd(t_all *all, char **arg, char **envp);
 void    buildin_func(t_all *all, char **arg, char **envp);
 
 #endif
