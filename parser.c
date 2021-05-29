@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/27 21:46:53 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/28 20:28:21 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ void 	arr_mem_alloc(t_all *all, int j)
 			tmp[i] = all->cmd[j].arg[i];
 			i++;
 		}
+		// сделать free all->cmd[j].arg и всех существующих строк
 		all->cmd[j].arg = tmp;
 		// free(tmp);
 		// i = 0;
@@ -95,7 +96,7 @@ void 	cmd_mem_alloc(t_all *all)
 	all->cmd_n = all->cmd_n + 1;
 	if (!all->cmd)
 	{
-		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
+ 		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 			all->cmd[0].arg_n = 1;
 			all->cmd[1].null = 1;
 	}
@@ -104,8 +105,8 @@ void 	cmd_mem_alloc(t_all *all)
 		tmp = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 		while (i < old_cmd_n)
 		{
-			tmp->arg_n = all->cmd[i].arg_n;
-			tmp->arg = all->cmd[i].arg;
+			tmp[i].arg_n = all->cmd[i].arg_n;
+			tmp[i].arg = all->cmd[i].arg;
 			i++;
 		}
 		if (all->cmd)
@@ -183,7 +184,7 @@ void	parser(char *line, t_all *all)
 		while (all->cmd[j].arg[n])
 		{
 			printf("adr = |%p|\n", all->cmd[j].arg[n]);
-			printf("str(#%i) = %s\n", n, all->cmd[j].arg[n]);
+			printf("str(#%i %i) = %s\n", j, n, all->cmd[j].arg[n]);
 			// printf("%i - %i\n", n, all->cmd[j].arg_n);
 			n++;
 		}
@@ -197,4 +198,3 @@ void	parser(char *line, t_all *all)
 	// printf("adr = |%p|\n", all->cmd[1].arg[0]);
 	// printf("str(%i) = %s\n", 0, all->cmd[1].arg[0]);
 }
-// void insert_arg(char * arg);
