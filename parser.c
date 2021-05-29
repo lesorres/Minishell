@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/29 17:44:37 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/29 19:44:04 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,6 @@
 // 		return (0);
 // 	add_char(arg, c);
 // 	return(1);
-// }
-
-// void 	arr_mem_alloc(t_all *all, int i, int n)
-// {
-// 	all->cmd[i].arg = ft_calloc(n, sizeof(char *)); //не забудь проверку на NULL
-// 	// all->cmd[i].redir = ft_calloc(all->cmd[i].arg_n, sizeof(char *)); //не забудь проверку на NULL
 // }
 
 void 	arr_mem_alloc(t_all *all, int j)
@@ -125,6 +119,23 @@ void 	cmd_mem_alloc(t_all *all)
 	}
 }
 
+void extract_cmd_name(t_all *all)
+{
+	int		i;
+	char	**tmp;
+
+	i = 0;
+	while(!all->cmd[i].null && all->cmd[i].arg)
+	{
+		all->cmd[i].name = all->cmd[i].arg[0];
+		tmp = malloc(sizeof(char *) * (all->cmd[i].arg_n - 1));
+		tmp = &all->cmd[i].arg[1];
+		free (all->cmd[i].arg);
+		all->cmd[i].arg = tmp;
+		i++;
+	}
+}
+
 void	parser(char *line, t_all *all)
 {
 	int i;					//счетчик line
@@ -157,13 +168,7 @@ void	parser(char *line, t_all *all)
 				tmp[k++] = line[i++];
 		}
 		tmp[k] = '\0';
-		if (line[i - 1] == ';')
-		{
-			j++;
-			cmd_mem_alloc(all);
-			n = 0;
-		}
-		else //здесь записываем слова в массив
+		if (tmp[0]) //здесь записываем слова в массив
 		{
 			arr_mem_alloc(all, j);
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
@@ -171,30 +176,28 @@ void	parser(char *line, t_all *all)
 			n++;
 			// all->cmd->arg_n = n;
 		}
+		if (line[i - 1] == ';')
+		{
+			j++;
+			cmd_mem_alloc(all);
+			n = 0;
+		}
 		free(tmp);
-		// int z = make_line(all->cmd[j].arg[n], line[i]);
-		// all->cmd[j].arg[n][k] = line[i];
 	}
-		// if (all->cmd_n % 3 == 0)
-		// 	cmd_mem_alloc(all);
+	// extract_cmd_name(all);
 	n = 0;
 	j = 0;
 	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
+		printf("name(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
 		while (all->cmd[j].arg[n])
 		{
-			printf("adr = |%p|\n", all->cmd[j].arg[n]);
-			printf("str(#%i %i) = %s\n", j, n, all->cmd[j].arg[n]);
+			// printf("adr       = |%p|\n", all->cmd[j].arg[n]);
+			printf("str(#%i %i) = |%s|\n\n", j, n, all->cmd[j].arg[n]);
 			// printf("%i - %i\n", n, all->cmd[j].arg_n);
 			n++;
 		}
 		j++;
 		n = 0;
 	}
-	// printf("adr = |%p|\n", all->cmd[0].arg[0]);
-	// printf("str(%i) = %s\n", 0, all->cmd[0].arg[0]);
-	// printf("adr = |%p|\n", all->cmd[0].arg[1]);
-	// printf("str(%i) = %s\n", 0, all->cmd[0].arg[1]);
-	// printf("adr = |%p|\n", all->cmd[1].arg[0]);
-	// printf("str(%i) = %s\n", 0, all->cmd[1].arg[0]);
 }
