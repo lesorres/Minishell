@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/28 20:28:21 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/29 17:44:37 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,8 +109,8 @@ void 	cmd_mem_alloc(t_all *all)
 			tmp[i].arg = all->cmd[i].arg;
 			i++;
 		}
-		if (all->cmd)
-			free(all->cmd);
+		// if (all->cmd)
+		// 	free(all->cmd);
 		all->cmd = tmp;
 		all->cmd[old_cmd_n].arg_n = 1;
 		all->cmd[all->cmd_n - 1].null = 1;
@@ -179,7 +179,7 @@ void	parser(char *line, t_all *all)
 		// 	cmd_mem_alloc(all);
 	n = 0;
 	j = 0;
-	while (!all->cmd[j].null && all->cmd[j].arg[n])
+	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		while (all->cmd[j].arg[n])
 		{
