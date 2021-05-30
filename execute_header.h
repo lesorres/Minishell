@@ -25,4 +25,6 @@ typedef struct s_termline
 	char    *hist_line;
 	char    *str;
 	char	**env_arr;
+	int		exp_line_num;
+	char	**export_arr;
 }   t_termline;

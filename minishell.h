@@ -17,6 +17,7 @@
 typedef struct s_lst
 {
 	char	*oldpwd;
+	int		export_new_arg;
 }   t_lst;
 
 typedef struct s_all
@@ -24,7 +25,7 @@ typedef struct s_all
 	char	**hist_arr;
     int     cmd_n;
     t_cmd   *cmd;
-	t_lst	*builds;
+	t_lst	builds;
 	t_termline tline;
 }				t_all;
 
