@@ -18,6 +18,7 @@ typedef struct s_lst
 {
 	char	*oldpwd;
 	int		export_new_arg;
+	int		get_env;
 }   t_lst;
 
 typedef struct s_all
@@ -41,6 +42,7 @@ int		cmd_cd(t_all *all, char **envp);
 void    cmd_env(t_all *all);
 void    cmd_export(t_all *all, char **envp);
 void	cmd_pwd(t_all *all, char **envp);
+void    get_envp(t_all *all, char **envp);
 void    buildin_func(t_all *all, char **arg, char **envp);
 
 #endif

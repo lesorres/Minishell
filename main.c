@@ -202,6 +202,7 @@ int main(int argc, char **arg, char **envp)
 	tgetent(0, TERM_NAME);
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
+	get_envp(&all, envp);
 	while (strcmp(str, "\4"))
 	{	
 		all.tline.str = malloc(1024);

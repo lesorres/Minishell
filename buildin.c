@@ -1,5 +1,19 @@
 #include "minishell.h"
 
+void		print_arr(char **args)
+{
+	int i;
+
+	i = 0;
+	while (args[i])
+	{
+		printf("%s\n", args[i]);
+		i++;
+	}
+	if (args[i] == NULL)
+		printf("<null>\n");
+}
+
 int	error_handler(char *arg1, char *arg2, int num)
 {
 	write(1, "minishell: ", PROMPT);
@@ -24,25 +38,22 @@ static int len(char **str)
 void    add_new_env_param(t_all *all, char *line)
 {
 	char	**new_arr;
-	int		line_len;;
+	int		i;;
 
 
-	line_len = len(all->tline.env_arr); // line = all->cmd[0].arg[1]
-	printf("arr_len = %i\n", line_len);
-	if(!(new_arr = calloc((line_len + 1), sizeof(char *))))
+	i = len(all->tline.env_arr); // line = all->cmd[0].arg[1]
+	// printf("arr_len = %i\n", line_len);
+	if(!(new_arr = calloc((i + 1), sizeof(char *))))
 		printf("error");
 	// new_arr[line_len] = NULL;
-	new_arr[line_len] = line;
-	int i = 0;
-	while (i < line_len)
-	{
+	new_arr[i] = NULL;
+	new_arr[--i] = line;
+	while (i--)
 		new_arr[i] = all->tline.env_arr[i];
-		i++;
-	}
 	free(all->tline.env_arr);
 	all->tline.env_arr = new_arr;
-	line_len = len(all->tline.env_arr); // line = all->cmd[0].arg[1]
-	printf("arr_len = %i\n", line_len);
+	// line_len = len(all->tline.env_arr); // line = all->cmd[0].arg[1]
+	// printf("arr_len = %i\n", line_len);
 	// free(new_arr);
 	// int	k = 0;
 	// while (all->tline.env_arr[k])
@@ -84,10 +95,10 @@ void cmd_echo(t_all *all, char **argv)
 	j = 0;
 	while (!all->cmd[0].null && all->cmd[0].arg[i])          // аргументы echo в парсере должны обрабатываться как один
 	{
-		if (!ft_strncmp(all->cmd[0].arg[i], "-n"))
+		if (!ft_strncmp(all->cmd[0].arg[1], "-n"))
 			i = 2;    
 		write(1, all->cmd[0].arg[i], ft_strlen(all->cmd[j].arg[i]));
-		if (strcmp(all->cmd[0].arg[1], "-n"))
+		if (ft_strncmp(all->cmd[0].arg[1], "-n"))
 			write(1, "\n", 1);
 		i++;
 	}
@@ -115,7 +126,7 @@ void cmd_echo(t_all *all, char **argv)
 //     return(1);
 // }
 
-void    cmd_pwd(t_all *all, char **envp)    // вроде работает все веерно???
+void    cmd_pwd(t_all *all, char **envp)    // ok???
 {
 	char    *path;
 	char    *tmp;
@@ -129,33 +140,66 @@ void    cmd_pwd(t_all *all, char **envp)    // вроде работает вс�
 
 void    sort_env(t_all *all)    //  неправильная сортировка + заполняет массив пустыми строками вместо переменных окружения
 {
-	int     i;
 	int     j;
-	char    *tmp_line;
+	int 	sort;
+	char 	*tmp;
 
-	i = 0;
-	while (i < all->tline.env_line_num - 1)
+	sort = 0;
+	while (!sort)
 	{
+		sort = 1;
 		j = 0;
-		// printf("env_arr[%d] - %s\n", i, all->tline.env_arr[i]);
-		// printf("%d\n", ft_strncmp(all->tline.env_arr[i], all->tline.env_arr[i + 1]));
-		while (j < all->tline.env_line_num - 2)
+		while (all->tline.export_arr[j + 1] != NULL)
 		{
-			if (ft_strncmp(all->tline.export_arr[i], all->tline.export_arr[i + 1]) == -1)
+			if (ft_strncmp(all->tline.export_arr[j], all->tline.export_arr[j + 1]) > 0)
 			{
-				tmp_line = malloc(sizeof(ft_strlen(all->tline.export_arr[i + 1])));
-				tmp_line = all->tline.export_arr[i + 1];
-				all->tline.export_arr[i + 1] = all->tline.export_arr[i];
-				all->tline.export_arr[i] = tmp_line;
-				free(tmp_line);
+				tmp = all->tline.export_arr[j];
+				all->tline.export_arr[j] = all->tline.export_arr[j + 1];
+				all->tline.export_arr[j + 1] = tmp;
+				sort = 0;
+				break ;
 			}
 			j++;
 		}
-		// printf("exp_arr[%d] - %s\n\n", i, all->tline.export_arr[i]);
-		i++;
 	}
-		// printf("exp_arr = 26 [%d] - %d\n", i, all->tline.export_arr[26][0]);
+	// printf("exp_arr = 26 [%d] - %d\n", i, all->tline.export_arr[26][0]);
 }
+
+// void    sort_env2(t_all *all)    //  неправильная сортировка + заполняет массив пустыми строками вместо переменных окружения
+// {
+// 	int     i;
+// 	int     j;
+// 	char    *tmp_line;
+
+// 	i = 0;
+// 	while (i < all->tline.env_line_num - 1)
+// 	{
+// 		j = 0;
+// 		// printf("env_arr[%d] - %s\n", i, all->tline.env_arr[i]);
+// 		// printf("%d\n", ft_strncmp(all->tline.env_arr[i], all->tline.env_arr[i + 1]));
+// 		while (j < all->tline.env_line_num - 2)
+// 		{
+// 			if (ft_strncmp(all->tline.export_arr[i], all->tline.export_arr[i + 1]) > 0)
+// 			{
+// 				char *tmp;
+
+// 				tmp = all->tline.export_arr[i];
+// 				all->tline.export_arr[i] = all->tline.export_arr[i + 1];
+// 				all->tline.export_arr[i + 1] = tmp;
+
+// 				// tmp_line = malloc(sizeof(ft_strlen(all->tline.export_arr[i + 1])));
+// 				// tmp_line = all->tline.export_arr[i + 1];
+// 				// all->tline.export_arr[i + 1] = all->tline.export_arr[i];
+// 				// all->tline.export_arr[i] = tmp_line;
+// 				// free(tmp_line);
+// 			}
+// 			j++;
+// 		}
+// 		// printf("exp_arr[%d] - %s\n\n", i, all->tline.export_arr[i]);
+// 		i++;
+// 	}
+// 		// printf("exp_arr = 26 [%d] - %d\n", i, all->tline.export_arr[26][0]);
+// }
 
 int	is_print_line(char *str)
 {
@@ -226,6 +270,7 @@ void	copy_env(t_all *all)
 		all->tline.export_arr[i] = ft_strdup(all->tline.env_arr[i]);
 		i++;
 	}
+	// print_arr(all->tline.export_arr);
 	// all->tline.export_arr[i] = NULL;
 }
 
@@ -236,27 +281,23 @@ void    cmd_export(t_all *all, char **envp)
 	i = 0;
 	// printf("exp_arr[i] - %s\n", *all->tline.export_arr);
 	int arr_len = len(all->tline.export_arr);
-	// printf("arr_len1 = %i\n", arr_len);
 	if (all->cmd[0].arg[1])   // проверять есть ли такая переменная окружения в массиве, если да - заменять значение
 	{
+
 		add_new_env_param(all, all->cmd[0].arg[1]);
 		all->builds.export_new_arg = 1;
 	}
 	arr_len = len(all->tline.export_arr);
-	// printf("arr_len2 = %i\n", arr_len);
-	// while (all->tline.export_arr[i])
-	// {
-	//     printf("declare -x %s\n", all->tline.export_arr[i]);
-	// 	i++;
-	// }
+	printf("arr_len2 = %i\n", arr_len);
 	copy_env(all);
-	// sort_env(all);
+	sort_env(all);
+
 	i = 0;
-	// while (all->tline.export_arr[i])
-	// {
-	//     printf("declare -x %s\n", all->tline.export_arr[i]);
-	// 	i++;
-	// }
+	while (all->tline.export_arr[i])
+	{
+	    printf("declare -x %s\n", all->tline.export_arr[i]);
+		i++;
+	}
 }
 
 int		exit_error(char *cmd, char *arg, char *error)
@@ -265,30 +306,62 @@ int		exit_error(char *cmd, char *arg, char *error)
 	return (0);
 }
 
-// void	cmd_exit(t_all *all, char **arg)
-// {
-// 	int	i;
+int		isalpha_line(char *str)
+{
+	int	c;
 
-// 	i = 2;
-// 	if (all->cmd[0].arg[i])
-// 	{
-// 		if (ft_isalpha(all->cmd[0].arg[1]))
-// 		{
-// 			exit_error(all->cmd[0].arg[0], all->cmd[0].arg[1], "numeric argument required");
-// 			exit (0);
-// 		}
-// 		else if (ft_isdigit(all->cmd[0].arg[1]))
-// 		{
-// 			if (all->cmd[0].arg[])
-// 		}
-// 			error_handler();
-// 	}
-// }
+	c = 0;
+	while ((64 < str[c] && str[c] < 91) || (96 < str[c] && str[c] < 123))
+		c++;
+	if (!ft_isalpha(str[c]))
+		return (0);
+	return (1);
+}
+
+int	isdigit_line(char *str)
+{
+	int		c;
+
+	while (47 < str[c] && str[c] < 58)
+		c++;
+	if (str[c] != ' ' || (str[c]) != '\n')
+		return (0);
+	else
+		return (1);
+}
+
+void	cmd_exit(t_all *all, char **arg)
+{
+	int	i;
+
+	i = 2;
+	if (all->cmd[0].arg[i])
+	{
+		if (isdigit_line(all->cmd[0].arg[1]))
+		{
+			if (!all->cmd[0].arg[2])
+			{
+				printf("%s\n", all->cmd[0].arg[0]);
+				exit (0);
+			}
+			else
+			{
+				write(1, "minishell: ", PROMPT);
+				printf("%s\n", all->cmd[0].arg[0]);
+				printf("%s: %s: \n", all->cmd[0].arg[0], "too many arguments");
+			}
+		}
+		else //if (isalpha_line(all->cmd[0].arg[1]))
+		{
+			exit_error(all->cmd[0].arg[0], all->cmd[0].arg[1], "numeric argument required");
+			exit (0);
+		}
+	}
+}
 
 void    buildin_func(t_all *all, char **arg, char **envp)
 {
 	all->builds.export_new_arg = 0;
-	get_envp(all, envp);
 	if (!strcmp(all->cmd[0].arg[0], "cd"))
 		cmd_cd(all, envp);
 	else if (!strcmp(all->cmd[0].arg[0], "echo"))
@@ -303,6 +376,6 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	}
 	else if (!strcmp(all->cmd[0].arg[0], "env"))
 		cmd_env(all);
-	// else if (strcmp(all->cmd->arg[0], "exit"))
-	//     cmd_exit(all, arg);
+	else if (strcmp(all->cmd->arg[0], "exit"))
+	    cmd_exit(all, arg);
 }
