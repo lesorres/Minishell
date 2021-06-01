@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/01 19:29:30 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/01 21:09:38 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,13 +45,25 @@
 // 	return(1);
 // }
 
+void free_arr(char ***arr)
+{
+	int	i;
+	
+	i = 0;
+	while ((*arr)[i])
+	{
+		free((*arr)[i]);
+		(*arr)[i++] = NULL;
+	}
+}
+
 void print_parsed_string(t_all *all)
 {
 	int n = 0;
 	int j = 0;
 	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
-		// printf("name(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
+		printf("name(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
 		while (all->cmd[j].arg[n])
 		{
 			// printf("adr       = |%p|\n", all->cmd[j].arg[n]);
@@ -59,9 +71,11 @@ void print_parsed_string(t_all *all)
 			// printf("%i - %i\n", n, all->cmd[j].arg_n);
 			n++;
 		}
+		printf("arg_n = %i\n", all->cmd[j].arg_n);
 		j++;
 		n = 0;
 	}
+	printf("cmd_n = %i", all->cmd_n);
 }
 
 void error(char *str)
@@ -114,7 +128,7 @@ void 	cmd_mem_alloc(t_all *all)
 	all->cmd_n = all->cmd_n + 1;
 	if (!all->cmd)
 	{
- 		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
+		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 			all->cmd[0].arg_n = 1;
 			all->cmd[1].null = 1;
 	}
@@ -136,20 +150,26 @@ void 	cmd_mem_alloc(t_all *all)
 	}
 }
 
-void extract_cmd_name(t_all *all)
+void extract_cmd_name(t_all *all) //утечек нет (вроде бы)
 {
+	int		j;
 	int		i;
 	char	**tmp;
 
-	i = 0;
-	while(!all->cmd[i].null && all->cmd[i].arg)
+	j = 0;
+	while(!all->cmd[j].null && all->cmd[j].arg)
 	{
-		all->cmd[i].name = all->cmd[i].arg[0];
-		tmp = malloc(sizeof(char *) * (all->cmd[i].arg_n - 1));
-		tmp = &all->cmd[i].arg[1];
-		free (all->cmd[i].arg);
-		all->cmd[i].arg = tmp;
-		i++;
+		i = 0;
+		all->cmd[j].name = all->cmd[j].arg[0];
+		tmp = ft_calloc((all->cmd[j].arg_n - 1), sizeof(char *));
+		while (all->cmd[j].arg[i + 1])
+		{
+			tmp[i] = all->cmd[j].arg[i + 1];
+			i++;
+		}
+		free (all->cmd[j].arg);
+		all->cmd[j].arg = tmp;
+		j++;
 	}
 }
 
@@ -175,25 +195,6 @@ void	parser(char *line, t_all *all)
 		while (line[i] == ' ')
 			i++;
 		tmp = malloc(line_len);
-		// v1
-		// if (line[i] == ';' && all->cmd->dq_fl == 0 && all->cmd->sq_fl == 0)
-		// 	i++;
-		// else
-		// {
-		// 	while (line[i] != ' ' && line[i] && line[i] != ';')
-		// 		tmp[k++] = line[i++];
-		// 	tmp[k] = '\0';
-		// }
-		// v2
-		// while (line[i] != ' ' && line[i] && line[i] != ';')
-		// {
-		// 		tmp[k++] = line[i++];
-		// }
-		// if (line[i] == ';')
-		// {
-		// 	i++;
-		// }
-		// v3
 		while (line[i] != ' ' && line[i])
 		{
 			if (line[i] == ';')
@@ -225,6 +226,6 @@ void	parser(char *line, t_all *all)
 		}
 		free(tmp);
 	}
-	// extract_cmd_name(all);
+	extract_cmd_name(all);
 	print_parsed_string(all);
 }
