@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:13:59 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/29 18:45:43 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/05/31 20:49:36 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ typedef struct	s_cmd
 	char	**arg;
 	// char	**redir;
 	// int		echo_n;
-	// int		doub;
-	// int		sing;
 	int null;
+	int dq_fl;
+	int sq_fl;
 }				t_cmd;
 
 #endif

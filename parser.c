@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/29 19:44:04 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/01 19:29:30 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,30 @@
 // 	return(1);
 // }
 
+void print_parsed_string(t_all *all)
+{
+	int n = 0;
+	int j = 0;
+	while (!all->cmd[j].null && all->cmd[j].arg)
+	{
+		// printf("name(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
+		while (all->cmd[j].arg[n])
+		{
+			// printf("adr       = |%p|\n", all->cmd[j].arg[n]);
+			printf("str(#%i %i) = |%s|\n\n", j, n, all->cmd[j].arg[n]);
+			// printf("%i - %i\n", n, all->cmd[j].arg_n);
+			n++;
+		}
+		j++;
+		n = 0;
+	}
+}
+
+void error(char *str)
+{
+	printf("%s\n", str);
+	exit(1);
+}
 void 	arr_mem_alloc(t_all *all, int j)
 {
 	int		i;
@@ -109,13 +133,6 @@ void 	cmd_mem_alloc(t_all *all)
 		all->cmd[old_cmd_n].arg_n = 1;
 		all->cmd[all->cmd_n - 1].null = 1;
 		all->cmd[old_cmd_n].null = 0;
-		// i = 0;
-		// while (old_cmd_n < all->cmd_n)
-		// {
-		// 	all->cmd[old_cmd_n].arg_n = 0;
-		// 	arr_mem_alloc (all, old_cmd_n);
-		// 	old_cmd_n++;
-		// }
 	}
 }
 
@@ -149,7 +166,7 @@ void	parser(char *line, t_all *all)
 	j = 0;
 	n = 0;
 	all->cmd_n = 1;
-	line = ft_strtrim(line, " ");
+	// line = ft_strtrim(line, " ");
 	line_len = ft_strlen(line);
 	cmd_mem_alloc(all);
 	while(line[i])
@@ -158,11 +175,31 @@ void	parser(char *line, t_all *all)
 		while (line[i] == ' ')
 			i++;
 		tmp = malloc(line_len);
+		// v1
+		// if (line[i] == ';' && all->cmd->dq_fl == 0 && all->cmd->sq_fl == 0)
+		// 	i++;
+		// else
+		// {
+		// 	while (line[i] != ' ' && line[i] && line[i] != ';')
+		// 		tmp[k++] = line[i++];
+		// 	tmp[k] = '\0';
+		// }
+		// v2
+		// while (line[i] != ' ' && line[i] && line[i] != ';')
+		// {
+		// 		tmp[k++] = line[i++];
+		// }
+		// if (line[i] == ';')
+		// {
+		// 	i++;
+		// }
+		// v3
 		while (line[i] != ' ' && line[i])
 		{
 			if (line[i] == ';')
 			{
 				i++;
+				break;
 			}
 			else
 				tmp[k++] = line[i++];
@@ -178,6 +215,10 @@ void	parser(char *line, t_all *all)
 		}
 		if (line[i - 1] == ';')
 		{
+			if (line[i] == ';')
+				error("syntax error near unexpected token `;;'");
+			if (all->cmd[j].arg == NULL)
+				error("syntax error near unexpected token `;'");
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
@@ -185,19 +226,5 @@ void	parser(char *line, t_all *all)
 		free(tmp);
 	}
 	// extract_cmd_name(all);
-	n = 0;
-	j = 0;
-	while (!all->cmd[j].null && all->cmd[j].arg)
-	{
-		printf("name(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
-		while (all->cmd[j].arg[n])
-		{
-			// printf("adr       = |%p|\n", all->cmd[j].arg[n]);
-			printf("str(#%i %i) = |%s|\n\n", j, n, all->cmd[j].arg[n]);
-			// printf("%i - %i\n", n, all->cmd[j].arg_n);
-			n++;
-		}
-		j++;
-		n = 0;
-	}
+	print_parsed_string(all);
 }
