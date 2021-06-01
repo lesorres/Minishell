@@ -30,19 +30,21 @@ typedef struct s_all
 	t_termline tline;
 }				t_all;
 
-int		ft_strcmp(char *s1, char *s2);
 int		ft_putchar(char c);
 char	*read_line(int fd);
+int 	len(char **str);
 void	parser(char *line, t_all *all);
 
 /*  buildin commands  */
 
-void	cmd_echo(t_all *all, char **argv);
+void    buildin_func(t_all *all, char **arg, char **envp);
 int		cmd_cd(t_all *all, char **envp);
+void	cmd_echo(t_all *all, char **argv);
 void    cmd_env(t_all *all);
 void    cmd_export(t_all *all, char **envp);
 void	cmd_pwd(t_all *all, char **envp);
+void	cmd_exit(t_all *all, char **arg);
+void    add_new_env_param(t_all *all, char *line);
 void    get_envp(t_all *all, char **envp);
-void    buildin_func(t_all *all, char **arg, char **envp);
 
 #endif
