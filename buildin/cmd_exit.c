@@ -1,16 +1,16 @@
 #include "../minishell.h"
 
-int		exit_error(t_all *all, char *cmd, char *arg)
+int		exit_error(t_all *all, char *cmd, char *arg, int k)
 {
-	printf("%s\n", all->cmd[0].arg[0]);
+	printf("%s\n", all->cmd[k].name);
 	write(1, "minishell: ", PROMPT);
-	printf("%s: %s: %s:\n", cmd, arg, "numeric argument required");
+	printf("%s: %s: %s\n", cmd, arg, "numeric argument required");
 	return (0);
 }
 
-void	print_exit(t_all *all)
+void	print_exit(t_all *all, int k)
 {
-	printf("%s\n", all->cmd[0].arg[0]);
+	printf("%s\n", all->cmd[k].name);
 	exit (0);
 }
 
@@ -29,27 +29,27 @@ int	isdigit_line(char *str)
 	return (1);
 }
 
-void	cmd_exit(t_all *all, char **arg)
+void	cmd_exit(t_all *all, char **arg, int k)
 {
-	if (all->cmd[0].arg[1])
+	if (all->cmd[k].arg[0])
 	{
-		if (isdigit_line(all->cmd[0].arg[1]))
+		if (isdigit_line(all->cmd[k].arg[0]))
 		{
-			if (!all->cmd[0].arg[2])
-				print_exit(all);
+			if (!all->cmd[k].arg[1])
+				print_exit(all, k);
 			else
 			{
-                printf("%s\n", all->cmd[0].arg[0]);
+                printf("%s\n", all->cmd[k].name);
 				write(1, "minishell: ", PROMPT);
-				printf("%s: %s \n", all->cmd[0].arg[0], "too many arguments");
+				printf("%s: %s \n", all->cmd[k].name, "too many arguments");
 			}
 		}
 		else
 		{
-			exit_error(all, all->cmd[0].arg[0], all->cmd[0].arg[1]);
+			exit_error(all, all->cmd[k].name, all->cmd[k].arg[0], k);
 			exit (0);
 		}
 	}
 	else
-		print_exit(all);
+		print_exit(all, k);
 }
