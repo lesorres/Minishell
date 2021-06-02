@@ -1,18 +1,16 @@
 #include "../minishell.h"
 
-void cmd_echo(t_all *all, char **argv)
+void cmd_echo(t_all *all, char **argv, int k)
 {
 	int     i;
-	int     j;
 	
-	i = 1;
-	j = 0;
-	while (!all->cmd[0].null && all->cmd[0].arg[i])          // аргументы echo в парсере должны обрабатываться как один
+	i = 0;
+	while (!all->cmd[k].null && all->cmd[k].arg[i])          // аргументы echo в парсере должны обрабатываться как один
 	{
-		if (!ft_strncmp(all->cmd[0].arg[1], "-n"))
-			i = 2;    
-		write(1, all->cmd[0].arg[i], ft_strlen(all->cmd[j].arg[i]));
-		if (ft_strncmp(all->cmd[0].arg[1], "-n"))
+		if (!ft_strncmp(all->cmd[k].arg[0], "-n"))
+			i = 1;    
+		write(1, all->cmd[k].arg[i], ft_strlen(all->cmd[k].arg[i]));
+		if (ft_strncmp(all->cmd[k].arg[0], "-n"))
 			write(1, "\n", 1);
 		i++;
 	}
