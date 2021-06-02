@@ -45,23 +45,26 @@ void    sort_env(t_all *all)
 	}
 }
 
-void    cmd_export(t_all *all, char **envp)
+void	check_val(t_all *all, char *line)
+{
+	
+}
+
+void    cmd_export(t_all *all, int k)
 {
 	int i;
     int arr_len;
 	
 	i = 0;
 	arr_len = len(all->tline.export_arr);
-	if (all->cmd[0].arg[1])
+	if (all->cmd[k].arg[0])
 	{
         // проверять есть ли такая переменная окружения в массиве, если да - заменять значение
-		add_new_env_param(all, all->cmd[0].arg[1]);
-		all->builds.export_new_arg = 1;
+		add_new_env_param(all, all->cmd[k].arg[0]);
 	}
 	arr_len = len(all->tline.export_arr);
 	copy_env(all);
 	sort_env(all);
-	i = 0;
 	while (all->tline.export_arr[i])
 	{
 	    printf("declare -x %s\n", all->tline.export_arr[i]);
