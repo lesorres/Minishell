@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/01 21:19:51 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/02 21:24:10 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,7 @@ void extract_cmd_name(t_all *all) //утечек нет (вроде бы)
 	char	**tmp;
 
 	j = 0;
-	while(!all->cmd[j].null && all->cmd[j].arg)
+	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		i = 0;
 		all->cmd[j].name = all->cmd[j].arg[0];
@@ -167,10 +167,35 @@ void extract_cmd_name(t_all *all) //утечек нет (вроде бы)
 			tmp[i] = all->cmd[j].arg[i + 1];
 			i++;
 		}
-		free (all->cmd[j].arg);
+		free(all->cmd[j].arg);
 		all->cmd[j].arg = tmp;
 		j++;
 	}
+}
+
+int		quotes_flags_switch(t_all *all, char *line, int i, int j)
+{
+	if (line[i] == '\'' && !all->cmd[j].sq_fl && !all->cmd[j].dq_fl)
+	{
+		all->cmd[j].sq_fl = 1;
+		i++;
+	}
+	else if ((line[i] == '\"' && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl))
+	{
+		all->cmd[j].dq_fl = 1;
+		i++;
+	}
+	else if (line[i] == '\'' && all->cmd[j].sq_fl)
+	{
+		all->cmd[j].sq_fl = 0;
+		i++;
+	}
+	else if (line[i] == '\"' && all->cmd[j].dq_fl)
+	{
+		all->cmd[j].dq_fl = 0;
+		i++;
+	}
+	return	(i);
 }
 
 void	parser(char *line, t_all *all)
@@ -192,10 +217,11 @@ void	parser(char *line, t_all *all)
 	while(line[i])
 	{
 		k = 0;
-		while (line[i] == ' ')
+		while (line[i] == ' ' && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
 			i++;
+		i = quotes_flags_switch(all, line, i, j);
 		tmp = malloc(line_len);
-		while (line[i] != ' ' && line[i])
+		while (line[i] != ' ' && line[i] && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
 		{
 			if (line[i] == ';')
 			{
@@ -205,6 +231,8 @@ void	parser(char *line, t_all *all)
 			else
 				tmp[k++] = line[i++];
 		}
+		while (line[i] && (all->cmd[j].dq_fl || all->cmd[j].sq_fl))
+				tmp[k++] = line[i++];
 		tmp[k] = '\0';
 		if (tmp[0]) //здесь записываем слова в массив
 		{
@@ -214,7 +242,7 @@ void	parser(char *line, t_all *all)
 			n++;
 			// all->cmd->arg_n = n;
 		}
-		if (line[i - 1] == ';')
+		if (line[i - 1] == ';' && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
 		{
 			if (line[i] == ';')
 				error("syntax error near unexpected token `;;'");
