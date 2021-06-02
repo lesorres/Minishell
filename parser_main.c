@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/01 21:10:15 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/02 21:49:30 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main()
 	char *str;
 	t_all all;
 
-	str = ft_strdup("    a s d f ;   f f f g g fdf cv ;dfdf dfd ggfg;d;");
+	str = ft_strdup("export \"qw=ert\"=trewq");
 	parser(str, &all);
 	// free (str);
 	// printf("%s", all.cmd.s_cmd[0].arg[1]);
