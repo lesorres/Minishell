@@ -17,7 +17,7 @@ void    get_envp(t_all *all, char **envp)  // ок
 	all->tline.env_arr[line] = NULL;
 }
 
-void    cmd_env(t_all *all)
+void    cmd_env(t_all *all, int k)
 {
 	int     i;
 
