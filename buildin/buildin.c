@@ -41,21 +41,27 @@ void    add_new_env_param(t_all *all, char *line)
 	all->tline.env_arr = new_arr;
 }
 
-void    buildin_func(t_all *all, char **arg, char **envp)
+void    buildin_func(t_all *all, char **arg, char **envp)   //как-то нужно проверять команды, которые не cmd[0] !?!?!?!?!?!
 {
-	all->builds.export_new_arg = 0;
-	if (!strcmp(all->cmd[0].arg[0], "cd"))
-		cmd_cd(all, envp);
-	else if (!strcmp(all->cmd[0].arg[0], "echo"))
-		cmd_echo(all, arg);
-	if (!strcmp(all->cmd[0].arg[0], "pwd"))
-		cmd_pwd(all, envp);
-	else if (!strcmp(all->cmd[0].arg[0], "export"))
-		cmd_export(all, envp);
-	// else if (strcmp(all->cmd->arg[0], "unset "))
-	//     cmd_unset(all, arg, envp);
-	else if (!strcmp(all->cmd[0].arg[0], "env"))
-		cmd_env(all);
-	else if (!strcmp(all->cmd->arg[0], "exit"))
-	    cmd_exit(all, arg);
+	int i;
+
+	i = 0;
+	while (!all->cmd[i].null && all->cmd[i].arg)
+	{
+		if (!strcmp(all->cmd[i].name, "cd"))
+			cmd_cd(all, envp, i);
+		else if (!strcmp(all->cmd[i].name, "echo"))
+			cmd_echo(all, arg, i);
+		else if (!strcmp(all->cmd[i].name, "pwd"))
+			cmd_pwd(all, envp);
+		else if (!strcmp(all->cmd[i].name, "export"))
+			cmd_export(all, i);
+		else if (strcmp(all->cmd[i].name, "unset"))
+		    cmd_unset(all, i);
+		else if (!strcmp(all->cmd[i].name, "env"))
+			cmd_env(all, i);
+		else if (!strcmp(all->cmd[i].name, "exit"))
+		    cmd_exit(all, arg, i);
+		i++;
+	}
 }
