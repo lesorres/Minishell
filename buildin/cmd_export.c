@@ -50,40 +50,35 @@ int		check_env(t_all *all, char *line, int k)
 	int 	i;
 	int		j;
 	int		dif;
-	char	*env_tmp;
-	int		num;
 
 	i = 0;
+	char	*env_tmp;
 	while (all->tline.env_arr[i])
 	{
 		j = ft_strchr_int(all->tline.env_arr[i], '=');
 		if (j == 0)
 			j = ft_strlen(all->tline.env_arr[i]);
 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
-			printf("[i] ----- %d ft_strncmp ===== %d\n", i, strcmp(env_tmp, all->tline.replaced_str));
-			num = ft_strlen(all->tline.replaced_str);
-			printf("replaced str -------= |%s|\n", all->tline.replaced_str);
-			printf("env_arr str -------= |%s|\n", all->tline.env_arr[i]);
-			printf("lelem of replaced string ---- %d\n", (int)all->tline.replaced_str[num - 1]);
-			printf("last elem of replaced string ---- %d\n", (int)all->tline.replaced_str[num]);
 		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
 		{
-			// free (all->tline.env_arr[i]);
-			// printf("\nenv_tmp ------ |%s|\n", env_tmp);
 			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-			// all->tline.env_arr[i] = malloc(sizeof(ft_strlen(line)));
 			ft_strcpy(all->tline.env_arr[i], line);
 			free (env_tmp);
 			return (1);
 		}
-			num = ft_strlen(all->tline.env_arr[i]);
-			printf("elem env+arr ---- %d\n", (int)all->tline.env_arr[i][num - 1]);
-			printf("last elem env+arr ---- %d\n\n", (int)all->tline.env_arr[i][num]);
 		i++;
 	}
 	return (0);
-		// printf("\n\nreplaced str -------= |%s|\n", all->tline.replaced_str);
-		// printf("\nenv_tmp ------ |%s|\n", env_tmp);
+}
+
+int		find_equal_sign(char *line)
+{
+	int		j;
+
+	j = ft_strchr_int(line, '=');
+	if (j == 0)
+		j = ft_strlen(line);
+	return (j);
 }
 
 int		check_val(t_all *all, char *line, int k)
@@ -91,18 +86,32 @@ int		check_val(t_all *all, char *line, int k)
 	char	*tmp;
 	int		i;
 	int		j;
-	int		len;
 
 	i = 0;
-	j = ft_strchr_int(line, '=');
-	if (j == 0)
-		j = ft_strlen(line);
+	// j = ft_strchr_int(line, '=');
+	// if (j == 0)
+	// 	j = ft_strlen(line);
+	j = find_equal_sign(line);
 	tmp = ft_substr(line, 0, j);
-	len  = ft_strlen(line) - j;
-	all->tline.replaced_val = malloc(sizeof(len));
-	all->tline.replaced_val = ft_substr(line, j, len);
 	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
 	all->tline.replaced_str = tmp;
+	char	*env_tmp;
+	while (all->tline.env_arr[i])
+	{
+		// j = ft_strchr_int(all->tline.env_arr[i], '=');
+		// if (j == 0)
+		// 	j = ft_strlen(all->tline.env_arr[i]);
+		j = find_equal_sign(all->tline.env_arr[i]);
+		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
+		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
+		{
+			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
+			ft_strcpy(all->tline.env_arr[i], line);
+			free (env_tmp);
+			return (1);
+		}
+		i++;
+	}
 	// int num = ft_strlen(all->tline.replaced_str);
 	// printf("last elem of replaced string ---- %d\n", (int)all->tline.replaced_str[num]);
 	// while (all->tline.env_arr[i])
@@ -122,9 +131,8 @@ int		check_val(t_all *all, char *line, int k)
 	// }
 	// return (0);
 	// printf("\n\ntmp = |%s|\n", all->tline.replaced_str);
-	// printf("\n\nthis isn't tmp = |%s|\n", all->tline.replaced_val);
-	if (check_env(all, line, k) == 1)
-		return (1);
+	// if (check_env(all, line, k) == 1)
+	// 	return (1);
 	return (0);
 }
 
