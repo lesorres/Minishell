@@ -46,6 +46,7 @@ void    buildin_func(t_all *all, char **arg, char **envp)   //как-то нуж
 	int i;
 
 	i = 0;
+			// printf("%s\n", all->cmd[i].name);
 	while (!all->cmd[i].null && all->cmd[i].arg)
 	{
 		if (!strcmp(all->cmd[i].name, "cd"))

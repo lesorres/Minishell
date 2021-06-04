@@ -28,4 +28,5 @@ typedef struct s_termline
 	int		exp_line_num;
 	char	**export_arr;
 	char	*replaced_str;
+	char	*replaced_val;
 }   t_termline;
