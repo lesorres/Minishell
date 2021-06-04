@@ -1,12 +1,12 @@
 #include "../minishell.h"
 
-int	error_handler(char *arg1, char *arg2, int num)
+int	error_handler(char *arg1, char *arg2, char *err)
 {
 	write(1, "minishell: ", PROMPT);
-	if (num == 2)
-		printf("%s: %s: %s\n", arg1, arg2, "No such file or directory");
-	else if (num == 20)
-		printf("%s: %s: %s\n", arg1, arg2, "Not a directory");
+	// if (num == 2)
+	printf("%s: %s: %s\n", arg1, arg2, err);
+	// else if (num == 20)
+	// 	printf("%s: %s: %s\n", arg1, arg2, err);
 	return(1);
 }
 
@@ -21,10 +21,7 @@ int cmd_cd(t_all *all, char **envp, int k)
 	if (all->cmd[k].arg[0] && ft_strncmp(all->cmd[k].arg[0], "."))
 	{
 		if (chdir(all->cmd[k].arg[0]) == -1)
-		{
-			error_num = errno;
-			error_handler(all->cmd[k].arg[0], all->cmd[k].arg[0], error_num);
-		}
+			error_handler(all->cmd[k].name, all->cmd[k].arg[0], strerror(errno));
 	}
 	else if (!all->cmd[k].arg[0] || !ft_strncmp(all->cmd[k].arg[0], "."))
 	{
