@@ -56,7 +56,7 @@ void    buildin_func(t_all *all, char **arg, char **envp)   //как-то нуж
 			cmd_pwd(all, envp);
 		else if (!strcmp(all->cmd[i].name, "export"))
 			cmd_export(all, i);
-		else if (strcmp(all->cmd[i].name, "unset"))
+		else if (!strcmp(all->cmd[i].name, "unset"))
 		    cmd_unset(all, i);
 		else if (!strcmp(all->cmd[i].name, "env"))
 			cmd_env(all, i);
