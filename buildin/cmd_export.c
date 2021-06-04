@@ -45,31 +45,31 @@ void    sort_env(t_all *all)
 	}
 }
 
-int		check_env(t_all *all, char *line, int k)
-{
-	int 	i;
-	int		j;
-	int		dif;
+// int		check_env(t_all *all, char *line, int k)
+// {
+// 	int 	i;
+// 	int		j;
+// 	int		dif;
 
-	i = 0;
-	char	*env_tmp;
-	while (all->tline.env_arr[i])
-	{
-		j = ft_strchr_int(all->tline.env_arr[i], '=');
-		if (j == 0)
-			j = ft_strlen(all->tline.env_arr[i]);
-		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
-		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
-		{
-			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-			ft_strcpy(all->tline.env_arr[i], line);
-			free (env_tmp);
-			return (1);
-		}
-		i++;
-	}
-	return (0);
-}
+// 	i = 0;
+// 	char	*env_tmp;
+// 	while (all->tline.env_arr[i])
+// 	{
+// 		j = ft_strchr_int(all->tline.env_arr[i], '=');
+// 		if (j == 0)
+// 			j = ft_strlen(all->tline.env_arr[i]);
+// 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
+// 		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
+// 		{
+// 			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
+// 			ft_strcpy(all->tline.env_arr[i], line);
+// 			free (env_tmp);
+// 			return (1);
+// 		}
+// 		i++;
+// 	}
+// 	return (0);
+// }
 
 int		find_equal_sign(char *line)
 {
@@ -88,9 +88,6 @@ int		check_val(t_all *all, char *line, int k)
 	int		j;
 
 	i = 0;
-	// j = ft_strchr_int(line, '=');
-	// if (j == 0)
-	// 	j = ft_strlen(line);
 	j = find_equal_sign(line);
 	tmp = ft_substr(line, 0, j);
 	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
@@ -98,9 +95,6 @@ int		check_val(t_all *all, char *line, int k)
 	char	*env_tmp;
 	while (all->tline.env_arr[i])
 	{
-		// j = ft_strchr_int(all->tline.env_arr[i], '=');
-		// if (j == 0)
-		// 	j = ft_strlen(all->tline.env_arr[i]);
 		j = find_equal_sign(all->tline.env_arr[i]);
 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
 		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
@@ -112,27 +106,6 @@ int		check_val(t_all *all, char *line, int k)
 		}
 		i++;
 	}
-	// int num = ft_strlen(all->tline.replaced_str);
-	// printf("last elem of replaced string ---- %d\n", (int)all->tline.replaced_str[num]);
-	// while (all->tline.env_arr[i])
-	// {
-	// 	j = ft_strchr_int(all->tline.env_arr[i], '=');
-	// 	tmp = ft_substr(all->tline.env_arr[i], 0, j);
-	// 	if (strcmp(tmp, all->tline.replaced_str) == 0)
-	// 	{
-	// 		// free (all->tline.env_arr[i]);
-	// 		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-	// 		// all->tline.env_arr[i] = ft_realloc(sizeof(ft_strlen(line)));
-	// 		ft_strcpy(all->tline.env_arr[i], line);
-	// 		free (tmp);
-	// 		return (1);
-	// 	}
-	// 	i++;
-	// }
-	// return (0);
-	// printf("\n\ntmp = |%s|\n", all->tline.replaced_str);
-	// if (check_env(all, line, k) == 1)
-	// 	return (1);
 	return (0);
 }
 
@@ -147,7 +120,6 @@ void    cmd_export(t_all *all, int k)
 	arr_len = len(all->tline.export_arr);
 	while (all->cmd[k].arg[j])
 	{
-		printf("args[%d] ---- |%s|\n", j, all->cmd[k].arg[j]);
 		if (!check_val(all, all->cmd[k].arg[j], k))      // проверять есть ли такая переменная окружения в массиве, если да - заменять значение
 			add_new_env_param(all, all->cmd[k].arg[j]);
 		j++;
