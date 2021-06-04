@@ -6,7 +6,7 @@
 /*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/04 20:49:46 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/05/29 13:30:02 by fhyman           ###   ########.fr       */
+/*   Updated: 2021/06/04 19:17:28 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ char				*ft_strrchr(const char *s, int c);
 char				*ft_strnstr(const char *haystack, const char *needle, \
 size_t len);
 int					ft_strncmp(const char *s1, const char *s2);
+int					ft_strchr_int(const char *str, int c);
 int					ft_strcmp(char *s1, char *s2);
 int					ft_isalpha(int c);
 int					ft_isdigit(int c);
