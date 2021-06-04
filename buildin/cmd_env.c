@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void    get_envp(t_all *all, char **envp)  // ок
+void    get_envp(t_all *all, char **envp)
 {
 	int     line;
 	
@@ -8,7 +8,7 @@ void    get_envp(t_all *all, char **envp)  // ок
 	line = 0;
 	while (envp[all->tline.env_line_num])
 		all->tline.env_line_num++;
-	all->tline.env_arr = (char **)malloc(sizeof(char *) * (all->tline.env_line_num));
+	all->tline.env_arr = (char **)malloc(sizeof(char *) * (all->tline.env_line_num + 1));
 	while (line < all->tline.env_line_num)
 	{
 		all->tline.env_arr[line] = ft_strdup(envp[line]);
@@ -24,7 +24,7 @@ void    cmd_env(t_all *all, int k)
 	i = 0;
 	while (all->tline.env_arr[i])
 	{
-		printf("%s\n", all->tline.env_arr[i]);
+		printf("i = %d env = %s\n", i, all->tline.env_arr[i]);
 		i++;
 	}
 }
