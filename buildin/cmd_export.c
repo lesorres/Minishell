@@ -16,7 +16,6 @@ void	copy_env(t_all *all)
 		all->tline.export_arr[i] = ft_strdup(all->tline.env_arr[i]);
 		i++;
 	}
-	// all->tline.export_arr[i] = NULL;
 }
 
 void    sort_env(t_all *all)
@@ -60,12 +59,12 @@ int		check_env(t_all *all, char *line, int k)
 		if (j == 0)
 			j = ft_strlen(all->tline.env_arr[i]);
 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
-			printf("[i] ----- %d ft_strncmp ===== %d\n", i, strcmp(env_tmp, all->tline.replaced_str));
+			// printf("[i] ----- %d ft_strncmp ===== %d\n", i, strcmp(env_tmp, all->tline.replaced_str));
 			num = ft_strlen(all->tline.replaced_str);
-			printf("replaced str -------= |%s|\n", all->tline.replaced_str);
-			printf("env_arr str -------= |%s|\n", all->tline.env_arr[i]);
-			printf("lelem of replaced string ---- %d\n", (int)all->tline.replaced_str[num - 1]);
-			printf("last elem of replaced string ---- %d\n", (int)all->tline.replaced_str[num]);
+			// printf("replaced str -------= |%s|\n", all->tline.replaced_str);
+			// printf("env_arr str -------= |%s|\n", all->tline.env_arr[i]);
+			// printf("lelem of replaced string ---- %d\n", (int)all->tline.replaced_str[num - 1]);
+			// printf("last elem of replaced string ---- %d\n", (int)all->tline.replaced_str[num]);
 		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
 		{
 			// free (all->tline.env_arr[i]);
@@ -77,8 +76,8 @@ int		check_env(t_all *all, char *line, int k)
 			return (1);
 		}
 			num = ft_strlen(all->tline.env_arr[i]);
-			printf("elem env+arr ---- %d\n", (int)all->tline.env_arr[i][num - 1]);
-			printf("last elem env+arr ---- %d\n\n", (int)all->tline.env_arr[i][num]);
+			// printf("elem env+arr ---- %d\n", (int)all->tline.env_arr[i][num - 1]);
+			// printf("last elem env+arr ---- %d\n\n", (int)all->tline.env_arr[i][num]);
 		i++;
 	}
 	return (0);
@@ -98,9 +97,9 @@ int		check_val(t_all *all, char *line, int k)
 	if (j == 0)
 		j = ft_strlen(line);
 	tmp = ft_substr(line, 0, j);
-	len  = ft_strlen(line) - j;
-	all->tline.replaced_val = malloc(sizeof(len));
-	all->tline.replaced_val = ft_substr(line, j, len);
+	len  = ft_strlen(line) - (j + 1);
+	all->tline.replaced_val = malloc(sizeof(len - 1));
+	all->tline.replaced_val = ft_substr(line, (j + 1), len);
 	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
 	all->tline.replaced_str = tmp;
 	// int num = ft_strlen(all->tline.replaced_str);
@@ -121,8 +120,8 @@ int		check_val(t_all *all, char *line, int k)
 	// 	i++;
 	// }
 	// return (0);
-	// printf("\n\ntmp = |%s|\n", all->tline.replaced_str);
-	// printf("\n\nthis isn't tmp = |%s|\n", all->tline.replaced_val);
+	printf("\n\ntmp = |%s|\n", all->tline.replaced_str);
+	printf("\n\nthis isn't tmp = |%s|\n", all->tline.replaced_val);
 	if (check_env(all, line, k) == 1)
 		return (1);
 	return (0);
