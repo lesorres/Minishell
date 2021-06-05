@@ -77,49 +77,27 @@ int		find_equal_sign(t_all *all, char *line)
 	int		cmp;
 
 	j = ft_strchr_int(line, '=');
-	// printf("first j ----------- %d\n", j);
 	cmp = ft_strlen(line) - 1;
-	// printf("cmp ------ %d\n", cmp);
-	if (j == cmp)
-	{
-		all->tline.equal_sign = 0;
-		// printf("equal sing # %d\n", j);
-	}
 	if (j == 0)
 	{
+		all->tline.equal_sign = 0;
 		j = ft_strlen(line);
 	}
+	else if (j == cmp)
+		all->tline.equal_sign = 1;
 	return (j);
 }
 
-int		check_val(t_all *all, char *line, int k)
+int		find_env_equal(t_all *all, char *line)
 {
-	char	*tmp;
-	int		i;
 	int		j;
+	int		cmp;
 
-	i = 0;
-	all->tline.equal_sign = -1;
-	j = find_equal_sign(all, line);
-	// printf("this is num of = ----- %d\n\n\n", all->tline.equal_sign);
-	tmp = ft_substr(line, 0, j);
-	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
-	all->tline.replaced_str = tmp;
-	char	*env_tmp;
-	while (all->tline.env_arr[i])
-	{
-		j = find_equal_sign(all, all->tline.env_arr[i]);
-		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
-		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
-		{
-			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-			ft_strcpy(all->tline.env_arr[i], line);
-			free (env_tmp);
-			return (1);
-		}
-		i++;
-	}
-	return (0);
+	j = ft_strchr_int(line, '=');
+	cmp = ft_strlen(line) - 1;
+	if (j == 0)
+		j = ft_strlen(line);
+	return (j);
 }
 
 char	*add_quotes(t_all *all, char *line)
@@ -127,18 +105,68 @@ char	*add_quotes(t_all *all, char *line)
 	char	*tmp;
 	int 	len;
 
-	len = ft_strlen(line) + 3;
+	if (all->tline.equal_sign == 1)
+		len = ft_strlen(line) + 3;
+	else 
+	if (all->tline.equal_sign == 0)
+		len = ft_strlen(line) + 4;
 	tmp = malloc(sizeof(len));
-	tmp = ft_strjoin(line, "''");
+	if (all->tline.equal_sign == 1)
+		tmp = ft_strjoin(line, "''");
+	else if (all->tline.equal_sign == 0)
+		tmp = ft_strjoin(line, "=''");
 	tmp[len] = '\0';
-	// printf("this is tmp with quotes ----- %s\n", tmp);
 	return (tmp);
 }
 
+int		check_val(t_all *all, char *line, int k)
+{
+	char	*tmp;
+	char	*env_tmp;
+	char	*str_w_quotes;
+	int		i;
+	int		j;
+
+	i = 0;
+	all->tline.equal_sign = -1;
+	j = find_equal_sign(all, line);
+	// 	// printf("this is num of = ----- %d\n\n\n", all->tline.equal_sign);
+	tmp = ft_substr(line, 0, j);
+	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
+	all->tline.replaced_str = tmp;
+	while (all->tline.env_arr[i])
+	{
+		j = find_env_equal(all, all->tline.env_arr[i]);
+		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
+		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
+		{
+			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
+				all->tline.env_arr[i] = add_quotes(all, line);
+			else
+			{
+				all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
+				ft_strcpy(all->tline.env_arr[i], line);
+			}
+			return (1);
+		}
+		free (env_tmp);
+		// else
+		// {
+		// 	str_w_quotes = add_quotes(all, all->cmd[k].arg[j]);
+		// 	all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(str_w_quotes));
+		// 	ft_strcpy(all->tline.env_arr[i], str_w_quotes);
+		// 	free (str_w_quotes);
+		// }
+		i++;
+	}
+	return (0);
+}
+
+
 void    cmd_export(t_all *all, int k)
 {
-	int i;
-	int	j;
+	int 	i;
+	int		j;
     int arr_len;
 	char	*tmp;
 	
@@ -147,13 +175,15 @@ void    cmd_export(t_all *all, int k)
 	arr_len = len(all->tline.export_arr);
 	while (all->cmd[k].arg[j])
 	{
-		if (!check_val(all, all->cmd[k].arg[j], k))      // проверять есть ли такая переменная окружения в массиве, если да - заменять значение
+		if (!check_val(all, all->cmd[k].arg[j], k))
 		{
 			// printf("this is num of = ----- %d\n", all->tline.equal_sign);
-			if (all->tline.equal_sign == 0)
+			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
 			{
 				tmp = add_quotes(all, all->cmd[k].arg[j]);
-				add_new_env_param(all, tmp);
+				printf("if strcmp != 0 export tmp = %s\n", tmp);
+				if (!check_val(all, all->cmd[k].arg[j], k))
+					add_new_env_param(all, tmp);
 			}
 			else
 				add_new_env_param(all, all->cmd[k].arg[j]);
