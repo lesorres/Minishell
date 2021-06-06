@@ -28,6 +28,8 @@ typedef struct s_all
     t_cmd   *cmd;
 	t_lst	builds;
 	t_termline tline;
+	char	**path_arr;
+
 }				t_all;
 
 int		ft_putchar(char c);
@@ -49,5 +51,6 @@ int		cmd_unset(t_all *all, int k);
 void	cmd_exit(t_all *all, char **arg, int k);
 void    add_new_env_param(t_all *all, char *line);
 void    get_envp(t_all *all, char **envp);
+void	split_path(t_all *all);
 
 #endif
