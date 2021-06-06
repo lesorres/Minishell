@@ -12,8 +12,8 @@ int		check(t_all *all, char *line, int k)
 	j = ft_strchr_int(line, '=');
 	tmp = ft_substr(line, 0, j);
 	len  = ft_strlen(line) - j;
-	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
-	all->tline.replaced_str = tmp;
+	// all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
+	// all->tline.replaced_str = tmp;
 	while (all->tline.env_arr[i])
 	{
 		j = ft_strchr_int(all->tline.env_arr[i], '=');
@@ -29,11 +29,6 @@ int		check(t_all *all, char *line, int k)
 		i++;
 	}
 	return (0);
-	// printf("\n\ntmp = |%s|\n", all->tline.replaced_str);
-	// printf("\n\nthis isn't tmp = |%s|\n", all->tline.replaced_val);
-	// if (check_env(all, line, k) == 1)
-	// 	return (1);
-	// return (0);
 }
 
 void    del_env_line(t_all *all, int i)
@@ -71,18 +66,38 @@ int dl_l_line(char ***input)
 
 int    cmd_unset(t_all *all, int k)
 {
-    int i;
+    int 	i;
+	int		j;
+	int		n;
+	char	*tmp;
 
     i = 0;
+	n = 0;
     if (!all->cmd[k].arg[0])
         return (0);
     else
     {
-        while (all->cmd[k].arg[i])
+        while (all->cmd[k].arg[n])
         {
-            del_env_line(all, 1);
-            i++;
-        }
+			// printf("\n\nif [n] = %d, all->cmd[i].arg[n] --- %s\n\n", n, all->cmd[k].arg[n]);
+			while (all->tline.env_arr[i])
+			{
+				j = find_env_equal(all, all->tline.env_arr[i]);
+				tmp = ft_substr(all->tline.env_arr[i], 0, j);
+				printf("if [i] = %d, tmp --- %s\n", i, tmp);
+				if (ft_strncmp(tmp, all->cmd[k].arg[n]) == 0)
+            		del_env_line(all, i);
+				i++;
+			}
+			// printf("array str --- %s\n", all->tline.env_arr[i]);
+        	n++;
+        } 
+		i = 0;
+		while (all->tline.env_arr[i])
+		{
+		printf("[%d] env = %s\n", i, all->tline.env_arr[i]);
+		i++;
+		}
     }
     return(1);
 }

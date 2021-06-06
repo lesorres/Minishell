@@ -29,4 +29,6 @@ typedef struct s_termline
 	char	**export_arr;
 	char	*replaced_str;
 	char	*replaced_val;
+	char	*val_str;
+	int		equal_sign;
 }   t_termline;
