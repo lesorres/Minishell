@@ -9,14 +9,20 @@ void	copy_env(t_all *all)
 	i = 0;
 	while (all->tline.env_arr[j])
 		j++;
-	all->tline.export_arr = (char **)malloc(sizeof(char *) * (j + 1)); //возможна утечка
+	if (all->tline.export_arr != NULL)   // воможная утечка пофиксена? -30 leaks
+	{
+		while (all->tline.export_arr[i])
+			free (all->tline.export_arr[i++]);
+		free (all->tline.export_arr);
+	}
+	i = 0;
+	all->tline.export_arr = (char **)malloc(sizeof(char *) * (j + 1));
 	all->tline.export_arr[j] = NULL;
 	while (all->tline.env_arr[i])
 	{
 		all->tline.export_arr[i] = ft_strdup(all->tline.env_arr[i]);
 		i++;
 	}
-	// all->tline.export_arr[i] = NULL;
 }
 
 void    sort_env(t_all *all)
@@ -44,32 +50,6 @@ void    sort_env(t_all *all)
 		}
 	}
 }
-
-// int		check_env(t_all *all, char *line, int k)
-// {
-// 	int 	i;
-// 	int		j;
-// 	int		dif;
-
-// 	i = 0;
-// 	char	*env_tmp;
-// 	while (all->tline.env_arr[i])
-// 	{
-// 		j = ft_strchr_int(all->tline.env_arr[i], '=');
-// 		if (j == 0)
-// 			j = ft_strlen(all->tline.env_arr[i]);
-// 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
-// 		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
-// 		{
-// 			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-// 			ft_strcpy(all->tline.env_arr[i], line);
-// 			free (env_tmp);
-// 			return (1);
-// 		}
-// 		i++;
-// 	}
-// 	return (0);
-// }
 
 int		find_equal_sign(t_all *all, char *line)
 {
@@ -130,15 +110,12 @@ int		check_val(t_all *all, char *line, int k)
 	i = 0;
 	all->tline.equal_sign = -1;
 	j = find_equal_sign(all, line);
-	// 	// printf("this is num of = ----- %d\n\n\n", all->tline.equal_sign);
 	tmp = ft_substr(line, 0, j);
-	all->tline.replaced_str = malloc(sizeof(ft_strlen(tmp)));
-	all->tline.replaced_str = tmp;
 	while (all->tline.env_arr[i])
 	{
 		j = find_env_equal(all, all->tline.env_arr[i]);
 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
-		if (strcmp(env_tmp, all->tline.replaced_str) == 0)
+		if (strcmp(env_tmp, tmp) == 0)
 		{
 			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
 				all->tline.env_arr[i] = add_quotes(all, line);
@@ -150,15 +127,9 @@ int		check_val(t_all *all, char *line, int k)
 			return (1);
 		}
 		free (env_tmp);
-		// else
-		// {
-		// 	str_w_quotes = add_quotes(all, all->cmd[k].arg[j]);
-		// 	all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(str_w_quotes));
-		// 	ft_strcpy(all->tline.env_arr[i], str_w_quotes);
-		// 	free (str_w_quotes);
-		// }
 		i++;
 	}
+	free (tmp);
 	return (0);
 }
 
@@ -167,7 +138,7 @@ void    cmd_export(t_all *all, int k)
 {
 	int 	i;
 	int		j;
-    int arr_len;
+    int 	arr_len;
 	char	*tmp;
 	
 	i = 0;
@@ -181,7 +152,7 @@ void    cmd_export(t_all *all, int k)
 			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
 			{
 				tmp = add_quotes(all, all->cmd[k].arg[j]);
-				printf("if strcmp != 0 export tmp = %s\n", tmp);
+				// printf("if strcmp != 0 export tmp = %s\n", tmp);
 				if (!check_val(all, all->cmd[k].arg[j], k))
 					add_new_env_param(all, tmp);
 			}
@@ -190,14 +161,13 @@ void    cmd_export(t_all *all, int k)
 		}
 		j++;
 	}
-	arr_len = len(all->tline.export_arr);
 	copy_env(all);
 	sort_env(all);
 	if (!all->cmd[k].arg[0])
 	{
 		while (all->tline.export_arr[i])
 		{
-		    printf("declare -x %s\n", all->tline.export_arr[i]);
+		    printf("[%d] = declare -x %s\n", i, all->tline.export_arr[i]); //убрать d
 			i++;
 		}
 	}
