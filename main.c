@@ -173,6 +173,34 @@ char	*get_hist_line(int num, int fd)
 // 	all->tline.str = malloc(1024);
 // }
 
+void	split_path(t_all *all)
+{
+	char	*tmp;
+	char	*tmp_2;
+	int		line_len;
+	int		i;
+
+	i = 0;
+	i = 0;
+	while (all->tline.env_arr[i])
+	{
+		if (ft_strncmp(all->tline.env_arr[i], "PATH=", 5) == 0)
+			break;
+		i++;
+	}
+	if (all->tline.env_arr[i] == NULL)
+		all->path_arr = NULL;
+	else
+	{
+		line_len = ft_strlen(all->tline.env_arr[i]);
+		tmp = ft_substr(all->tline.env_arr[i], 5, (line_len - 5));
+		tmp_2 = ft_strtrim(tmp, "\'\"");
+		free(tmp);
+		all->path_arr = ft_split(tmp_2, ':');
+		free(tmp_2);
+	}
+}
+
 int main(int argc, char **arg, char **envp)
 {
 	t_cmd 	cmd;
@@ -203,6 +231,14 @@ int main(int argc, char **arg, char **envp)
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
 	get_envp(&all, envp);
+
+
+	split_path(&all);
+
+	int z = 0;
+	while (all.path_arr[z])
+		printf ("|%s|\n", all.path_arr[z++]);
+	
 	while (strcmp(str, "\4"))
 	{	
 		all.tline.str = malloc(1024);
