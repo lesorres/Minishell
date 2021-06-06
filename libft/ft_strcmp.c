@@ -5,25 +5,23 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/19 20:13:22 by fhyman            #+#    #+#             */
-/*   Updated: 2021/05/19 20:13:25 by fhyman           ###   ########.fr       */
+/*   Created: 2020/11/22 16:10:39 by kmeeseek          #+#    #+#             */
+/*   Updated: 2021/06/06 15:16:49 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int		ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	int	x;
+	size_t			i;
+	unsigned char	*ss1;
+	unsigned char	*ss2;
 
-	x = 0;
-	while (s1[x] == s2[x] && s1[x] != '\0' && s2[x] != '\0')
-	{
-		++x;
-		if (s1[x] != s2[x])
-			return (s1[x] - s2[x]);
-		else
-			return (0);
-	}
-	return(0);
+	ss1 = (unsigned char *)s1;
+	ss2 = (unsigned char *)s2;
+	i = 0;
+	while (ss1[i] == ss2[i] && ss1[i])
+		i++;
+	return (ss1[i] - ss2[i]);
 }
