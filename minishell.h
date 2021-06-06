@@ -34,6 +34,8 @@ int		ft_putchar(char c);
 char	*read_line(int fd);
 int 	len(char **str);
 void	parser(char *line, t_all *all);
+char	*add_quotes(t_all *all, char *line);
+int		find_env_equal(t_all *all, char *line);
 
 /*  buildin commands  */
 
