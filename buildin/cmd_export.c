@@ -38,7 +38,7 @@ void    sort_env(t_all *all)
 		j = 0;
 		while (all->tline.export_arr[j + 1] != NULL)
 		{
-			if (ft_strncmp(all->tline.export_arr[j], all->tline.export_arr[j + 1]) > 0)
+			if (ft_strcmp(all->tline.export_arr[j], all->tline.export_arr[j + 1]) > 0)
 			{
 				tmp = all->tline.export_arr[j];
 				all->tline.export_arr[j] = all->tline.export_arr[j + 1];
