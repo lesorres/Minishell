@@ -41,7 +41,23 @@ void    add_new_env_param(t_all *all, char *line)
 	all->tline.env_arr = new_arr;
 }
 
-void    buildin_func(t_all *all, char **arg, char **envp)   //как-то нужно проверять команды, которые не cmd[0] !?!?!?!?!?!
+// void	execute(t_all *all)
+// {
+// 	int		stdin;
+// 	int		stdout;
+// 	pid_t	pid;
+
+// 	pid = fork();
+// 	if (!pid)
+// 		execve();
+// 	else if (pid < 0)
+// 		printf("%s\n", "Error!");
+// 	else
+// 		wait(&pid);
+// 	return (1);
+// }
+
+void    buildin_func(t_all *all, char **arg, char **envp)
 {
 	int i;
 
@@ -63,6 +79,8 @@ void    buildin_func(t_all *all, char **arg, char **envp)   //как-то нуж
 			cmd_env(all, i);
 		else if (!strcmp(all->cmd[i].name, "exit"))
 		    cmd_exit(all, arg, i);
+		// else
+
 		i++;
 	}
 }

@@ -34,7 +34,7 @@ int    cmd_unset(t_all *all, int k)
 			{
 				j = find_env_equal(all, all->tline.env_arr[i]);
 				tmp = ft_substr(all->tline.env_arr[i], 0, j);
-				if (ft_strncmp(tmp, all->cmd[k].arg[n]) == 0)
+				if (ft_strcmp(tmp, all->cmd[k].arg[n]) == 0)
             		del_env_line(all, i);
 				i++;
 				free (tmp);
