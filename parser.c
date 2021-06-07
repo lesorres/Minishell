@@ -6,44 +6,11 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/05 18:50:49 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/06 19:28:37 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
-
-// int add_char(char *arg, char c)
-// {
-// 	int len;
-// 	int new_len;
-// 	char *ret;
-// 	len = ft_strlen(arg);
-// 	new_len = len + 2;
-// 	if (!(ret = malloc(sizeof(char) * (new_len))))
-// 		return (0);
-// 	ret[new_len - 2] = c;
-// 	ret[new_len - 1] = '\0';
-// 	while (len-- >=0)
-// 		ret[len] = arg[len];
-// 	free(arg);
-// 	arg = ret;
-// 	return (1);
-// }
-
-// int	make_line(char *arg, char c)
-// {
-// 	if (!(arg))
-// 	{
-// 		arg = malloc(sizeof(char));
-// 		if (!(arg))
-// 			return (0);
-// 		arg[0] = '\0';
-// 	}
-// 	if (c =='\0')
-// 		return (0);
-// 	add_char(arg, c);
-// 	return(1);
-// }
 
 void free_arr(char ***arr)
 {
@@ -107,13 +74,6 @@ void 	arr_mem_alloc(t_all *all, int j)
 		// сделать free all->cmd[j].arg и всех существующих строк
 		all->cmd[j].arg = tmp;
 		// free(tmp);
-		// i = 0;
-		// while (old_cmd_n < all->cmd_n)
-		// {
-		// 	all->cmd[old_cmd_n].arg_n = 0;
-		// 	arr_mem_alloc (all, old_cmd_n);
-		// 	old_cmd_n++;
-		// }
 	}
 }
 
@@ -246,7 +206,6 @@ void	parser(char *line, t_all *all)
 			}
 		}
 		tmp[k] = '\0';
-
 		if (tmp[0]) //здесь записываем слова в массив
 		{
 			arr_mem_alloc(all, j);
@@ -264,6 +223,7 @@ void	parser(char *line, t_all *all)
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
+			
 		}
 		free(tmp);
 	}
