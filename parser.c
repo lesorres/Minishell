@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/08 20:07:57 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/08 21:33:16 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void print_parsed_string(t_all *all)
 void error(char *str)
 {
 	printf("%s\n", str);
-	exit(1);
+	// exit(1);
 }
 void 	arr_mem_alloc(t_all *all, int j)
 {
@@ -183,6 +183,39 @@ void	check_qoutes_content(all, line, i, j)
 	
 }
 
+int		check_line_validity(char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (line[i] == ';' && line[i + 1] == ';')
+		{
+			error("syntax error near unexpected token `;;'");
+			return(1);
+		}
+		if (line[0] == ';')
+		{
+			error("syntax error near unexpected token `;'");
+			return(1);
+		}
+		if (line[i] == ';')
+		{
+			i++;
+			while (line[i] && line[i] == ' ')
+				i++;
+			if (line[i] && line[i] == ';')
+			{
+				error("syntax error near unexpected token `;'");
+				return(1);
+			}
+		}
+		i++;
+	}
+	return (0);
+}
+
 // void	parser(char *line, t_all *all)
 void	parser(char *line, t_all *all, char **arg, char **envp)
 {
@@ -198,6 +231,8 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 	n = 0;
 	all->cmd_n = 1;
 	line = ft_strtrim(line, " ");
+	if (check_line_validity(line) == 1)
+		return;
 	line_len = ft_strlen(line);
 	cmd_mem_alloc(all);
 	while(line[i])
@@ -222,7 +257,7 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 					tmp[k++] = line[i++];
 					i = quotes_flags_switch(all, line, i, j);
 				}
-				if (line[i] != ' ' && line[i])
+				if (line[i] != ' ' && line[i] != ';' && line[i])
 					tmp[k++] = line[i++];
 			}
 		}
@@ -237,10 +272,16 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 		}
 		if (line[i - 1] == ';')// && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
 		{
-			if (line[i] == ';')
-				error("syntax error near unexpected token `;;'");
-			if (all->cmd[j].arg == NULL)
-				error("syntax error near unexpected token `;'");
+			// if (line[i] == ';')
+			// {
+			// 	error("syntax error near unexpected token `;;'");
+			// 	break;
+			// }
+			// if (all->cmd[j].arg == NULL)
+			// {
+			// 	error("syntax error near unexpected token `;'");
+			// 	break;
+			// }
 			extract_cmd_name(all, j);
 			buildin_func(all, arg, envp);
 			j++;
@@ -249,10 +290,8 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 		}
 		free(tmp);
 	}
-	// printf("cmd_n = %i\n", all->cmd_n);
-	// if (!all->cmd[j].null && all->cmd[j].arg && all->cmd_n == 2)
 	extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
-	if (!all->cmd[j].null && all->cmd[j].arg && all->cmd_n == 2)
+	if (!all->cmd[j].null && all->cmd[j].arg)
 		buildin_func(all, arg, envp);
 	// extract_cmd_name(all); //old one
 	// print_parsed_string(all);
