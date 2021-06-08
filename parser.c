@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/06 19:28:37 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/08 20:07:57 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,9 @@ void 	cmd_mem_alloc(t_all *all)
 		tmp = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 		while (i < old_cmd_n)
 		{
-			tmp[i].arg_n = all->cmd[i].arg_n;
+			tmp[i].arg_n = all->cmd[i].arg_n; //ДРУГИЕ ЭЛЕМЕНТЫ ДОБАВЬ
 			tmp[i].arg = all->cmd[i].arg;
+			tmp[i].name = all->cmd[i].name;
 			i++;
 		}
 		// if (all->cmd)
@@ -110,14 +111,34 @@ void 	cmd_mem_alloc(t_all *all)
 	}
 }
 
-void extract_cmd_name(t_all *all) //утечек нет (вроде бы)
+// void extract_cmd_name(t_all *all) //утечек нет (вроде бы)  //old one
+// {
+// 	int		j;
+// 	int		i;
+// 	char	**tmp;
+// 	j = 0;
+// 	while (!all->cmd[j].null && all->cmd[j].arg)
+// 	{
+// 		i = 0;
+// 		all->cmd[j].name = all->cmd[j].arg[0];
+// 		tmp = ft_calloc((all->cmd[j].arg_n - 1), sizeof(char *));
+// 		while (all->cmd[j].arg[i + 1])
+// 		{
+// 			tmp[i] = all->cmd[j].arg[i + 1];
+// 			i++;
+// 		}
+// 		free(all->cmd[j].arg);
+// 		all->cmd[j].arg = tmp;
+// 		j++;
+// 	}
+// }
+
+void extract_cmd_name(t_all *all, int j) //утечек нет (вроде бы)
 {
-	int		j;
 	int		i;
 	char	**tmp;
 
-	j = 0;
-	while (!all->cmd[j].null && all->cmd[j].arg)
+	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		i = 0;
 		all->cmd[j].name = all->cmd[j].arg[0];
@@ -129,7 +150,6 @@ void extract_cmd_name(t_all *all) //утечек нет (вроде бы)
 		}
 		free(all->cmd[j].arg);
 		all->cmd[j].arg = tmp;
-		j++;
 	}
 }
 
@@ -158,13 +178,13 @@ int		quotes_flags_switch(t_all *all, char *line, int i, int j)
 	return	(i);
 }
 
-// int	check_quotes(t_all *all, char *line, int i, int j, int k)
-// {
-// 	i = quotes_flags_switch(all, line, i, j);
-// 	if (all->cmd[j] = )
-// }
+void	check_qoutes_content(all, line, i, j)
+{
+	
+}
 
-void	parser(char *line, t_all *all)
+// void	parser(char *line, t_all *all)
+void	parser(char *line, t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
@@ -198,6 +218,7 @@ void	parser(char *line, t_all *all)
 				i = quotes_flags_switch(all, line, i, j);
 				while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && line[i])
 				{
+					// i = check_qoutes_content(all, line, i, j);
 					tmp[k++] = line[i++];
 					i = quotes_flags_switch(all, line, i, j);
 				}
@@ -220,13 +241,19 @@ void	parser(char *line, t_all *all)
 				error("syntax error near unexpected token `;;'");
 			if (all->cmd[j].arg == NULL)
 				error("syntax error near unexpected token `;'");
+			extract_cmd_name(all, j);
+			buildin_func(all, arg, envp);
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
-			
 		}
 		free(tmp);
 	}
-	extract_cmd_name(all);
-	print_parsed_string(all);
+	// printf("cmd_n = %i\n", all->cmd_n);
+	// if (!all->cmd[j].null && all->cmd[j].arg && all->cmd_n == 2)
+	extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
+	if (!all->cmd[j].null && all->cmd[j].arg && all->cmd_n == 2)
+		buildin_func(all, arg, envp);
+	// extract_cmd_name(all); //old one
+	// print_parsed_string(all);
 }

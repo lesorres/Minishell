@@ -61,10 +61,11 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 {
 	int i;
 
-	i = 0;
+	// i = 0;
+	i = all->cmd_n - 2;
 			// printf("%s\n", all->cmd[i].name);
-	while (!all->cmd[i].null && all->cmd[i].arg)
-	{
+	// while (!all->cmd[i].null && all->cmd[i].arg)
+	// {
 		if (!strcmp(all->cmd[i].name, "cd"))
 			cmd_cd(all, envp, i);
 		else if (!strcmp(all->cmd[i].name, "echo"))
@@ -79,8 +80,7 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 			cmd_env(all, i);
 		else if (!strcmp(all->cmd[i].name, "exit"))
 		    cmd_exit(all, arg, i);
-		// else
-
-		i++;
-	}
+		// i++;
+		//void	split_path(t_all *all);
+	// }
 }
