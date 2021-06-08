@@ -234,11 +234,6 @@ int main(int argc, char **arg, char **envp)
 
 
 	split_path(&all);
-
-	int z = 0;
-	while (all.path_arr[z])
-		printf ("|%s|\n", all.path_arr[z++]);
-	
 	while (strcmp(str, "\4"))
 	{	
 		all.tline.str = malloc(1024);
@@ -349,8 +344,6 @@ int main(int argc, char **arg, char **envp)
 		tline.line_num++;
 		buildin_func(&all, arg, envp);
 	}
-	// execute(&all);
-	// buildin_func(&all, argv, envp);
 	write(1, "\n", 1);
 	free (str);
 	free_hisr_arr(&all);
