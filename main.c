@@ -339,10 +339,10 @@ int main(int argc, char **arg, char **envp)
 			write(fd, all.tline.str, ft_strlen(all.tline.str));
 		all.tline.str[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
-		parser(all.tline.str, &all);
+		parser(all.tline.str, &all, arg, envp);
 		free(all.tline.str);
 		tline.line_num++;
-		buildin_func(&all, arg, envp);
+		// buildin_func(&all, arg, envp);
 	}
 	write(1, "\n", 1);
 	free (str);
