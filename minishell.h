@@ -43,7 +43,7 @@ int		find_env_equal(t_all *all, char *line);
 /*  buildin commands  */
 
 void    buildin_func(t_all *all, char **arg, char **envp);
-int		cmd_cd(t_all *all, char **envp, int k);
+void	cmd_cd(t_all *all, char **envp, int k);
 void	cmd_echo(t_all *all, char **argv, int k);
 void    cmd_env(t_all *all, int k);
 void    cmd_export(t_all *all, int k);
