@@ -53,10 +53,10 @@ void	cmd_cd(t_all *all, char **envp, int k)
 	path = malloc(PATH_LEN + 1);
 	path = getcwd(path, PATH_LEN);
 	all->builds.oldpwd = NULL;
-	if (all->cmd[k].arg[0] && ft_strcmp(all->cmd[k].arg[0], "."))
+	if (all->cmd[k].arg[1] && ft_strcmp(all->cmd[k].arg[1], "."))
 	{
-		if (chdir(all->cmd[k].arg[0]) == -1)
-			error_handler(all->cmd[k].name, all->cmd[k].arg[0], strerror(errno));
+		if (chdir(all->cmd[k].arg[1]) == -1)
+			error_handler(all->cmd[k].name, all->cmd[k].arg[1], strerror(errno));
 		else
 		{
 			i = 0;
@@ -64,12 +64,12 @@ void	cmd_cd(t_all *all, char **envp, int k)
 			srch_str_in_arr(all, tmp);
 		}
 	}
-	else if (!all->cmd[k].arg[0] && ft_strcmp(all->cmd[k].arg[0], "."))
+	else if (!all->cmd[k].arg[1] && ft_strcmp(all->cmd[k].arg[1], "."))
 	{
 		tmp_path = getenv("HOME");
 		chdir(tmp_path);
 	}
 	add_oldpwd(all, path);
 	free(path);
-	free(tmp);
+	// free(tmp);
 }

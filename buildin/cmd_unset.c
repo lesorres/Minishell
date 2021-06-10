@@ -22,8 +22,8 @@ int    cmd_unset(t_all *all, int k)
 	int		n;
 	char	*tmp;
 
-	n = 0;
-    if (!all->cmd[k].arg[0])
+	n = 1;
+    if (!all->cmd[k].arg[1])
         return (0);
     else
     {

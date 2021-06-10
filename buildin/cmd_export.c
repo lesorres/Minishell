@@ -142,7 +142,7 @@ void    cmd_export(t_all *all, int k)
 	char	*tmp;
 	
 	i = 0;
-	j = 0;
+	j = 1;
 	arr_len = len(all->tline.export_arr);
 	while (all->cmd[k].arg[j])
 	{
@@ -163,7 +163,7 @@ void    cmd_export(t_all *all, int k)
 	}
 	copy_env(all);
 	sort_env(all);
-	if (!all->cmd[k].arg[0])
+	if (!all->cmd[k].arg[1])
 	{
 		while (all->tline.export_arr[i])
 		{

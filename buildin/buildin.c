@@ -41,21 +41,44 @@ void    add_new_env_param(t_all *all, char *line)
 	all->tline.env_arr = new_arr;
 }
 
-// void	execute(t_all *all)
-// {
-// 	int		stdin;
-// 	int		stdout;
-// 	pid_t	pid;
+void	execute(t_all *all, char *name, char **arg, char **envp)
+{
+	int		stdin;
+	int		stdout;
+	char	*cmd;
+	pid_t	pid;
+	int		i;
 
-// 	pid = fork();
-// 	if (!pid)
-// 		execve();
-// 	else if (pid < 0)
-// 		printf("%s\n", "Error!");
-// 	else
-// 		wait(&pid);
-// 	return (1);
-// }
+	i = 0;
+	pid = fork();
+			printf("arg[0] = %s\n", arg[0]);
+		printf("arg[1] = %s\n", arg[1]);
+	if (!pid)
+	{
+		while (all->path_arr[i])
+		{
+			all->path_arr[i] = ft_strjoin(all->path_arr[i], "/");
+			cmd = ft_strjoin(all->path_arr[i], name);
+			printf("[%i] = %s\n", i, cmd);
+			// char **myarg = (char **)(malloc(sizeof(char *) * 3));
+			// myarg[0] = name;
+			// myarg[1] = arg[0];
+			
+			if (execve(cmd, arg, envp) == -1)
+				i++;
+			else
+			{
+				// execve(cmd, arg, envp);
+				break ;
+			}
+		}
+	}
+	else if (pid < 0)
+		printf("%s\n", "Error!");
+	else
+		wait(&pid);
+	// return (1);
+}
 
 void    buildin_func(t_all *all, char **arg, char **envp)
 {
@@ -66,20 +89,24 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 			// printf("%s\n", all->cmd[i].name);
 	// while (!all->cmd[i].null && all->cmd[i].arg)
 	// {
-		if (!strcmp(all->cmd[i].name, "cd"))
+		// printf("arg[0] = %s\n", arg[0]);
+		// printf("arg[1] = %s\n", arg[1]);
+		if (!strcmp(all->cmd[i].arg[0], "cd"))
 			cmd_cd(all, envp, i);
-		else if (!strcmp(all->cmd[i].name, "echo"))
+		else if (!strcmp(all->cmd[i].arg[0], "echo"))
 			cmd_echo(all, arg, i);
-		else if (!strcmp(all->cmd[i].name, "pwd"))
+		else if (!strcmp(all->cmd[i].arg[0], "pwd"))
 			cmd_pwd(all, envp);
-		else if (!strcmp(all->cmd[i].name, "export"))
+		else if (!strcmp(all->cmd[i].arg[0], "export"))
 			cmd_export(all, i);
-		else if (!strcmp(all->cmd[i].name, "unset"))
+		else if (!strcmp(all->cmd[i].arg[0], "unset"))
 		    cmd_unset(all, i);
-		else if (!strcmp(all->cmd[i].name, "env"))
+		else if (!strcmp(all->cmd[i].arg[0], "env"))
 			cmd_env(all, i);
-		else if (!strcmp(all->cmd[i].name, "exit"))
+		else if (!strcmp(all->cmd[i].arg[0], "exit"))
 		    cmd_exit(all, arg, i);
+		else
+			execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
 		// i++;
 		//void	split_path(t_all *all);
 	// }
