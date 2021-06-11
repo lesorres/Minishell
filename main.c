@@ -201,6 +201,32 @@ void	split_path(t_all *all)
 	}
 }
 
+void	check_shlvl(t_all *all, char **envp)
+{
+	int		i;
+
+	i = 0;
+	// while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 7) == NULL)
+	// {
+	// 	i++;
+	// 	// ft_strnstr(all->tline.env_arr[i], "SHLVL=", 7);
+	// }
+	// if 
+}
+
+void set_terminal(struct  termios *term)
+{
+	term->c_lflag &= ~(ECHO);
+	term->c_lflag &= ~(ICANON);
+	tcsetattr(0, TCSANOW, term);
+}
+
+void res_terminal(struct  termios *term)
+{
+	term->c_lflag |= ECHO | ICANON;
+	tcsetattr(0, TCSANOW, term);
+}
+
 int main(int argc, char **arg, char **envp)
 {
 	t_cmd 	cmd;
@@ -224,18 +250,21 @@ int main(int argc, char **arg, char **envp)
 	// printf("file name ----- %s\n", file_name);
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
-	term.c_lflag &= ~(ECHO);
-	term.c_lflag &= ~(ICANON);
-	tcsetattr(0, TCSANOW, &term);
+	// term.c_lflag &= ~(ECHO);
+	// term.c_lflag &= ~(ICANON);
+	// tcsetattr(0, TCSANOW, &term);
 	tgetent(0, TERM_NAME);
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
 	get_envp(&all, envp);
 
+	check_shlvl(&all, envp);
 
 	split_path(&all);
+	
 	while (strcmp(str, "\4"))
-	{	
+	{
+		set_terminal(&term);
 		all.tline.str = malloc(1024);
 		all.tline.print_line = malloc(1024);
 		all.tline.cursor = PROMPT;
@@ -339,6 +368,7 @@ int main(int argc, char **arg, char **envp)
 			write(fd, all.tline.str, ft_strlen(all.tline.str));
 		all.tline.str[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
+		res_terminal(&term);
 		parser(all.tline.str, &all, arg, envp);
 		free(all.tline.str);
 		tline.line_num++;
