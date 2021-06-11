@@ -41,43 +41,38 @@ void    add_new_env_param(t_all *all, char *line)
 	all->tline.env_arr = new_arr;
 }
 
-void	execute(t_all *all, char *name, char **arg, char **envp)
+int	execute(t_all *all, char *name, char **arg, char **envp)
 {
-	int		stdin;
-	int		stdout;
 	char	*cmd;
 	pid_t	pid;
 	int		i;
 
 	i = 0;
 	pid = fork();
-			printf("arg[0] = %s\n", arg[0]);
-		printf("arg[1] = %s\n", arg[1]);
 	if (!pid)
 	{
 		while (all->path_arr[i])
 		{
 			all->path_arr[i] = ft_strjoin(all->path_arr[i], "/");
 			cmd = ft_strjoin(all->path_arr[i], name);
-			printf("[%i] = %s\n", i, cmd);
-			// char **myarg = (char **)(malloc(sizeof(char *) * 3));
-			// myarg[0] = name;
-			// myarg[1] = arg[0];
-			
 			if (execve(cmd, arg, envp) == -1)
 				i++;
-			else
-			{
-				// execve(cmd, arg, envp);
-				break ;
-			}
+			// else
+			// {
+			// 	exit (0);
+			// 	break ;
+			// }
+				// printf("child pid - %i\n", pid);
 		}
 	}
 	else if (pid < 0)
+	{
 		printf("%s\n", "Error!");
+		exit (1);
+	}
 	else
 		wait(&pid);
-	// return (1);
+	return (1);
 }
 
 void    buildin_func(t_all *all, char **arg, char **envp)
