@@ -201,17 +201,51 @@ void	split_path(t_all *all)
 	}
 }
 
+void	find_line_in_arr(char **arr, char *line)
+{
+	int	i;
+
+	i = 0;
+	while (ft_strnstr(arr[i], line, ft_strle(line) == NULL))
+		i++;
+	if (ft_strncmp(arr[i], line, ft_strlen(line))
+		add_new_env_param(all, );
+	else
+		
+}
+
 void	check_shlvl(t_all *all, char **envp)
 {
 	int		i;
+	int		j;
+	char	*value;
+	int		num;
+	char	*tmp;
+	char	*num_ch;
 
 	i = 0;
-	// while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 7) == NULL)
-	// {
-	// 	i++;
-	// 	// ft_strnstr(all->tline.env_arr[i], "SHLVL=", 7);
-	// }
-	// if 
+	printf("i'm here\n\n");
+	while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
+		i++;
+	if (ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	{
+		add_new_env_param(all, "SHLVL=1");
+		all->tline.first_shlvl = 1;
+	}
+	else
+	{
+		j = find_env_equal(all->tline.env_arr[i]);
+		num = ft_strlen(all->tline.env_arr[i]) - (j + 1);
+		value = ft_substr(all->tline.env_arr[i], j + 1, num);
+		if (isdigit_line(value))
+			num = ft_atoi(value) + 1;
+		else
+			num = 1;
+		num_ch = ft_itoa(num);
+		tmp = ft_strjoin("SHLVL=", num_ch);
+		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(tmp));
+		ft_strcpy(all->tline.env_arr[i], tmp);
+	}
 }
 
 void set_terminal(struct  termios *term)
@@ -247,7 +281,6 @@ int main(int argc, char **arg, char **envp)
 	path = malloc(PATH_LEN + 1);
 	tmp_path = getcwd(path, PATH_LEN);
 	file_name = ft_strjoin(tmp_path, "/.HISTORY");
-	// printf("file name ----- %s\n", file_name);
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
 	// term.c_lflag &= ~(ECHO);
@@ -257,13 +290,13 @@ int main(int argc, char **arg, char **envp)
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
 	get_envp(&all, envp);
-
-	check_shlvl(&all, envp);
+	check_shlvl(&all, all.tline.env_arr);
 
 	split_path(&all);
 	
 	while (strcmp(str, "\4"))
 	{
+		// check_shlvl(&all, all.tline.env_arr);
 		set_terminal(&term);
 		all.tline.str = malloc(1024);
 		all.tline.print_line = malloc(1024);
@@ -299,8 +332,6 @@ int main(int argc, char **arg, char **envp)
 					count = ft_strlen(all.tline.str);
 					write(1, all.tline.str, ft_strlen(all.tline.str));
 				}
-				// else if (tline.curr_line == tline.line_num)
-				// 	write(1, all.tline.print_line, ft_strlen(all.tline.print_line));
 				close(hist_fd);
 			}
 			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
@@ -332,7 +363,6 @@ int main(int argc, char **arg, char **envp)
 				{
 					all.tline.cursor--;
 					all.tline.symb_num--;
-					// all.tline.str[count--] = '\0';
 					all.tline.print_line[count--] = '\0';
 					ft_putstr_fd(cursor_left, 1);
 					ft_putstr_fd(tgetstr("dc", 0), 1);
@@ -372,8 +402,8 @@ int main(int argc, char **arg, char **envp)
 		parser(all.tline.str, &all, arg, envp);
 		free(all.tline.str);
 		tline.line_num++;
-		// buildin_func(&all, arg, envp);
 	}
+	close(fd);
 	write(1, "\n", 1);
 	free (str);
 	free_hisr_arr(&all);
