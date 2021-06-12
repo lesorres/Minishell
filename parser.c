@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/11 23:05:36 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/12 20:19:34 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -216,27 +216,35 @@ int		check_line_validity(char *line)
 	return (0);
 }
 
-void	clean_echo_from_flags(t_all *all, int i, int j)
+void	clean_echo_from_flags(t_all *all, int i, int j) //ликов быть не должно
 {
 	char	**tmp;
 	int		k;
+	int		t;
+	int		g;
 
+	g = i;
 	k = 1;
 	tmp = calloc(all->cmd[j].arg_n, sizeof(char *));
 	tmp[0] = all->cmd[j].arg[0];
 	while (all->cmd[j].arg[i])
 		tmp[k++] = all->cmd[j].arg[i++];
-	free_arr(&all->cmd[j].arg);
+	t = 1;
+	while (t < g)
+	{
+		free(all->cmd[j].arg[t]);
+		t++;
+	}
+	free(all->cmd[j].arg);
 	all->cmd[j].arg = tmp;
 }
 
-void	check_echo_n_flag(t_all *all, int j)
+void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 {
 	int	i;
 	int k;
 	int flag;
 
-	printf ("%s\n", "here2");
 	if (!ft_strcmp(all->cmd[j].arg[0], "echo")) //&& all->cmd[j].arg[1])
 	{
 		i = 1;
@@ -251,22 +259,24 @@ void	check_echo_n_flag(t_all *all, int j)
 				i++;
 		}
 		if (i == 1)
-			// return;
-			printf ("%s\n", "here3");
+			return;
+			// printf ("here3\n");
 		else
 		{
-			printf ("%s\n","flag worked");
+			all->cmd[j].echo_n = 1;
+			// printf ("flag worked\n");
+			// printf ("flag - %i\n\n", all->cmd[j].echo_n);
 			clean_echo_from_flags(all, i, j);
 		}
 	}
 	i = 0;
-	while (all->cmd[j].arg[i])
-		printf("%s\n", all->cmd[j].arg[i++]);
-	printf("%c\n", '|');
+	// while (all->cmd[j].arg[i])
+	// 	printf("%s\n", all->cmd[j].arg[i++]);
+	// printf("\n\n");
 }
 
-void	parser(char *line, t_all *all)
-// void	parser(char *line, t_all *all, char **arg, char **envp)
+// void	parser(char *line, t_all *all)
+void	parser(char *line, t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
@@ -343,9 +353,9 @@ void	parser(char *line, t_all *all)
 	// extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
-		printf ("%s\n","here1");
+		// printf ("%s\n","here1");
 		check_echo_n_flag(all, j);
-		// buildin_func(all, arg, envp);
+		buildin_func(all, arg, envp);
 	}
 	// extract_cmd_name(all); //old one
 	// print_parsed_string(all);
