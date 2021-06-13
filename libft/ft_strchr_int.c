@@ -10,5 +10,5 @@ int		ft_strchr_int(const char *str, int c)
 	if (c == str[i])
 		return (i);
 	else
-		return (0);
+		return (-1);
 }
