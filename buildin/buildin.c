@@ -74,9 +74,12 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 			// tmp = ft_strjoin(all->path_arr[i], "/");
 
 			// all->path_arr[i] = ft_strjoin(all->path_arr[i], "/");  //leak
-			printf("path_arr %s\n", all->path_arr[i]);
-			cmd = ft_strjoin(all->path_arr[i], name);
+			// printf("path_arr %s\n", all->path_arr[i]);
+			printf("name  %s\n", name);
+			if (ft_strcmp(name, "./minishell") != 0)
+				cmd = ft_strjoin(all->path_arr[i], name);
 			printf("cmd before  %s\n", cmd);
+			// if ()
 			exec = execve(cmd, arg, all->tline.env_arr);
 			// printf("cmd %s\n", cmd);
 			if (exec == -1)
