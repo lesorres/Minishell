@@ -29,6 +29,7 @@ typedef struct s_all
 	t_lst	builds;
 	t_termline tline;
 	char	**path_arr;
+	char	*tmp;
 
 }				t_all;
 
