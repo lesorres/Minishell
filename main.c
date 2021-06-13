@@ -181,7 +181,6 @@ void	split_path(t_all *all)
 	int		i;
 
 	i = 0;
-	i = 0;
 	while (all->tline.env_arr[i])
 	{
 		if (ft_strncmp(all->tline.env_arr[i], "PATH=", 5) == 0)
@@ -197,22 +196,51 @@ void	split_path(t_all *all)
 		tmp_2 = ft_strtrim(tmp, "\'\"");
 		free(tmp);
 		all->path_arr = ft_split(tmp_2, ':');
+		i = 0;
+		while(all->path_arr[i])
+		{
+			line_len = ft_strlen(all->path_arr[i]) + 2;
+			all->path_arr[i] = ft_realloc(all->path_arr[i], line_len);
+			all->path_arr[i][line_len - 2] = '/';
+			i++;
+		}
+		i = 0;
+		while (all->tline.env_arr[i])
+		{
+			if (ft_strncmp(all->tline.env_arr[i], "_=", 2) == 0)
+				break;
+			i++;
+		}
+		// printf("env_arr[i] = %s\n", all->tline.env_arr[i]);
+		char *val_tmp;
+		int j;
+
+		j = 0;
+		j = find_env_equal(all->tline.env_arr[i]);
+		val_tmp = ft_substr(all->tline.env_arr[i], (j + 1), ft_strlen(all->tline.env_arr[i] - j));
+		add_new_line_to_arr(&all->path_arr, val_tmp);
+		i = 0;
+		while (all->path_arr[i])
+		{
+			printf("all->path_arr[%i] = %s\n", i, all->path_arr[i]);
+			i++;
+		}
 		free(tmp_2);
 	}
 }
 
-void	find_line_in_arr(char **arr, char *line)
-{
-	int	i;
+// void	find_line_in_arr(char **arr, char *line)
+// {
+// 	int	i;
 
-	i = 0;
-	while (ft_strnstr(arr[i], line, ft_strle(line) == NULL))
-		i++;
-	if (ft_strncmp(arr[i], line, ft_strlen(line))
-		add_new_env_param(all, );
-	else
+// 	i = 0;
+// 	while (ft_strnstr(arr[i], line, ft_strle(line) == NULL))
+// 		i++;
+// 	if (ft_strncmp(arr[i], line, ft_strlen(line))
+// 		add_new_env_param(all, );
+// 	else
 		
-}
+// }
 
 void	check_shlvl(t_all *all, char **envp)
 {
@@ -227,7 +255,7 @@ void	check_shlvl(t_all *all, char **envp)
 	printf("i'm here\n\n");
 	while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
 		i++;
-	if (ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	if (!ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
 	{
 		add_new_env_param(all, "SHLVL=1");
 		all->tline.first_shlvl = 1;
@@ -280,6 +308,7 @@ int main(int argc, char **arg, char **envp)
 
 	path = malloc(PATH_LEN + 1);
 	tmp_path = getcwd(path, PATH_LEN);
+	printf("tmp_path --- %s\n", tmp_path);
 	file_name = ft_strjoin(tmp_path, "/.HISTORY");
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
