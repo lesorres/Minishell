@@ -213,11 +213,14 @@ void	split_path(t_all *all)
 		}
 		// printf("env_arr[i] = %s\n", all->tline.env_arr[i]);
 		char *val_tmp;
-		// int j;
+		int j;
 
-		// j = 0;
-		// j = find_env_equal(all->tline.env_arr[i]);
-		val_tmp = ft_strjoin(all->tline.path, "/");
+		j = 0;
+		j = find_env_equal(all->tline.env_arr[i]);
+		int num = ft_strlen(all->tline.env_arr[i]) - (j + 1);
+		val_tmp = ft_substr(all->tline.env_arr[i], (j + 1), num);
+		// printf("val_tmp = %s\n", val_tmp);
+		// val_tmp = ft_strjoin(all->tline.path, "/");
 		add_new_line_to_arr(&all->path_arr, val_tmp);
 		// i = 0;
 		// while (all->path_arr[i])
@@ -255,7 +258,7 @@ void	check_shlvl(t_all *all, char **envp)
 	// printf("i'm here\n\n");
 	while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
 		i++;
-	if (!ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	if (ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
 	{
 		add_new_env_param(all, "SHLVL=1");
 		all->tline.first_shlvl = 1;
