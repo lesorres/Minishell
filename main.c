@@ -213,18 +213,18 @@ void	split_path(t_all *all)
 		}
 		// printf("env_arr[i] = %s\n", all->tline.env_arr[i]);
 		char *val_tmp;
-		int j;
+		// int j;
 
-		j = 0;
-		j = find_env_equal(all->tline.env_arr[i]);
-		val_tmp = ft_substr(all->tline.env_arr[i], (j + 1), ft_strlen(all->tline.env_arr[i] - j));
+		// j = 0;
+		// j = find_env_equal(all->tline.env_arr[i]);
+		val_tmp = ft_strjoin(all->tline.path, "/");
 		add_new_line_to_arr(&all->path_arr, val_tmp);
-		i = 0;
-		while (all->path_arr[i])
-		{
-			printf("all->path_arr[%i] = %s\n", i, all->path_arr[i]);
-			i++;
-		}
+		// i = 0;
+		// while (all->path_arr[i])
+		// {
+		// 	printf("all->path_arr[%i] = %s\n", i, all->path_arr[i]);
+		// 	i++;
+		// }
 		free(tmp_2);
 	}
 }
@@ -252,7 +252,7 @@ void	check_shlvl(t_all *all, char **envp)
 	char	*num_ch;
 
 	i = 0;
-	printf("i'm here\n\n");
+	// printf("i'm here\n\n");
 	while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
 		i++;
 	if (!ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
@@ -303,13 +303,13 @@ int main(int argc, char **arg, char **envp)
 	int		k;
 	int		fd;
 	char    *path;
-	char    *tmp_path;
+	// char    *tmp_path;
 	char	*file_name;
 
 	path = malloc(PATH_LEN + 1);
-	tmp_path = getcwd(path, PATH_LEN);
-	printf("tmp_path --- %s\n", tmp_path);
-	file_name = ft_strjoin(tmp_path, "/.HISTORY");
+	all.tline.path = getcwd(path, PATH_LEN);
+	// printf("tmp_path --- %s\n", all.tline.path);
+	file_name = ft_strjoin(all.tline.path, "/.HISTORY");
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
 	// term.c_lflag &= ~(ECHO);
