@@ -9,7 +9,7 @@ void	copy_env(t_all *all)
 	i = 0;
 	while (all->tline.env_arr[j])
 		j++;
-	if (all->tline.export_arr != NULL)   // воможная утечка пофиксена? -30 leaks
+	if (all->tline.export_arr != NULL)
 	{
 		while (all->tline.export_arr[i])
 			free (all->tline.export_arr[i++]);
@@ -58,7 +58,7 @@ int		find_equal_sign(t_all *all, char *line)
 
 	j = ft_strchr_int(line, '=');
 	cmp = ft_strlen(line) - 1;
-	if (j == 0)
+	if (j == -1)  //j ==0
 	{
 		all->tline.equal_sign = 0;
 		j = ft_strlen(line);
@@ -68,14 +68,14 @@ int		find_equal_sign(t_all *all, char *line)
 	return (j);
 }
 
-int		find_env_equal(t_all *all, char *line)
+int		find_env_equal(char *line)
 {
 	int		j;
 	int		cmp;
 
 	j = ft_strchr_int(line, '=');
 	cmp = ft_strlen(line) - 1;
-	if (j == 0)
+	if (j == -1)
 		j = ft_strlen(line);
 	return (j);
 }
@@ -99,6 +99,17 @@ char	*add_quotes(t_all *all, char *line)
 	return (tmp);
 }
 
+void	add_env_val(t_all *all, int i, char *line)
+{
+	if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
+		all->tline.env_arr[i] = add_quotes(all, line);
+	else
+	{
+		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
+		ft_strcpy(all->tline.env_arr[i], line);
+	}
+}
+
 int		check_val(t_all *all, char *line, int k)
 {
 	char	*tmp;
@@ -113,17 +124,18 @@ int		check_val(t_all *all, char *line, int k)
 	tmp = ft_substr(line, 0, j);
 	while (all->tline.env_arr[i])
 	{
-		j = find_env_equal(all, all->tline.env_arr[i]);
+		j = find_env_equal(all->tline.env_arr[i]);
 		env_tmp = ft_substr(all->tline.env_arr[i], 0, j);
 		if (strcmp(env_tmp, tmp) == 0)
 		{
-			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
-				all->tline.env_arr[i] = add_quotes(all, line);
-			else
-			{
-				all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-				ft_strcpy(all->tline.env_arr[i], line);
-			}
+			add_env_val(all, i, line);
+			// if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
+			// 	all->tline.env_arr[i] = add_quotes(all, line);
+			// else
+			// {
+			// 	all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
+			// 	ft_strcpy(all->tline.env_arr[i], line);
+			// }
 			return (1);
 		}
 		free (env_tmp);
@@ -148,11 +160,9 @@ void    cmd_export(t_all *all, int k)
 	{
 		if (!check_val(all, all->cmd[k].arg[j], k))
 		{
-			// printf("this is num of = ----- %d\n", all->tline.equal_sign);
 			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
 			{
 				tmp = add_quotes(all, all->cmd[k].arg[j]);
-				// printf("if strcmp != 0 export tmp = %s\n", tmp);
 				if (!check_val(all, all->cmd[k].arg[j], k))
 					add_new_env_param(all, tmp);
 			}
