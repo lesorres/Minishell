@@ -12,6 +12,7 @@ char	*ft_realloc(char *ptr, unsigned int size)
 		new[i] = ptr[i];
 		i++;
 	}
+	new[size - 1] = '\0'; //новая строка
 	free(ptr);
 	return (new);
 }
