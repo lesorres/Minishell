@@ -3,7 +3,8 @@
 
 # include <stdio.h>
 # include <unistd.h>
-# include <string.h> 
+# include <string.h>
+# include <stdlib.h>
 # include "libft/libft.h"
 # include "get_next_line.h"
 # include "execute_header.h"
@@ -20,6 +21,19 @@ typedef struct s_lst
 	int		export_new_arg;
 	int		get_env;
 }   t_lst;
+
+typedef struct	s_cmd
+{
+	char	*name;
+	int		arg_n;
+	char	**arg;
+	int		echo_n;
+	int		null;
+	int		dq_fl;
+	int		sq_fl;
+	char	**i_rdir;
+	char	**o_rdir;
+}				t_cmd;
 
 typedef struct s_all
 {
