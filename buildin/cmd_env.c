@@ -15,6 +15,7 @@ void    get_envp(t_all *all, char **envp)
 		line++;
 	}
 	all->tline.env_arr[line] = NULL;
+	// check_shlvl(all, all->tline.env_arr);
 }
 
 void    cmd_env(t_all *all, int k)

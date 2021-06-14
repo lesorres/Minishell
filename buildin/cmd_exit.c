@@ -35,7 +35,7 @@ void	cmd_exit(t_all *all, char **arg, int k)
 	{
 		if (isdigit_line(all->cmd[k].arg[1]))
 		{
-			if (!all->cmd[k].arg[1])
+			if (!all->cmd[k].arg[2])
 				print_exit(all, k);
 			else
 			{
