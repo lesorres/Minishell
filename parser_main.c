@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/13 22:09:31 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/14 16:09:49 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main()
 	char *str;
 	t_all all;
 
-	str = ft_strdup("blabla$HOME blabla");
+	str = ft_strdup("blabla$USER blabla");
 
 	//"'dfjkd'; dkjfd" //'dfjkd';ffg
 	//"echo sjdhdsj lfllf flkgmblf ; echo -n; echo ----n; echo -n-n-n jjj; echo -nnn- ; echo -nnn -nnn j; echo n n; echo -nf"

@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/13 22:31:10 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/14 17:45:20 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -253,42 +253,10 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 	// printf("\n\n");
 }
 
-int		find_str_index_in_arr(char **arr, char *str);
-{
-	int		i;
 
-	i = 0;
-	while (arr[i])
-	{
-		if (ft_strncmp(arr[i], str, ft_strlen(str)) == 0)
-			break;
-		i++;
-	}
-	if (arr[i] == NULL)
-		i = -1;				// переменную не нашли
-	
-}
 
-void	compare_with_env(t_all *all, char *line, int i)
-{
-	char	*tmp;
-	char	*tmp2;
-	int		k;
-
-	tmp = ft_strdup(&line[i]);
-	k = 0;
-	while(tmp[k] != ' ' && tmp[k] != '\0')
-		k++;
-	tmp2 = ft_substr(tmp, 1, k); //HOME
-	free(tmp);
-	tmp = ft_strjoin(tmp2, "=");
-	printf("str = %s\n", tmp2);
-	k = find_env_index(all->tline.env_arr, tmp);
-	// return (0);
-}
-
-void	parser(char *line, t_all *all)
-// void	parser(char *line, t_all *all, char **arg, char **envp)
+// void	parser(char *line, t_all *all)
+void	parser(char *line, t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
@@ -353,7 +321,7 @@ void	parser(char *line, t_all *all)
 		{
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
-			// buildin_func(all, arg, envp);
+			buildin_func(all, arg, envp);
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
@@ -365,7 +333,7 @@ void	parser(char *line, t_all *all)
 	{
 		// printf ("%s\n","here1");
 		check_echo_n_flag(all, j);
-		// buildin_func(all, arg, envp);
+		buildin_func(all, arg, envp);
 	}
 	// extract_cmd_name(all); //old one
 	// print_parsed_string(all);

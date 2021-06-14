@@ -11,7 +11,7 @@
 # include <curses.h>
 # include <term.h>
 # include <fcntl.h>
-# include "parser_header.h"
+// # include "parser_header.h"
 # include <errno.h>
 
 
