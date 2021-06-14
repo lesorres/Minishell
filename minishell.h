@@ -29,15 +29,14 @@ typedef struct s_all
 	t_lst	builds;
 	t_termline tline;
 	char	**path_arr;
-	char	*tmp;
+	char	*tmp; //где используется?
+	char	*line;
 
 }				t_all;
 
 int		ft_putchar(char c);
 char	*read_line(int fd);
 int 	len(char **str);
-// void	parser(char *line, t_all *all);
-void	parser(char *line, t_all *all, char **arg, char **envp);
 char	*add_quotes(t_all *all, char *line);
 int		find_env_equal(char *line);
 void	check_shlvl(t_all *all, char **envp);
@@ -55,5 +54,11 @@ void	cmd_exit(t_all *all, char **arg, int k);
 void    add_new_env_param(t_all *all, char *line);
 void    get_envp(t_all *all, char **envp);
 void	split_path(t_all *all);
+
+/*  parser functions  */
+
+// void	parser(char *line, t_all *all);
+void	parser(char *line, t_all *all, char **arg, char **envp);
+void	compare_with_env(t_all *all, char *line, int i);
 
 #endif
