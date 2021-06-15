@@ -45,7 +45,6 @@ typedef struct s_all
 	char	**path_arr;
 	char	*tmp; //где используется?
 	char	*line;
-
 }				t_all;
 
 int		ft_putchar(char c);
