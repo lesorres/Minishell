@@ -70,8 +70,8 @@ void	split_path(t_all *all);
 
 /*  parser functions  */
 
-// void	parser(char *line, t_all *all);
-void	parser(char *line, t_all *all, char **arg, char **envp);
+// void	parser(t_all *all);
+void	parser(t_all *all, char **arg, char **envp);
 void	compare_with_env(t_all *all, char *line, int i);
 
 #endif

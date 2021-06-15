@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/14 17:45:20 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/15 18:24:50 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,8 +255,8 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 
 
 
-// void	parser(char *line, t_all *all)
-void	parser(char *line, t_all *all, char **arg, char **envp)
+// void	parser(t_all *all)
+void	parser(t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
@@ -271,40 +271,40 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 	n = 0;
 	d = 0;
 	all->cmd_n = 1;
-	line = ft_strtrim(line, " ");
-	if (check_line_validity(line) == 1)
+	all->line = ft_strtrim(all->line, " ");
+	if (check_line_validity(all->line) == 1)
 		return;
-	line_len = ft_strlen(line);
+	line_len = ft_strlen(all->line);
 	cmd_mem_alloc(all);
-	while(line[i])
+	while(all->line[i])
 	{
 		k = 0;
 		tmp = malloc(line_len);
-		while (line[i] == ' ') // && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
+		while (all->line[i] == ' ')
 			i++;
-		while (line[i] != ' ' && line[i]) // && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
+		while (all->line[i] != ' ' && all->line[i])
 		{
-			if (line[i] == ';') // || line[i] == '|')
+			if (all->line[i] == ';') // || line[i] == '|')
 			{
 				i++;
 				break;
 			}
 			else
 			{
-				i = quotes_flags_switch(all, line, i, j);
-				while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && line[i])
+				i = quotes_flags_switch(all, all->line, i, j);
+				while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
 				{
 					// i = check_qoutes_content(all, line, i, j);
-					tmp[k++] = line[i++];
-					i = quotes_flags_switch(all, line, i, j);
+					tmp[k++] = all->line[i++];
+					i = quotes_flags_switch(all, all->line, i, j);
 				}
-				if (line[i] != ' ' && line[i] != ';' && line[i])
+				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
-					if (line[i] == '$')
+					if (all->line[i] == '$')
 					{
-						compare_with_env(all, line, i);
+						compare_with_env(all, all->line, i);
 					}
-					tmp[k++] = line[i++];
+					tmp[k++] = all->line[i++];
 				}
 			}
 		}
@@ -315,9 +315,8 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
 			ft_strcpy(all->cmd[j].arg[n], tmp);
 			n++;
-			// all->cmd->arg_n = n;
 		}
-		if (line[i - 1] == ';')// && !all->cmd[j].dq_fl && !all->cmd[j].sq_fl)
+		if (all->line[i - 1] == ';')
 		{
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
@@ -328,6 +327,7 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 		}
 		free(tmp);
 	}
+
 	// extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
@@ -335,6 +335,5 @@ void	parser(char *line, t_all *all, char **arg, char **envp)
 		check_echo_n_flag(all, j);
 		buildin_func(all, arg, envp);
 	}
-	// extract_cmd_name(all); //old one
-	// print_parsed_string(all);
+	print_parsed_string(all);
 }
