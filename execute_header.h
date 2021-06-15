@@ -33,6 +33,8 @@ typedef struct s_termline
 	int		equal_sign;
 	int		first_shlvl;
 	char    *path;
+	char	*pwd;
+	char	*new_name;
 }   t_termline;
 
 int	isdigit_line(char *str);
