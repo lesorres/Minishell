@@ -51,6 +51,7 @@ int		ft_putchar(char c);
 char	*read_line(int fd);
 int 	len(char **str);
 char	*add_quotes(t_all *all, char *line);
+char	*add_path(t_all *all, char **envp);
 int		find_env_equal(char *line);
 void	check_shlvl(t_all *all, char **envp);
 
