@@ -91,6 +91,8 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 
 	i = 0;
 	pid = fork();
+	signal(SIGINT, int_sign);
+	signal(SIGQUIT, quit_sign);
 	if (!pid)
 	{
 		while (all->path_arr[i])
@@ -114,7 +116,10 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 			if (exec == -1)
 				i++;
 			if (all->path_arr[i] == NULL && exec == -1)
+			{
 				printf("%s: %s: %s\n", "minishell", arg[0], strerror(errno));
+
+			}
 		}
 	}
 	else if (pid < 0)

@@ -23,9 +23,14 @@ void    cmd_env(t_all *all, int k)
 	int     i;
 
 	i = 0;
-	while (all->tline.env_arr[i])
+	if (all->cmd[k].arg[1])
+		printf("%s: %s: %s\n", all->cmd[k].arg[0], all->cmd[k].arg[1], "No such file or directory");
+	else
 	{
-		printf("i = %d env = %s\n", i, all->tline.env_arr[i]);
-		i++;
+		while (all->tline.env_arr[i])
+		{
+			printf("%s\n", all->tline.env_arr[i]);
+			i++;
+		}
 	}
 }
