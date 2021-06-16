@@ -266,12 +266,13 @@ void set_terminal(struct  termios *term)
 {
 	term->c_lflag &= ~(ECHO);
 	term->c_lflag &= ~(ICANON);
+	term->c_lflag &= ~(ISIG);
 	tcsetattr(0, TCSANOW, term);
 }
 
 void res_terminal(struct  termios *term)
 {
-	term->c_lflag |= ECHO | ICANON;
+	term->c_lflag |= ECHO | ICANON | ISIG;
 	tcsetattr(0, TCSANOW, term);
 }
 
@@ -293,6 +294,7 @@ int main(int argc, char **arg, char **envp)
 
 	path = malloc(PATH_LEN + 1);
 	all.tline.path = getcwd(path, PATH_LEN);
+	// printf("all.tline.path = %s\n", all.tline.path);
 	file_name = ft_strjoin(all.tline.path, "/.HISTORY");
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
@@ -305,9 +307,10 @@ int main(int argc, char **arg, char **envp)
 	get_envp(&all, envp);
 	check_shlvl(&all, all.tline.env_arr);
 
-	split_path(&all);
+	split_path(&all);   // нужно удалять массив, если unset PATH
 	
-	while (strcmp(str, "\4"))
+		// term.c_lflag &= ~(ISIG);
+	while (strcmp(str, "\4"))  /* при многочисленном нажатии enter в истории при зажатии кнопок вверх выводятся пустые строки */
 	{
 		set_terminal(&term);
 		all.line = malloc(1024);
@@ -315,17 +318,19 @@ int main(int argc, char **arg, char **envp)
 		all.tline.cursor = PROMPT;
 		all.tline.symb_num = PROMPT;
 		write(1, "#minishell> ", PROMPT);
+		// signal(SIGINT, int_sign);
+		// signal(SIGQUIT, quit_sign);
 		ft_putstr_fd(save_cursor, 1);
 		str[0] = 0;
 		count = 0;
 		tline.curr_line = tline.line_num;
-		while (strcmp(str, "\n") && strcmp(str, "\4"))
+		while (ft_strcmp(str, "\n") && ft_strcmp(str, "\4"))
 		{
 			if (all.tline.symb_num < all.tline.cursor)
 				all.tline.symb_num = all.tline.cursor;
 			l = read(1, str, 20);
 			str[l] = 0;
-			if (!strcmp(str, UP) || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
+			if (!ft_strcmp(str, UP) || !ft_strcmp(str, OPT_UP) || !ft_strcmp(str, SHF_UP) || !ft_strcmp(str, CTRL_UP))
 			{
 				int		hist_fd;
 				char	*tmp;
@@ -346,7 +351,7 @@ int main(int argc, char **arg, char **envp)
 				}
 				close(hist_fd);
 			}
-			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
+			else if (!ft_strcmp(str, DWN) || !ft_strcmp(str, OPT_DWN) || !ft_strcmp(str, SHF_DWN) || !ft_strcmp(str, CTRL_DWN))
 			{
 				int		hist_fd;
 				char	*tmp;
@@ -369,7 +374,7 @@ int main(int argc, char **arg, char **envp)
 					write(1, all.tline.print_line, ft_strlen(all.tline.print_line));
 				close(hist_fd);
 			}
-			else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
+			else if (!ft_strcmp(str, key_backspace) || !ft_strcmp(str, "\177"))
 			{	
 				if (all.tline.cursor > PROMPT)
 				{
@@ -380,7 +385,7 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("dc", 0), 1);
 				}
 			}
-			else if (!strcmp(str, LEFT))
+			else if (!ft_strcmp(str, LEFT))
 			{
 				if (all.tline.cursor > PROMPT)
 				{
@@ -388,7 +393,7 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("le", 0), 1);
 				}
 			}
-			else if (!strcmp(str, RiGHT))
+			else if (!ft_strcmp(str, RiGHT))
 			{
 				if (all.tline.symb_num > all.tline.cursor)
 				{
@@ -406,12 +411,18 @@ int main(int argc, char **arg, char **envp)
 				count++;
 			}
 		}
+		if (!ft_strcmp(str, "\4"))
+		{
+			write(1, "exit\n", 5);
+			// write(1, "\n", 1);
+        	exit (0);
+		}
 		if (all.line[0] != '\n')
 			write(fd, all.line, ft_strlen(all.line));
 		all.line[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
-		parser(all.line, &all, arg, envp);
+		parser(&all, arg, envp);
 		free(all.line);
 		tline.line_num++;
 	}
