@@ -11,6 +11,7 @@
 # include <curses.h>
 # include <term.h>
 # include <fcntl.h>
+# include <signal.h>
 // # include "parser_header.h"
 # include <errno.h>
 
@@ -54,6 +55,8 @@ char	*add_quotes(t_all *all, char *line);
 char	*add_path(t_all *all, char **envp);
 int		find_env_equal(char *line);
 void	check_shlvl(t_all *all, char **envp);
+void    int_sign(int sign);
+void    quit_sign(int sign);
 
 /*  buildin commands  */
 
@@ -71,9 +74,9 @@ void	split_path(t_all *all);
 
 /*  parser functions  */
 
-void	parser(t_all *all);
-// void	parser(t_all *all, char **arg, char **envp);
+// void	parser(t_all *all);
+void	parser(t_all *all, char **arg, char **envp);
 // int		compare_with_env(t_all *all, char *line, int i);
-int		compare_with_env(t_all *all, char *line, int i);
+void	compare_with_env(t_all *all, char *line, int i);
 
 #endif
