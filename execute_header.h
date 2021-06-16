@@ -13,6 +13,7 @@
 # define TERM_NAME "xterm-256color"
 # define PROMPT 12
 # define PATH_LEN 1024
+# define CMD_N_F "command not found"
 
 typedef struct s_termline
 {
