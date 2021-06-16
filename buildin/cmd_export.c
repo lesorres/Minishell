@@ -177,7 +177,7 @@ void    cmd_export(t_all *all, int k)
 	{
 		while (all->tline.export_arr[i])
 		{
-		    printf("[%d] = declare -x %s\n", i, all->tline.export_arr[i]); //убрать d
+		    printf("declare -x %s\n", all->tline.export_arr[i]); //убрать d
 			i++;
 		}
 	}
