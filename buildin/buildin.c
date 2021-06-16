@@ -61,31 +61,22 @@ int		cmp_path(t_all *all, char *str, char *name)
 {
 	int		i;  // arr - all->path_arr; name - arg[0];
 	int		j;
-
 	int		len;
+	int		cmp;
 	char	*tmp;
 	char	*new_name;
 
 	i = 0;
 	j = int_strrchr(name, 47);
-	// printf("this string - %s, this j = %d\n", name, j);
 	len = ft_strlen(name);
-	// printf("len = %d\n", len);
 	tmp = ft_substr(name, 0, len - j);
-	// printf("tmp = %s\n", tmp);
-	// while (arr[i])
-	// {
-		int	cmp = ft_strncmp(str, tmp, ft_strlen(tmp));
-		// printf("arr[%i] = %s, cmp = %d\n", i, str, cmp);
-		if (!cmp)
-		{
-			all->tline.new_name = malloc(sizeof(len - j));
-			all->tline.new_name = ft_substr(name, (j + 1), len - j);
-			printf("new name - %s\n", all->tline.new_name);
-			return(1);
-		}
-		// i++;
-	// }
+	cmp = ft_strncmp(str, tmp, ft_strlen(tmp));
+	if (!cmp)
+	{
+		all->tline.new_name = malloc(sizeof(len - j));
+		all->tline.new_name = ft_substr(name, (j + 1), len - j);
+		return(1);
+	}
 	return (0);
 }
 
@@ -96,42 +87,34 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	int		i;
 	int		exec;
 	char	*tmp;
+	char	*path;
 
 	i = 0;
 	pid = fork();
 	if (!pid)
 	{
-
-	while (all->path_arr[i])
-	{
-		// printf("[%i] - %s\n", i, all->path_arr[i]);
-		i++;
-	}
-		i = 0;
 		while (all->path_arr[i])
 		{
-		// printf("name - %s\n", name);
-			if (ft_strrncmp(name, "/minishell", 10) != 0)
+			if (ft_strncmp(name, "./", 2) == 0 || ft_strrncmp(name, "/minishell", 10) == 0)
 			{
-				
-				// printf("ft_strrncmp(%s, %s) = %d\n", name, "/minishell", ft_strrncmp(name, "/minishell", 10));
+				path = add_path(all, all->tline.env_arr);
+				cmd = ft_strjoin(path, name);
+				exec = execve(name, arg, all->tline.env_arr);
+			}
+			else
+			{
 				if (!cmp_path(all, all->path_arr[i], name))
-				{
 					cmd = ft_strjoin(all->path_arr[i], name);
-					printf("cmd ------------- %s\n", cmd);
-				}
 				else
 					cmd = ft_strjoin(all->path_arr[i], all->tline.new_name);
 				exec = execve(cmd, arg, all->tline.env_arr);
 			}
-			else if (ft_strrncmp(name, "/minishell", 10) == 0)
-				exec = execve(name, arg, all->tline.env_arr);
+			// else if (ft_strrncmp(name, "/minishell", 10) == 0)
+			// 	exec = execve(name, arg, all->tline.env_arr);
 			if (exec == -1)
 				i++;
 			if (all->path_arr[i] == NULL && exec == -1)
-			{
 				printf("%s: %s: %s\n", "minishell", arg[0], strerror(errno));
-			}
 		}
 	}
 	else if (pid < 0)
@@ -166,8 +149,5 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	else if (!strcmp(all->cmd[i].arg[0], "exit"))
 	    cmd_exit(all, arg, i);
 	else
-	{
 		execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
-		// printf("execute arg[0] = %s\n", all->cmd[i].arg[0]);
-	}
 }
