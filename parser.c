@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 19:23:28 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 19:57:54 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -265,6 +265,7 @@ void	parser(t_all *all)
 	int	d;					//разница между i
 	int	line_len;
 	char *tmp;
+	int val_len;
 
 	i = 0;
 	j = 0;
@@ -298,22 +299,31 @@ void	parser(t_all *all)
 					tmp[k++] = all->line[i++];
 					i = quotes_flags_switch(all, all->line, i, j);
 				}
+						printf("here\n");
+						printf("i = %i", i);
+						printf("line[i] = %c", all->line[i]);
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
 					if (all->line[i] == '$')
 					{
-						compare_with_env(all, all->line, i);
+						val_len = compare_with_env(all, all->line, i);
 						tmp = ft_realloc(tmp, ft_strlen(all->line));
-						// while (all->line[i])
-						// 	tmp[k++] = all->line[i++];
+						while (all->line[i] && val_len > 0)
+						{
+							tmp[k++] = all->line[i++];
+							val_len--;
+						}
 					}
-					tmp[k++] = all->line[i++];
+					else
+						tmp[k++] = all->line[i++];
 				}
 			}
 		}
 		tmp[k] = '\0';
 			printf("\n\n\nj = %i, n = %i\n", j, n);
 		printf("tmp before writing in cmd    = |%s|\n", tmp);
+		printf("k					    = |%i|\n", k);
+		printf("tmp[k]					    = |%c|\n", tmp[k]);
 		if (tmp[0]) //здесь записываем слова в массив
 		{
 			arr_mem_alloc(all, j);

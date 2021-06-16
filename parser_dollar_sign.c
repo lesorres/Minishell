@@ -6,13 +6,13 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:39:22 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 19:20:38 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 20:00:23 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 # include "minishell.h"
 
-static void	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len) //не работает с ненайденными переменными : echo $PWDklklk
+static int	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len) //не работает с ненайденными переменными : echo $PWDklklk
 {
 	char	*tmp;
 	char	*env_val;
@@ -30,6 +30,7 @@ static void	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len)
 
 		free (all->line);
 		all->line = tmp;
+		return (0);
 	}
 	else
 	{
@@ -52,6 +53,7 @@ static void	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len)
 		free (all->line);
 		all->line = tmp;
 		printf("line after f= |%s|\n", all->line);
+		return (val_len);
 	}
 }
 
@@ -71,24 +73,26 @@ static int	find_env_index_in_arr(char **arr, char *str)
 	return(i);
 }
 
-void	compare_with_env(t_all *all, char *line, int i)
+int	compare_with_env(t_all *all, char *line, int i)
 {
 	char	*tmp;
 	char	*tmp2;
 	int		k;		//длина имени переменной окружения с $
 	int		n;		//индекс нужной переменной в массиве
+	int val_len;
 
 	tmp = ft_strdup(&line[i]);
 	k = 0;
-	while(tmp[k] != ' ' && tmp[k] != '\0')
+	while (tmp[k] != ' ' && tmp[k] != '\0')
 		k++;
 	if (k == 1)
-		return;			//ничего не меняется если подается просто $
+		return (1);			//ничего не меняется если подается просто $
 	tmp2 = ft_substr(tmp, 1, k - 1); //HOME
 	free(tmp);
 	tmp = ft_strjoin(tmp2, "="); //HOME=
 	n = find_env_index_in_arr(all->tline.env_arr, tmp);
-	repl_env_name_with_value(all, i, n, k);
+	val_len = repl_env_name_with_value(all, i, n, k);
+	return (val_len);
 }
 
 //echo $echo $PWDfff  echo fgfgfgf $PWhdjhd dfhjdfh  echo   $rrrr jhj h h h  

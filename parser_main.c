@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 19:19:27 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 20:01:53 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main()
 	// char *str;
 	t_all all;
 
-	all.line = ft_strdup("echo $ $    $hghghg     cvcvcv cvcv      $PWD $USER $PATH dhfdhj djfdkfj djkfkdjhf");
+	all.line = ft_strdup("echo    $?     $dssdsd    $hghghg     cvcvcv cvcv      $PWD $USER $PATH dhfdhj djfdkfj djkfkdjhf    $$$$ # $VSCODE_GIT_ASKPASS_NODE");
 	all.tline.env_arr = ft_calloc(6, sizeof(char*));
 	all.tline.env_arr[0] = "PWD=/Users/kmeeseek/Desktop/minishell";
 	all.tline.env_arr[1] = "PATH=/Users/kmeeseek/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/usr/local/munki:~/.dotnet/tools:/Users/kmeeseek/.brew/bin";
