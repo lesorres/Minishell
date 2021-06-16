@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/15 18:24:50 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 19:23:28 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,19 @@ void print_parsed_string(t_all *all)
 	int j = 0;
 	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
-		printf("name(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
+		// printf("\nname(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
 		while (all->cmd[j].arg[n])
 		{
 			// printf("adr       = |%p|\n", all->cmd[j].arg[n]);
-			printf("str(#%i %i) = |%s|\n\n", j, n, all->cmd[j].arg[n]);
+			printf("str(#%i %i) = |%s|\n", j, n, all->cmd[j].arg[n]);
 			// printf("%i - %i\n", n, all->cmd[j].arg_n);
 			n++;
 		}
-		printf("arg_n = %i\n", all->cmd[j].arg_n);
+		// printf("arg_n = %i\n", all->cmd[j].arg_n);
 		j++;
 		n = 0;
 	}
-	printf("cmd_n = %i", all->cmd_n);
+	// printf("cmd_n = %i", all->cmd_n);
 }
 
 void error(char *str)
@@ -255,8 +255,8 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 
 
 
-// void	parser(t_all *all)
-void	parser(t_all *all, char **arg, char **envp)
+void	parser(t_all *all)
+// void	parser(t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
@@ -303,24 +303,35 @@ void	parser(t_all *all, char **arg, char **envp)
 					if (all->line[i] == '$')
 					{
 						compare_with_env(all, all->line, i);
+						tmp = ft_realloc(tmp, ft_strlen(all->line));
+						// while (all->line[i])
+						// 	tmp[k++] = all->line[i++];
 					}
 					tmp[k++] = all->line[i++];
 				}
 			}
 		}
 		tmp[k] = '\0';
+			printf("\n\n\nj = %i, n = %i\n", j, n);
+		printf("tmp before writing in cmd    = |%s|\n", tmp);
 		if (tmp[0]) //здесь записываем слова в массив
 		{
 			arr_mem_alloc(all, j);
-			all->cmd[j].arg[n] = malloc(ft_strlen(tmp));
+			printf("all->cmd[%i].arg[%i] before cpy= |%s|\n", j, n, all->cmd[j].arg[n]);
+			all->cmd[j].arg[n] = malloc(ft_strlen(tmp) + 1);
+			printf("tmp before arg malloc        = |%s|\n", tmp);
 			ft_strcpy(all->cmd[j].arg[n], tmp);
+			printf("all->cmd[%i].arg[%i] after cpy = |%s|\n", j, n, all->cmd[j].arg[n]);
 			n++;
 		}
+			printf("tmp after writing in cmd     = |%s|\n", tmp);
+			printf("all->cmd[%i].arg[%i]           = |%s|\n\n", j, n - 1, all->cmd[j].arg[n - 1]);
+			print_parsed_string(all);
 		if (all->line[i - 1] == ';')
 		{
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
-			buildin_func(all, arg, envp);
+			// buildin_func(all, arg, envp);
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
@@ -333,7 +344,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	{
 		// printf ("%s\n","here1");
 		check_echo_n_flag(all, j);
-		buildin_func(all, arg, envp);
+		// buildin_func(all, arg, envp);
 	}
-	print_parsed_string(all);
+	// print_parsed_string(all);
 }

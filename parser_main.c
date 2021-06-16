@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/16 22:10:52 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/15 17:44:15 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 19:19:27 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,13 @@ int	main()
 	// char *str;
 	t_all all;
 
-	all.line = ft_strdup("echo blabla blabla $kjdfkjdjkj $PWD $HOME $NAME $jhdjhfbb $USER");
-	all.tline.env_arr = ft_calloc(4, sizeof(char*));
-	all.tline.env_arr[0] = "PWD=pwd";
-	all.tline.env_arr[1] = "HOME=home";
-	all.tline.env_arr[2] = "USER=user";
+	all.line = ft_strdup("echo $ $    $hghghg     cvcvcv cvcv      $PWD $USER $PATH dhfdhj djfdkfj djkfkdjhf");
+	all.tline.env_arr = ft_calloc(6, sizeof(char*));
+	all.tline.env_arr[0] = "PWD=/Users/kmeeseek/Desktop/minishell";
+	all.tline.env_arr[1] = "PATH=/Users/kmeeseek/.brew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:/usr/local/munki:~/.dotnet/tools:/Users/kmeeseek/.brew/bin";
+	all.tline.env_arr[2] = "HOME=/Users/kmeeseek";
+	all.tline.env_arr[3] = "USER=kmeeseek";
+	all.tline.env_arr[4] = "VSCODE_GIT_ASKPASS_NODE=/Applications/Visual Studio Code.app/Contents/Frameworks/Code Helper (Renderer).app/Contents/MacOS/Code Helper (Renderer)";
 	
 	//"'dfjkd'; dkjfd" //'dfjkd';ffg
 	//"echo sjdhdsj lfllf flkgmblf ; echo -n; echo ----n; echo -n-n-n jjj; echo -nnn- ; echo -nnn -nnn j; echo n n; echo -nf"
