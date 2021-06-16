@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:39:22 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 20:00:23 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 20:09:30 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,22 @@ static int	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len) 
 		line_len = ft_strlen(all->line);
 		val_len = ft_strlen(all->tline.env_arr[env_i]) - name_len;
 		env_val = ft_substr(all->tline.env_arr[env_i], name_len, val_len);
-		printf("\nenv_val = |%s|\n", env_val);
+		// printf("\nenv_val = |%s|\n", env_val);
 		tmp = ft_calloc((line_len - name_len + val_len + 1), sizeof(char));
-		printf("tmp_len = |%i|\n", (line_len - name_len + val_len + 1));
+		// printf("tmp_len = |%i|\n", (line_len - name_len + val_len + 1));
 
 		t = ft_strlcpy(tmp, all->line, i + 1);
 		// printf("line_len = |%i|\n\n", line_len);
-		printf("tmp_1_trird = |%s|\n", tmp);
+		// printf("tmp_1_trird = |%s|\n", tmp);
 		
 		t = ft_strlcpy(&tmp[i], env_val, val_len + 1);
-		printf("tmp_2_trird = |%s|\n", tmp);
+		// printf("tmp_2_trird = |%s|\n", tmp);
 
 		t = ft_strlcpy(&tmp[i + val_len], &all->line[i + name_len], (line_len - i - name_len + 1));
-		printf("tmp_3_trird = |%s|\n", tmp);
+		// printf("tmp_3_trird = |%s|\n", tmp);
 		free (all->line);
 		all->line = tmp;
-		printf("line after f= |%s|\n", all->line);
+		// printf("line after f= |%s|\n", all->line);
 		return (val_len);
 	}
 }
@@ -94,5 +94,3 @@ int	compare_with_env(t_all *all, char *line, int i)
 	val_len = repl_env_name_with_value(all, i, n, k);
 	return (val_len);
 }
-
-//echo $echo $PWDfff  echo fgfgfgf $PWhdjhd dfhjdfh  echo   $rrrr jhj h h h  

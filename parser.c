@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 19:57:54 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/16 20:13:42 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -255,8 +255,8 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 
 
 
-void	parser(t_all *all)
-// void	parser(t_all *all, char **arg, char **envp)
+// void	parser(t_all *all)
+void	parser(t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
@@ -299,9 +299,6 @@ void	parser(t_all *all)
 					tmp[k++] = all->line[i++];
 					i = quotes_flags_switch(all, all->line, i, j);
 				}
-						printf("here\n");
-						printf("i = %i", i);
-						printf("line[i] = %c", all->line[i]);
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
 					if (all->line[i] == '$')
@@ -320,28 +317,28 @@ void	parser(t_all *all)
 			}
 		}
 		tmp[k] = '\0';
-			printf("\n\n\nj = %i, n = %i\n", j, n);
-		printf("tmp before writing in cmd    = |%s|\n", tmp);
-		printf("k					    = |%i|\n", k);
-		printf("tmp[k]					    = |%c|\n", tmp[k]);
+		// printf("\n\n\nj = %i, n = %i\n", j, n);
+		// printf("tmp before writing in cmd    = |%s|\n", tmp);
+		// printf("k					    = |%i|\n", k);
+		// printf("tmp[k]					    = |%c|\n", tmp[k]);
 		if (tmp[0]) //здесь записываем слова в массив
 		{
 			arr_mem_alloc(all, j);
-			printf("all->cmd[%i].arg[%i] before cpy= |%s|\n", j, n, all->cmd[j].arg[n]);
+			// printf("all->cmd[%i].arg[%i] before cpy= |%s|\n", j, n, all->cmd[j].arg[n]);
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp) + 1);
-			printf("tmp before arg malloc        = |%s|\n", tmp);
+			// printf("tmp before arg malloc        = |%s|\n", tmp);
 			ft_strcpy(all->cmd[j].arg[n], tmp);
-			printf("all->cmd[%i].arg[%i] after cpy = |%s|\n", j, n, all->cmd[j].arg[n]);
+			// printf("all->cmd[%i].arg[%i] after cpy = |%s|\n", j, n, all->cmd[j].arg[n]);
 			n++;
 		}
-			printf("tmp after writing in cmd     = |%s|\n", tmp);
-			printf("all->cmd[%i].arg[%i]           = |%s|\n\n", j, n - 1, all->cmd[j].arg[n - 1]);
-			print_parsed_string(all);
+			// printf("tmp after writing in cmd     = |%s|\n", tmp);
+			// printf("all->cmd[%i].arg[%i]           = |%s|\n\n", j, n - 1, all->cmd[j].arg[n - 1]);
+			// print_parsed_string(all);
 		if (all->line[i - 1] == ';')
 		{
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
-			// buildin_func(all, arg, envp);
+			buildin_func(all, arg, envp);
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
@@ -354,7 +351,7 @@ void	parser(t_all *all)
 	{
 		// printf ("%s\n","here1");
 		check_echo_n_flag(all, j);
-		// buildin_func(all, arg, envp);
+		buildin_func(all, arg, envp);
 	}
 	// print_parsed_string(all);
 }
