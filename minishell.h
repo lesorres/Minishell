@@ -57,6 +57,7 @@ int		find_env_equal(char *line);
 void	check_shlvl(t_all *all, char **envp);
 void    int_sign(int sign);
 void    quit_sign(int sign);
+void    kill_sig(int sign);
 
 /*  buildin commands  */
 
