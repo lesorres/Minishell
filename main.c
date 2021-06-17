@@ -280,10 +280,11 @@ void	init_all_vars(t_all *all)
 {
 	all->line = malloc(1024);
 	all->status = ft_calloc(4, sizeof(char));
+	all->status = "0";
 	all->tline.print_line = malloc(1024);
 	all->tline.cursor = PROMPT;
 	all->tline.symb_num = PROMPT;
-	all->tline.curr_line = all->tline.line_num;
+	// all->tline.curr_line = all->tline.line_num;
 }
 
 int main(int argc, char **arg, char **envp)
@@ -319,11 +320,12 @@ int main(int argc, char **arg, char **envp)
 	{
 		set_terminal(&term);
 		init_all_vars(&all);
+		printf("status = %s\n", all.status);
 		// all.line = malloc(1024);
 		// all.tline.print_line = malloc(1024);
 		// all.tline.cursor = PROMPT;
 		// all.tline.symb_num = PROMPT;
-		// tline.curr_line = tline.line_num;
+		tline.curr_line = tline.line_num;
 		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
 		str[0] = 0;
