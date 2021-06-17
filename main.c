@@ -279,7 +279,7 @@ void res_terminal(struct  termios *term)
 void	init_all_vars(t_all *all)
 {
 	all->line = malloc(1024);
-	all->status = NULL;
+	all->status = ft_calloc(4, sizeof(char));
 	all->tline.print_line = malloc(1024);
 	all->tline.cursor = PROMPT;
 	all->tline.symb_num = PROMPT;
