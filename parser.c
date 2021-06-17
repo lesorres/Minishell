@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 20:13:42 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/17 21:17:11 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -263,6 +263,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	int k;					//счетчик tmp
 	int n;					//номер аргумента
 	int	d;					//разница между i
+	int z;
 	int	line_len;
 	char *tmp;
 	int val_len;
@@ -272,7 +273,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	n = 0;
 	d = 0;
 	all->cmd_n = 1;
-	all->line = ft_strtrim(all->line, " ");
+	all->line = ft_strtrim(all->line, " \t");
 	if (check_line_validity(all->line) == 1)
 		return;
 	line_len = ft_strlen(all->line);
@@ -281,7 +282,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	{
 		k = 0;
 		tmp = malloc(line_len);
-		while (all->line[i] == ' ')
+		while (all->line[i] == ' ' || all->line[i] == '\t')
 			i++;
 		while (all->line[i] != ' ' && all->line[i])
 		{
@@ -301,8 +302,16 @@ void	parser(t_all *all, char **arg, char **envp)
 				}
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
-					if (all->line[i] == '$')
+					if (all->line[i] == '$' && all->line[i + 1] == '?')
 					{
+						i = i + 2;
+						z = 0;
+						while (all->status[z])
+							tmp[k++] = all->status[z++];
+					}
+					else if (all->line[i] == '$')
+					{
+						// check_question_sing(all->line[i]); //учесть $?
 						val_len = compare_with_env(all, all->line, i);
 						tmp = ft_realloc(tmp, ft_strlen(all->line));
 						while (all->line[i] && val_len > 0)

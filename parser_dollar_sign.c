@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:39:22 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/16 20:09:30 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/17 20:51:58 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	compare_with_env(t_all *all, char *line, int i)
 	int val_len;
 
 	tmp = ft_strdup(&line[i]);
+
 	k = 0;
 	while (tmp[k] != ' ' && tmp[k] != '\0')
 		k++;
