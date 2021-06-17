@@ -38,11 +38,12 @@ typedef struct	s_cmd
 
 typedef struct s_all
 {
-	char	**hist_arr;
     int     cmd_n;
     t_cmd   *cmd;
 	t_lst	builds;
 	t_termline tline;
+	char	*status;
+	char	**hist_arr; //возможно можно будет удалить 
 	char	**path_arr;
 	char	*tmp; //где используется?
 	char	*line;
