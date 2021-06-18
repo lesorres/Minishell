@@ -278,12 +278,12 @@ void res_terminal(struct  termios *term)
 
 void	init_all_vars(t_all *all)
 {
-	all->line = malloc(1024);
-	all->status = ft_calloc(4, sizeof(char));
-	all->status = "0";
-	all->tline.print_line = malloc(1024);
-	all->tline.cursor = PROMPT;
-	all->tline.symb_num = PROMPT;
+	// all->line = malloc(1024);
+	// all->status = ft_calloc(4, sizeof(char));
+	// all->status = "0";
+	// all->tline.print_line = malloc(1024);
+	// all->tline.cursor = PROMPT;
+	// all->tline.symb_num = PROMPT;
 	// all->tline.curr_line = all->tline.line_num;
 }
 
@@ -311,32 +311,32 @@ int main(int argc, char **arg, char **envp)
 	tgetent(0, TERM_NAME);
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
+	all.status = ft_calloc(4, sizeof(char));
 	get_envp(&all, envp);
 	check_shlvl(&all, all.tline.env_arr);
 
 	split_path(&all);
-	
-	while (strcmp(str, "\4"))
+	while (ft_strcmp(str, "\4"))
 	{
 		set_terminal(&term);
-		init_all_vars(&all);
-		printf("status = %s\n", all.status);
-		// all.line = malloc(1024);
-		// all.tline.print_line = malloc(1024);
-		// all.tline.cursor = PROMPT;
-		// all.tline.symb_num = PROMPT;
+		// init_all_vars(&all);
+		// printf("status = %s\n", all.status);
+		all.line = malloc(1024);
+		all.tline.print_line = malloc(1024);
+		all.tline.cursor = PROMPT;
+		all.tline.symb_num = PROMPT;
 		tline.curr_line = tline.line_num;
 		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
 		str[0] = 0;
 		count = 0;
-		while (strcmp(str, "\n") && strcmp(str, "\4"))
+		while (ft_strcmp(str, "\n") && ft_strcmp(str, "\4"))
 		{
 			if (all.tline.symb_num < all.tline.cursor)
 				all.tline.symb_num = all.tline.cursor;
 			l = read(1, str, 20);
 			str[l] = 0;
-			if (!strcmp(str, UP) || !strcmp(str, OPT_UP) || !strcmp(str, SHF_UP) || !strcmp(str, CTRL_UP))
+			if (!ft_strcmp(str, UP) || !ft_strcmp(str, OPT_UP) || !ft_strcmp(str, SHF_UP) || !ft_strcmp(str, CTRL_UP))
 			{
 				int		hist_fd;
 				char	*tmp;
@@ -357,7 +357,7 @@ int main(int argc, char **arg, char **envp)
 				}
 				close(hist_fd);
 			}
-			else if (!strcmp(str, DWN) || !strcmp(str, OPT_DWN) || !strcmp(str, SHF_DWN) || !strcmp(str, CTRL_DWN))
+			else if (!ft_strcmp(str, DWN) || !ft_strcmp(str, OPT_DWN) || !ft_strcmp(str, SHF_DWN) || !ft_strcmp(str, CTRL_DWN))
 			{
 				int		hist_fd;
 				char	*tmp;
@@ -380,7 +380,7 @@ int main(int argc, char **arg, char **envp)
 					write(1, all.tline.print_line, ft_strlen(all.tline.print_line));
 				close(hist_fd);
 			}
-			else if (!strcmp(str, key_backspace) || !strcmp(str, "\177"))
+			else if (!ft_strcmp(str, key_backspace) || !ft_strcmp(str, "\177"))
 			{	
 				if (all.tline.cursor > PROMPT)
 				{
@@ -391,7 +391,7 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("dc", 0), 1);
 				}
 			}
-			else if (!strcmp(str, LEFT))
+			else if (!ft_strcmp(str, LEFT))
 			{
 				if (all.tline.cursor > PROMPT)
 				{
@@ -399,7 +399,7 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("le", 0), 1);
 				}
 			}
-			else if (!strcmp(str, RiGHT))
+			else if (!ft_strcmp(str, RiGHT))
 			{
 				if (all.tline.symb_num > all.tline.cursor)
 				{
@@ -410,6 +410,7 @@ int main(int argc, char **arg, char **envp)
 			else
 			{
 				all.tline.cursor += write(1, str, l);
+				all.tline.print_line = ft_realloc(all.tline.print_line, ft_strlen(all.tline.print_line) + 1);
 				all.tline.print_line[count] = str[0];
 				all.tline.print_line[count + 1] = 0;
 				all.line[count] = str[0];
@@ -423,6 +424,8 @@ int main(int argc, char **arg, char **envp)
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
 		parser(&all, arg, envp);
+		printf("status - %s\n", all.status);
+		// printf("all.cmd[0].arg[0] = |%s|, all.cmd[0].arg[1] = |%s|\n", all.cmd[0].arg[0], all.cmd[0].arg[1]);
 		free(all.line);
 		tline.line_num++;
 	}
