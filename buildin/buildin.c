@@ -1,19 +1,5 @@
 #include "../minishell.h"
 
-void		print_arr(char **args)
-{
-	int i;
-
-	i = 0;
-	while (args[i])
-	{
-		printf("%s\n", args[i]);
-		i++;
-	}
-	if (args[i] == NULL)
-		printf("<null>\n");
-}
-
 int len(char **str)
 {
     int	i;
@@ -59,7 +45,7 @@ int	int_strrchr(char *s, int c)
 
 int		cmp_path(t_all *all, char *str, char *name)   
 {
-	int		i;  // arr - all->path_arr; name - arg[0];
+	int		i;
 	int		j;
 	int		len;
 	int		cmp;
@@ -111,14 +97,14 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 					cmd = ft_strjoin(all->path_arr[i], all->tline.new_name);
 				exec = execve(cmd, arg, all->tline.env_arr);
 			}
-			// else if (ft_strrncmp(name, "/minishell", 10) == 0)
-			// 	exec = execve(name, arg, all->tline.env_arr);
 			if (exec == -1)
 				i++;
 			if (all->path_arr[i] == NULL && exec == -1)
 			{
-				printf("%s: %s: %s\n", "minishell", arg[0], strerror(errno));
-
+				if (ft_strncmp(name, "/", 1))
+					printf("minishell: %s: command not found\n", arg[0]);
+				else if (!ft_strncmp(name, "/", 1))
+					printf("minishell: %s: %s\n", arg[0], strerror(2));
 			}
 		}
 	}
@@ -137,10 +123,9 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	int i;
 
 	i = all->cmd_n - 2;
-	printf("arg[0] = %s\n", all->cmd[i].arg[0]);
 	// while (!all->cmd[i].null && all->cmd[i].arg)
 	if (!strcmp(all->cmd[i].arg[0], "cd"))
-		cmd_cd(all, envp, i);
+		cmd_cd(all, all->tline.env_arr, i);
 	else if (!strcmp(all->cmd[i].arg[0], "echo"))
 		cmd_echo(all, arg, i);
 	else if (!strcmp(all->cmd[i].arg[0], "pwd"))
