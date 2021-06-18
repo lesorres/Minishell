@@ -90,12 +90,16 @@ void	cmd_cd(t_all *all, char **envp, int k)
 	if (all->cmd[k].arg[1] && ft_strcmp(all->cmd[k].arg[1], "."))
 	{
 		if (chdir(all->cmd[k].arg[1]) == -1)
+		{
 			error_handler(all->cmd[k].arg[0], all->cmd[k].arg[1], strerror(errno));
+			status = "1";
+		}
 		else
 		{
 			i = 0;
 			tmp = getcwd(tmp, PATH_LEN);
 			srch_str_in_arr(all, tmp);
+			status = "0";
 		}
 	}
 	else if (!all->cmd[k].arg[1])
@@ -103,7 +107,10 @@ void	cmd_cd(t_all *all, char **envp, int k)
 		tmp_path = getenv("HOME");
 		chdir(tmp_path);
 		if (find_var_in_arr(all->tline.env_arr, "HOME=") == -1)
+		{
 			printf("minishell: %s: HOME not set\n", all->cmd[k].arg[0]);
+			status = "1";
+		}
 	}
 	add_oldpwd(all, path);
 	free(path);
