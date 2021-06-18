@@ -110,6 +110,27 @@ void	add_env_val(t_all *all, int i, char *line)
 	}
 }
 
+int	check_valid_id(char *cmd, char *line)
+{
+	int	i;
+
+	i = 1;
+	if (!ft_isalpha(line[0]) && line[0] != '_')
+	{
+		printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
+		return (1);
+	}
+	while (line[i])
+	{
+		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) == 0 || line[i] == '_')
+			return (0);
+		else
+			printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
+		i++;
+	}
+	return (0);
+}
+
 int		check_val(t_all *all, char *line, int k)
 {
 	char	*tmp;
@@ -119,6 +140,7 @@ int		check_val(t_all *all, char *line, int k)
 	int		j;
 
 	i = 0;
+
 	all->tline.equal_sign = -1;
 	j = find_equal_sign(all, line);
 	tmp = ft_substr(line, 0, j);
@@ -129,13 +151,6 @@ int		check_val(t_all *all, char *line, int k)
 		if (strcmp(env_tmp, tmp) == 0)
 		{
 			add_env_val(all, i, line);
-			// if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
-			// 	all->tline.env_arr[i] = add_quotes(all, line);
-			// else
-			// {
-			// 	all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(line));
-			// 	ft_strcpy(all->tline.env_arr[i], line);
-			// }
 			return (1);
 		}
 		free (env_tmp);
@@ -158,7 +173,9 @@ void    cmd_export(t_all *all, int k)
 	arr_len = len(all->tline.export_arr);
 	while (all->cmd[k].arg[j])
 	{
-		if (!check_val(all, all->cmd[k].arg[j], k))
+		if (check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))
+			return ;
+		else if (!check_val(all, all->cmd[k].arg[j], k))
 		{
 			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
 			{
