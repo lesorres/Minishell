@@ -14,6 +14,7 @@
 # define PROMPT 12
 # define PATH_LEN 1024
 # define CMD_N_F "command not found"
+# define EXP_NOT_VAL "not a valid identifier"
 
 typedef struct s_termline
 {
