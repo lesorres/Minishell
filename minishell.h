@@ -49,6 +49,8 @@ typedef struct s_all
 	char	*line;
 }				t_all;
 
+char	*status;
+
 int		ft_putchar(char c);
 char	*read_line(int fd);
 int 	len(char **str);
