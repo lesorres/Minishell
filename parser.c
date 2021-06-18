@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/17 21:17:11 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/18 17:48:05 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,10 @@ int		quotes_flags_switch(t_all *all, char *line, int i, int j)
 
 // void	check_qoutes_content(all, line, i, j)
 // {
-	
+// 	if (all->cmd[j].dq_fl)
+// 	{
+		
+// 	}
 // }
 
 int		check_line_validity(char *line)
@@ -238,35 +241,71 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 		}
 		if (i == 1)
 			return;
-			// printf ("here3\n");
 		else
 		{
 			all->cmd[j].echo_n = 1;
-			// printf ("flag worked\n");
-			// printf ("flag - %i\n\n", all->cmd[j].echo_n);
 			clean_echo_from_flags(all, i, j);
 		}
 	}
 	i = 0;
-	// while (all->cmd[j].arg[i])
-	// 	printf("%s\n", all->cmd[j].arg[i++]);
-	// printf("\n\n");
 }
 
+void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
+{
+	int z;					//счетчик для печати status
+	int val_len;
 
+	if (all->line[*i] == '$' && all->line[*i + 1] == '?')
+	{
+		*i = *i + 2;
+		z = 0;
+		while (all->status[z])
+			(*tmp)[(*k)++] = all->status[z++];
+	}
+	else if (all->line[*i] == '$')
+	{
+		val_len = compare_with_env(all, all->line, *i);
+		*tmp = ft_realloc(*tmp, ft_strlen(all->line));
+		while (all->line[*i] && val_len > 0)
+		{
+			(*tmp)[(*k)++] = all->line[(*i)++];
+			val_len--;
+		}
+	}
+}
+
+//вместо функции выше было:
+					// if (all->line[i] == '$' && all->line[i + 1] == '?')
+					// {
+					// 	i = i + 2;
+					// 	z = 0;
+					// 	while (all->status[z])
+					// 		tmp[k++] = all->status[z++];
+					// }
+					// else if (all->line[i] == '$')
+					// {
+					// 	// check_question_sing(all->line[i]); //учесть $?
+					// 	val_len = compare_with_env(all, all->line, i);
+					// 	tmp = ft_realloc(tmp, ft_strlen(all->line));
+					// 	while (all->line[i] && val_len > 0)
+					// 	{
+					// 		tmp[k++] = all->line[i++];
+					// 		val_len--;
+					// 	}
+					// }
 
 // void	parser(t_all *all)
 void	parser(t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
 	int j;					//номер команды
-	int k;					//счетчик tmp
 	int n;					//номер аргумента
+	int k;					//счетчик tmp
 	int	d;					//разница между i
-	int z;
+	// int z;				//счетчик для печати status
 	int	line_len;
 	char *tmp;
-	int val_len;
+	// int val_len;
 
 	i = 0;
 	j = 0;
@@ -296,53 +335,29 @@ void	parser(t_all *all, char **arg, char **envp)
 				i = quotes_flags_switch(all, all->line, i, j);
 				while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
 				{
-					// i = check_qoutes_content(all, line, i, j);
+					// i = check_qoutes_content(all, all->line, i, j);
+					if (all->line[i] == '$' && all->cmd[j].dq_fl)
+						process_dollar_sign(all, &tmp, &i, &k);
 					tmp[k++] = all->line[i++];
 					i = quotes_flags_switch(all, all->line, i, j);
 				}
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
-					if (all->line[i] == '$' && all->line[i + 1] == '?')
-					{
-						i = i + 2;
-						z = 0;
-						while (all->status[z])
-							tmp[k++] = all->status[z++];
-					}
-					else if (all->line[i] == '$')
-					{
-						// check_question_sing(all->line[i]); //учесть $?
-						val_len = compare_with_env(all, all->line, i);
-						tmp = ft_realloc(tmp, ft_strlen(all->line));
-						while (all->line[i] && val_len > 0)
-						{
-							tmp[k++] = all->line[i++];
-							val_len--;
-						}
-					}
+					if (all->line[i] == '$')
+						process_dollar_sign(all, &tmp, &i, &k);
 					else
 						tmp[k++] = all->line[i++];
 				}
 			}
 		}
 		tmp[k] = '\0';
-		// printf("\n\n\nj = %i, n = %i\n", j, n);
-		// printf("tmp before writing in cmd    = |%s|\n", tmp);
-		// printf("k					    = |%i|\n", k);
-		// printf("tmp[k]					    = |%c|\n", tmp[k]);
 		if (tmp[0]) //здесь записываем слова в массив
 		{
 			arr_mem_alloc(all, j);
-			// printf("all->cmd[%i].arg[%i] before cpy= |%s|\n", j, n, all->cmd[j].arg[n]);
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp) + 1);
-			// printf("tmp before arg malloc        = |%s|\n", tmp);
 			ft_strcpy(all->cmd[j].arg[n], tmp);
-			// printf("all->cmd[%i].arg[%i] after cpy = |%s|\n", j, n, all->cmd[j].arg[n]);
 			n++;
 		}
-			// printf("tmp after writing in cmd     = |%s|\n", tmp);
-			// printf("all->cmd[%i].arg[%i]           = |%s|\n\n", j, n - 1, all->cmd[j].arg[n - 1]);
-			// print_parsed_string(all);
 		if (all->line[i - 1] == ';')
 		{
 			// extract_cmd_name(all, j);
@@ -354,11 +369,9 @@ void	parser(t_all *all, char **arg, char **envp)
 		}
 		free(tmp);
 	}
-
 	// extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
-		// printf ("%s\n","here1");
 		check_echo_n_flag(all, j);
 		buildin_func(all, arg, envp);
 	}
