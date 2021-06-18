@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/18 17:48:05 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/18 20:59:26 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,8 +259,8 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 	{
 		*i = *i + 2;
 		z = 0;
-		while (all->status[z])
-			(*tmp)[(*k)++] = all->status[z++];
+		while (status[z])
+			(*tmp)[(*k)++] = status[z++];
 	}
 	else if (all->line[*i] == '$')
 	{
@@ -338,7 +338,8 @@ void	parser(t_all *all, char **arg, char **envp)
 					// i = check_qoutes_content(all, all->line, i, j);
 					if (all->line[i] == '$' && all->cmd[j].dq_fl)
 						process_dollar_sign(all, &tmp, &i, &k);
-					tmp[k++] = all->line[i++];
+					else
+						tmp[k++] = all->line[i++];
 					i = quotes_flags_switch(all, all->line, i, j);
 				}
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
@@ -377,3 +378,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	}
 	// print_parsed_string(all);
 }
+
+
+//echo                                "   ckjvckvj     "  kjfdvkdjf                           j
+// echo ""    ""

@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:39:22 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/17 20:51:58 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/18 20:26:24 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,13 @@ int	compare_with_env(t_all *all, char *line, int i)
 
 	tmp = ft_strdup(&line[i]);
 
-	k = 0;
-	while (tmp[k] != ' ' && tmp[k] != '\0')
+	k = 1;
+	// while (tmp[k] != ' ' && tmp[k] != '\0' && tmp[k] != '\"' && tmp[k] != '\'')
+	while ((tmp[k] > 64 && tmp[k] < 91) || (tmp[k] > 96 && tmp[k] < 123) || (tmp[k] > 47 && tmp[k] < 58) || tmp[k] == '_')
+	{
 		k++;
+		printf("k = %i\n", k);
+	}
 	if (k == 1)
 		return (1);			//ничего не меняется если подается просто $
 	tmp2 = ft_substr(tmp, 1, k - 1); //HOME
