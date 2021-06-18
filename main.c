@@ -119,18 +119,18 @@ int add_l_char(char **line, char ch) //нужно переписать
     return (1);
 }
 
-void	free_hisr_arr(t_all *all)
-{
-	int	i;
+// void	free_hisr_arr(t_all *all)
+// {
+// 	int	i;
 	
-	i = 0;
-	while (all->hist_arr[i])
-	{
-		free(all->hist_arr[i]);
-		i++;
-	}
-	free (all->hist_arr);
-}
+// 	i = 0;
+// 	while (all->hist_arr[i])
+// 	{
+// 		free(all->hist_arr[i]);
+// 		i++;
+// 	}
+// 	free (all->hist_arr);
+// }
 
 int		hist_line_num(int fd)
 {
@@ -279,8 +279,8 @@ void res_terminal(struct  termios *term)
 void	init_all_vars(t_all *all)
 {
 	// all->line = malloc(1024);
-	// all->status = ft_calloc(4, sizeof(char));
-	// all->status = "0";
+	all->status = ft_calloc(4, sizeof(char));
+	// all->status = status;
 	// all->tline.print_line = malloc(1024);
 	// all->tline.cursor = PROMPT;
 	// all->tline.symb_num = PROMPT;
@@ -319,8 +319,9 @@ int main(int argc, char **arg, char **envp)
 	while (ft_strcmp(str, "\4"))
 	{
 		set_terminal(&term);
-		// init_all_vars(&all);
-		// printf("status = %s\n", all.status);
+		init_all_vars(&all);
+		// all.status = status;
+		printf("status = %s\n", status);
 		all.line = malloc(1024);
 		all.tline.print_line = malloc(1024);
 		all.tline.cursor = PROMPT;
@@ -407,10 +408,14 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("nd", 0), 1);
 				}
 			}
+			else if (!ft_strcmp(str, "\4"))
+			{
+				write(1, "exit\n", 5);
+				exit (0);
+			}
 			else
 			{
 				all.tline.cursor += write(1, str, l);
-				all.tline.print_line = ft_realloc(all.tline.print_line, ft_strlen(all.tline.print_line) + 1);
 				all.tline.print_line[count] = str[0];
 				all.tline.print_line[count + 1] = 0;
 				all.line[count] = str[0];
@@ -424,14 +429,13 @@ int main(int argc, char **arg, char **envp)
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
 		parser(&all, arg, envp);
-		printf("status - %s\n", all.status);
-		// printf("all.cmd[0].arg[0] = |%s|, all.cmd[0].arg[1] = |%s|\n", all.cmd[0].arg[0], all.cmd[0].arg[1]);
+		// printf("status - %s\n", status);
 		free(all.line);
 		tline.line_num++;
 	}
 	close(fd);
 	write(1, "\n", 1);
 	free (str);
-	free_hisr_arr(&all);
+	// free_hisr_arr(&all);
 	return (0);
 }
