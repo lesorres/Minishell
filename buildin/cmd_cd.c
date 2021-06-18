@@ -30,33 +30,6 @@ void	srch_str_in_arr(t_all *all, char *tmp)
 	}
 }
 
-// void	srch_str_in_arr(t_all *all, char *tmp)
-// {
-// 	int		i;
-// 	char	*pwd;
-// 	char	*tmp_pwd;
-
-// 	i = 0;
-// 	pwd = ft_strjoin("PWD=", tmp);
-// 	printf("srch_str_in_arr: pwd = %s\n", pwd);
-// 	while (ft_strncmp(all->tline.env_arr[i], "PWD=", 4))
-// 		i++;
-// 	if (all->tline.env_arr[i] == NULL)
-// 		add_new_line_to_arr(&all->tline.env_arr, pwd);
-// 	else
-// 	{
-// 		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(pwd));
-// 		ft_strcpy(all->tline.env_arr[i], pwd);
-// 	}
-// 	tmp_pwd = ft_substr(pwd, 4, (ft_strlen(pwd)) - 4);
-// 	free(pwd);
-// 	pwd = ft_strjoin(tmp_pwd, "/");
-// 	all->tline.pwd = malloc(sizeof(ft_strlen(pwd)));
-// 	ft_strcpy(all->tline.pwd, pwd);
-// 	free(pwd);
-// 	free(tmp_pwd);
-// }
-
 void	add_oldpwd(t_all *all, char *path)
 {
 	int		i;
@@ -89,6 +62,22 @@ char	*add_path(t_all *all, char **envp)
 	return (path);
 }
 
+static int	find_var_in_arr(char **arr, char *str)
+{
+	int		i;
+
+	i = 0;
+	while (arr[i])
+	{
+		if (ft_strncmp(arr[i], str, ft_strlen(str)) == 0)
+			break;
+		i++;
+	}
+	if (arr[i] == NULL)
+		i = -1;			// если переменную не нашли нужную переменную окружения
+	return(i);
+}
+
 void	cmd_cd(t_all *all, char **envp, int k)
 {
 	char    *path;
@@ -113,6 +102,8 @@ void	cmd_cd(t_all *all, char **envp, int k)
 	{
 		tmp_path = getenv("HOME");
 		chdir(tmp_path);
+		if (find_var_in_arr(all->tline.env_arr, "HOME=") == -1)
+			printf("minishell: %s: HOME not set\n", all->cmd[k].arg[0]);
 	}
 	add_oldpwd(all, path);
 	free(path);
