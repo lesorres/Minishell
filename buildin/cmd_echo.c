@@ -21,4 +21,5 @@ void cmd_echo(t_all *all, char **argv, int k)
 	}
 	if (all->cmd[k].echo_n != 1)
 		write(1, "\n", 1);
+	status = "0";
 }
