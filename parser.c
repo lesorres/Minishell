@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/18 20:59:26 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/19 19:40:28 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -332,15 +332,21 @@ void	parser(t_all *all, char **arg, char **envp)
 			}
 			else
 			{
-				i = quotes_flags_switch(all, all->line, i, j);
-				while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
+				while (all->line[i] == '\"' || all->line[i] == '\'')
 				{
-					// i = check_qoutes_content(all, all->line, i, j);
-					if (all->line[i] == '$' && all->cmd[j].dq_fl)
-						process_dollar_sign(all, &tmp, &i, &k);
-					else
-						tmp[k++] = all->line[i++];
-					i = quotes_flags_switch(all, all->line, i, j);
+					while (all->line[i] == '\"')
+						i = quotes_flags_switch(all, all->line, i, j);
+					while (all->line[i] == '\'' && !all->cmd[j].dq_fl)
+						i = quotes_flags_switch(all, all->line, i, j);
+					while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
+					{
+						// i = check_qoutes_content(all, all->line, i, j);
+						if (all->line[i] == '$' && all->cmd[j].dq_fl)
+							process_dollar_sign(all, &tmp, &i, &k);
+						else
+							tmp[k++] = all->line[i++];
+						i = quotes_flags_switch(all, all->line, i, j);
+					}
 				}
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
@@ -380,5 +386,13 @@ void	parser(t_all *all, char **arg, char **envp)
 }
 
 
-//echo                                "   ckjvckvj     "  kjfdvkdjf                           j
-// echo ""    ""
+//echo                                \"   ckjvckvj     \"  kjfdvkdjf                           j
+// echo \"\"    \"\"
+// echo \" \"    \" \"
+//("echo \"\" fff  \"   \"");
+//("echo \"something\" \"  \"  ab\"\" .");
+//echo \"  \"    \"  \"\"\"
+//echo \"\'cd\'\"
+//echo \'a  \"  \"  a\'
+//echo \"a  \'  \'  a\"
+//echo \'\'\'\"asd
