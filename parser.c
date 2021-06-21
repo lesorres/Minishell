@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/19 19:40:28 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/21 19:54:12 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -370,6 +370,15 @@ void	parser(t_all *all, char **arg, char **envp)
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
 			buildin_func(all, arg, envp);
+			j++;
+			cmd_mem_alloc(all);
+			n = 0;
+		}
+		if (all->line[i - 1] == '|')
+		{
+			// extract_cmd_name(all, j);
+			check_echo_n_flag(all, j);
+			all->cmd[j].delim = 1;
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
