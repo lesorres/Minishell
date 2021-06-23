@@ -39,16 +39,19 @@ typedef struct	s_cmd
 
 typedef struct s_all
 {
-    int     cmd_n;
-    t_cmd   *cmd;
-	t_lst	builds;
-	t_termline tline;
-	char	*status;
-	char	**hist_arr; //возможно можно будет удалить 
-	char	**path_arr;
-	char	*tmp; //где используется?
-	char	*line;
-	int		p_num; // количество пайпов
+    int			cmd_n;
+    t_cmd		*cmd;
+	t_lst		builds;
+	pid_t		*pid;
+	t_termline	tline;
+	char		*status;
+	char		**hist_arr; //возможно можно будет удалить 
+	char		**path_arr;
+	int			p_num; // количество пайпов
+	char		*tmp; //где используется?
+	char		*line;
+	int			in;
+	int			out;
 }				t_all;
 
 char	*status;
