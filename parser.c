@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/18 17:48:05 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/21 19:54:12 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -259,8 +259,8 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 	{
 		*i = *i + 2;
 		z = 0;
-		while (all->status[z])
-			(*tmp)[(*k)++] = all->status[z++];
+		while (status[z])
+			(*tmp)[(*k)++] = status[z++];
 	}
 	else if (all->line[*i] == '$')
 	{
@@ -332,14 +332,21 @@ void	parser(t_all *all, char **arg, char **envp)
 			}
 			else
 			{
-				i = quotes_flags_switch(all, all->line, i, j);
-				while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
+				while (all->line[i] == '\"' || all->line[i] == '\'')
 				{
-					// i = check_qoutes_content(all, all->line, i, j);
-					if (all->line[i] == '$' && all->cmd[j].dq_fl)
-						process_dollar_sign(all, &tmp, &i, &k);
-					tmp[k++] = all->line[i++];
-					i = quotes_flags_switch(all, all->line, i, j);
+					while (all->line[i] == '\"')
+						i = quotes_flags_switch(all, all->line, i, j);
+					while (all->line[i] == '\'' && !all->cmd[j].dq_fl)
+						i = quotes_flags_switch(all, all->line, i, j);
+					while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
+					{
+						// i = check_qoutes_content(all, all->line, i, j);
+						if (all->line[i] == '$' && all->cmd[j].dq_fl)
+							process_dollar_sign(all, &tmp, &i, &k);
+						else
+							tmp[k++] = all->line[i++];
+						i = quotes_flags_switch(all, all->line, i, j);
+					}
 				}
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
 				{
@@ -367,6 +374,15 @@ void	parser(t_all *all, char **arg, char **envp)
 			cmd_mem_alloc(all);
 			n = 0;
 		}
+		if (all->line[i - 1] == '|')
+		{
+			// extract_cmd_name(all, j);
+			check_echo_n_flag(all, j);
+			all->cmd[j].delim = 1;
+			j++;
+			cmd_mem_alloc(all);
+			n = 0;
+		}
 		free(tmp);
 	}
 	// extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
@@ -377,3 +393,15 @@ void	parser(t_all *all, char **arg, char **envp)
 	}
 	// print_parsed_string(all);
 }
+
+
+//echo                                \"   ckjvckvj     \"  kjfdvkdjf                           j
+// echo \"\"    \"\"
+// echo \" \"    \" \"
+//("echo \"\" fff  \"   \"");
+//("echo \"something\" \"  \"  ab\"\" .");
+//echo \"  \"    \"  \"\"\"
+//echo \"\'cd\'\"
+//echo \'a  \"  \"  a\'
+//echo \"a  \'  \'  a\"
+//echo \'\'\'\"asd
