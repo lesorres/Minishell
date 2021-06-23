@@ -34,6 +34,7 @@ typedef struct	s_cmd
 	int		sq_fl;
 	char	**i_rdir;
 	char	**o_rdir;
+	// int		delim; //если 0 - точка с запятой, если 1 - пайп
 }				t_cmd;
 
 typedef struct s_all
@@ -47,6 +48,7 @@ typedef struct s_all
 	char	**path_arr;
 	char	*tmp; //где используется?
 	char	*line;
+	int		p_num; // количество пайпов
 }				t_all;
 
 char	*status;
