@@ -101,7 +101,7 @@ char	*add_quotes(t_all *all, char *line)
 
 void	add_env_val(t_all *all, int i, char *line)
 {
-	if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
+	if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)  //
 		all->tline.env_arr[i] = add_quotes(all, line);
 	else
 	{
@@ -122,7 +122,7 @@ int	check_valid_id(char *cmd, char *line)
 	}
 	while (line[i])
 	{
-		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) == 0 || line[i] == '_')
+		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) || line[i] == '_')
 			return (0);
 		else
 			printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
@@ -173,17 +173,19 @@ void    cmd_export(t_all *all, int k)
 	arr_len = len(all->tline.export_arr);
 	while (all->cmd[k].arg[j])
 	{
-		if (check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))
-			return ;
-		else if (!check_val(all, all->cmd[k].arg[j], k))
+		// check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]);
+		// if (check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))
+			// return ;
+		// else if (!check_val(all, all->cmd[k].arg[j], k))
+		if (!check_val(all, all->cmd[k].arg[j], k))
 		{
 			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
 			{
 				tmp = add_quotes(all, all->cmd[k].arg[j]);
-				if (!check_val(all, all->cmd[k].arg[j], k))
+				if (!check_val(all, all->cmd[k].arg[j], k) && !check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))   //without && !check...
 					add_new_env_param(all, tmp);
 			}
-			else
+			else if (!check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))   //else
 				add_new_env_param(all, all->cmd[k].arg[j]);
 		}
 		j++;
