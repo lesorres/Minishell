@@ -119,13 +119,11 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	return (1);
 }
 
-void    buildin_func(t_all *all, char **arg, char **envp)
+void    buildin_func(t_all *all, char **arg, char **envp, int i)
 {
-	static int i;
+	int i;
 
-	// i = 0;
-	i = all->cmd_n - 2;
-	// while (!all->cmd[i].null && all->cmd[i].arg)
+	i = all->cmd_i;
 	if (!ft_strcmp(all->cmd[i].arg[0], "cd"))
 		cmd_cd(all, all->tline.env_arr, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "echo"))
@@ -142,5 +140,4 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	    cmd_exit(all, arg, i);
 	else
 		execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
-	i++;
 }
