@@ -79,6 +79,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	pid = fork();
 	signal(SIGINT, int_sign);
 	signal(SIGQUIT, quit_sign);
+	signal(EOF, kill_sig);
 	if (!pid)
 	{
 		while (all->path_arr[i])
@@ -122,22 +123,22 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 {
 	static int i;
 
-	i = 0;
-	// i = all->cmd_n - 2;
+	// i = 0;
+	i = all->cmd_n - 2;
 	// while (!all->cmd[i].null && all->cmd[i].arg)
-	if (!strcmp(all->cmd[i].arg[0], "cd"))
+	if (!ft_strcmp(all->cmd[i].arg[0], "cd"))
 		cmd_cd(all, all->tline.env_arr, i);
-	else if (!strcmp(all->cmd[i].arg[0], "echo"))
+	else if (!ft_strcmp(all->cmd[i].arg[0], "echo"))
 		cmd_echo(all, arg, i);
-	else if (!strcmp(all->cmd[i].arg[0], "pwd"))
+	else if (!ft_strcmp(all->cmd[i].arg[0], "pwd"))
 		cmd_pwd(all, envp);
-	else if (!strcmp(all->cmd[i].arg[0], "export"))
+	else if (!ft_strcmp(all->cmd[i].arg[0], "export"))
 		cmd_export(all, i);
-	else if (!strcmp(all->cmd[i].arg[0], "unset"))
+	else if (!ft_strcmp(all->cmd[i].arg[0], "unset"))
 	    cmd_unset(all, i);
-	else if (!strcmp(all->cmd[i].arg[0], "env"))
+	else if (!ft_strcmp(all->cmd[i].arg[0], "env"))
 		cmd_env(all, i);
-	else if (!strcmp(all->cmd[i].arg[0], "exit"))
+	else if (!ft_strcmp(all->cmd[i].arg[0], "exit"))
 	    cmd_exit(all, arg, i);
 	else
 		execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
