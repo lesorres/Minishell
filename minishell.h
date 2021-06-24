@@ -80,6 +80,7 @@ void	cmd_exit(t_all *all, char **arg, int k);
 void	add_new_env_param(t_all *all, char *line);
 void	get_envp(t_all *all, char **envp);
 void	split_path(t_all *all);
+void    pipe_exec(t_all *all, char**argv, char **envp);
 
 /*  parser functions  */
 
