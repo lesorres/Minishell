@@ -115,14 +115,14 @@ int	check_valid_id(char *cmd, char *line)
 	int	i;
 
 	i = 1;
-	if (!ft_isalpha(line[0]) && line[0] != '_')
+	if (!ft_isalpha(line[0]) && line[0] != '_' && line[0] != '\'' && line[0] != '\"') //сделать доп проверку кавычек 
 	{
 		printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
 		return (1);
 	}
 	while (line[i])
 	{
-		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) || line[i] == '_')
+		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) || line[i] == '_' || line[0] != '\'' || line[0] != '\"')
 			return (0);
 		else
 			printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
