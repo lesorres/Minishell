@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/21 19:54:12 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/24 19:31:38 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void print_parsed_string(t_all *all)
 	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		// printf("\nname(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
+		// printf("del(#%i %i) = |%d|\n", j, n, all->cmd[j].delim);
 		while (all->cmd[j].arg[n])
 		{
 			// printf("adr       = |%p|\n", all->cmd[j].arg[n]);
@@ -39,6 +40,7 @@ void print_parsed_string(t_all *all)
 			n++;
 		}
 		// printf("arg_n = %i\n", all->cmd[j].arg_n);
+		printf("\n");
 		j++;
 		n = 0;
 	}
@@ -295,6 +297,21 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 					// }
 
 // void	parser(t_all *all)
+
+void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
+{
+	int i;
+
+	if (all->p_num == 0)
+		buildin_func(all, arg, envp);
+	else
+	{
+		i = all->cmd_n - 2 - all->p_num;
+		pipe_exec(all, arg, envp, i);
+	}
+	all->p_num = 0;
+}
+
 void	parser(t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
@@ -307,6 +324,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	char *tmp;
 	// int val_len;
 
+	all->p_num = 0;
 	i = 0;
 	j = 0;
 	n = 0;
@@ -325,7 +343,7 @@ void	parser(t_all *all, char **arg, char **envp)
 			i++;
 		while (all->line[i] != ' ' && all->line[i])
 		{
-			if (all->line[i] == ';') // || line[i] == '|')
+			if (all->line[i] == ';'|| all->line[i] == '|')
 			{
 				i++;
 				break;
@@ -348,7 +366,7 @@ void	parser(t_all *all, char **arg, char **envp)
 						i = quotes_flags_switch(all, all->line, i, j);
 					}
 				}
-				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i])
+				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i] != '|' && all->line[i])
 				{
 					if (all->line[i] == '$')
 						process_dollar_sign(all, &tmp, &i, &k);
@@ -369,19 +387,22 @@ void	parser(t_all *all, char **arg, char **envp)
 		{
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
-			buildin_func(all, arg, envp);
+			// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
+			semicolon_or_pipe(all, arg, envp);
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
 		}
 		if (all->line[i - 1] == '|')
 		{
+			printf("pipe here\n");
+			printf("j = %i\n", j);
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
-			all->cmd[j].delim = 1;
 			j++;
 			cmd_mem_alloc(all);
 			n = 0;
+			all->p_num++;
 		}
 		free(tmp);
 	}
@@ -389,10 +410,12 @@ void	parser(t_all *all, char **arg, char **envp)
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		check_echo_n_flag(all, j);
-		buildin_func(all, arg, envp);
+		// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
+		semicolon_or_pipe(all, arg, envp);
 	}
-	// print_parsed_string(all);
+	print_parsed_string(all);
 }
+
 
 
 //echo                                \"   ckjvckvj     \"  kjfdvkdjf                           j
