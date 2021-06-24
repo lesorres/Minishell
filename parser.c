@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/24 19:31:38 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/24 19:45:00 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,11 +303,14 @@ void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 	int i;
 
 	if (all->p_num == 0)
+	{
+		all->cmd_i = all->cmd_n - 2;	
 		buildin_func(all, arg, envp);
+	}
 	else
 	{
-		i = all->cmd_n - 2 - all->p_num;
-		pipe_exec(all, arg, envp, i);
+		all->cmd_i = all->cmd_n - 2 - all->p_num;
+		pipe_exec(all, arg, envp);
 	}
 	all->p_num = 0;
 }
