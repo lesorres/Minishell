@@ -94,7 +94,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 			{
 				if (!cmp_path(all, all->path_arr[i], name))
 					cmd = ft_strjoin(all->path_arr[i], name);
-				else
+				else if (all->path_arr[0])
 					cmd = ft_strjoin(all->path_arr[i], all->tline.new_name);
 				exec = execve(cmd, arg, all->tline.env_arr);
 			}
@@ -119,11 +119,12 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	return (1);
 }
 
-void    buildin_func(t_all *all, char **arg, char **envp, int i)
+void    buildin_func(t_all *all, char **arg, char **envp)
 {
 	int i;
 
 	i = all->cmd_i;
+	all->cmd_i++;
 	if (!ft_strcmp(all->cmd[i].arg[0], "cd"))
 		cmd_cd(all, all->tline.env_arr, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "echo"))
