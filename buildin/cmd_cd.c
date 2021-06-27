@@ -87,17 +87,19 @@ void	cmd_cd(t_all *all, char **envp, int k)
 
 	path = add_path(all, envp);
 	all->builds.oldpwd = NULL;
+	tmp = malloc(sizeof(char) * PATH_LEN);
 	if (all->cmd[k].arg[1] && ft_strcmp(all->cmd[k].arg[1], "."))
 	{
-		if (chdir(all->cmd[k].arg[1]) == -1)
+		int ch= chdir(all->cmd[k].arg[1]);
+		printf("chdir return - %d\n", ch);
+		if (ch == -1)
 		{
 			error_handler(all->cmd[k].arg[0], all->cmd[k].arg[1], strerror(errno));
 			status = "1";
 		}
 		else
 		{
-			i = 0;
-			tmp = getcwd(tmp, PATH_LEN);
+			getcwd(tmp, PATH_LEN);
 			srch_str_in_arr(all, tmp);
 			status = "0";
 		}
@@ -111,8 +113,9 @@ void	cmd_cd(t_all *all, char **envp, int k)
 			printf("minishell: %s: HOME not set\n", all->cmd[k].arg[0]);
 			status = "1";
 		}
+		getcwd(tmp, PATH_LEN);
+		srch_str_in_arr(all, tmp);
 	}
 	add_oldpwd(all, path);
 	free(path);
-	// free(tmp);
 }

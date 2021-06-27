@@ -14,6 +14,7 @@
 # include <signal.h>
 // # include "parser_header.h"
 # include <errno.h>
+# include <sys/param.h>
 
 
 typedef struct s_lst

@@ -18,7 +18,7 @@ void    quit_sign(int sign)
 
 void    kill_sig(int sign)
 {
-    if (sign == SIGKILL)
+    if (sign == EOF)
     {
         write(1, "exit\n", 5);
         exit (1);
