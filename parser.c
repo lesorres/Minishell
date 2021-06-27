@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/24 19:45:00 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/27 15:39:23 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,9 +178,19 @@ int		check_line_validity(char *line)
 			error("syntax error near unexpected token `;;'");
 			return(1);
 		}
+		if (line[i] == '|' && line[i + 1] == '|')
+		{
+			error("syntax error near unexpected token `||'");
+			return(1);
+		}
 		if (line[0] == ';')
 		{
 			error("syntax error near unexpected token `;'");
+			return(1);
+		}
+		if (line[0] == '|')
+		{
+			error("syntax error near unexpected token `|'");
 			return(1);
 		}
 		if (line[i] == ';')
@@ -191,6 +201,17 @@ int		check_line_validity(char *line)
 			if (line[i] && line[i] == ';')
 			{
 				error("syntax error near unexpected token `;'");
+				return(1);
+			}
+		}
+		if (line[i] == '|')
+		{
+			i++;
+			while (line[i] && line[i] == ' ')
+				i++;
+			if (line[i] && line[i] == '|')
+			{
+				error("syntax error near unexpected token `|'");
 				return(1);
 			}
 		}
@@ -256,13 +277,15 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 {
 	int z;					//счетчик для печати status
 	int val_len;
+	char *loc_stat;
 
+	loc_stat = ft_itoa(status);
 	if (all->line[*i] == '$' && all->line[*i + 1] == '?')
 	{
 		*i = *i + 2;
 		z = 0;
-		while (status[z])
-			(*tmp)[(*k)++] = status[z++];
+		while (loc_stat[z])
+			(*tmp)[(*k)++] = loc_stat[z++];
 	}
 	else if (all->line[*i] == '$')
 	{
@@ -274,6 +297,7 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 			val_len--;
 		}
 	}
+	free(loc_stat);
 }
 
 //вместо функции выше было:
@@ -304,7 +328,7 @@ void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 
 	if (all->p_num == 0)
 	{
-		all->cmd_i = all->cmd_n - 2;	
+		all->cmd_i = all->cmd_n - 2;
 		buildin_func(all, arg, envp);
 	}
 	else
@@ -327,6 +351,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	char *tmp;
 	// int val_len;
 
+	printf("\nline = %s\n\n", all->line);
 	all->p_num = 0;
 	i = 0;
 	j = 0;
@@ -373,6 +398,8 @@ void	parser(t_all *all, char **arg, char **envp)
 				{
 					if (all->line[i] == '$')
 						process_dollar_sign(all, &tmp, &i, &k);
+					if (all->line[i] == '>' || all->line[i] == '<')
+						process_redirections(all, &i)
 					else
 						tmp[k++] = all->line[i++];
 				}
@@ -398,8 +425,6 @@ void	parser(t_all *all, char **arg, char **envp)
 		}
 		if (all->line[i - 1] == '|')
 		{
-			printf("pipe here\n");
-			printf("j = %i\n", j);
 			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
 			j++;
