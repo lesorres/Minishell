@@ -33,9 +33,8 @@ typedef struct	s_cmd
 	int		null;
 	int		dq_fl;
 	int		sq_fl;
-	char	**i_rdir;
-	char	**o_rdir;
-	// int		delim; //если 0 - точка с запятой, если 1 - пайп
+	int		i_rdir;
+	int		o_rdir;
 }				t_cmd;
 
 typedef struct s_all
@@ -90,5 +89,6 @@ void    pipe_exec(t_all *all, char**argv, char **envp);
 void	parser(t_all *all, char **arg, char **envp);
 // int		compare_with_env(t_all *all, char *line, int i);
 int		compare_with_env(t_all *all, char *line, int i);
+int		process_redirections(t_all *all, int i, int j, int line_len);
 
 #endif
