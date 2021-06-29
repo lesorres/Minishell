@@ -74,7 +74,7 @@ static int	find_var_in_arr(char **arr, char *str)
 		i++;
 	}
 	if (arr[i] == NULL)
-		i = -1;			// если переменную не нашли нужную переменную окружения
+		i = -1;			// если не нашли нужную переменную окружения
 	return(i);
 }
 
@@ -84,24 +84,24 @@ void	cmd_cd(t_all *all, char **envp, int k)
 	char    *tmp_path;
 	char	*tmp;
 	int		i;
+	int		dir;
 
 	path = add_path(all, envp);
 	all->builds.oldpwd = NULL;
 	tmp = malloc(sizeof(char) * PATH_LEN);
 	if (all->cmd[k].arg[1] && ft_strcmp(all->cmd[k].arg[1], "."))
 	{
-		int ch= chdir(all->cmd[k].arg[1]);
-		printf("chdir return - %d\n", ch);
-		if (ch == -1)
+		dir = chdir(all->cmd[k].arg[1]);
+		if (dir == -1)
 		{
 			error_handler(all->cmd[k].arg[0], all->cmd[k].arg[1], strerror(errno));
-			status = "1";
+			status = 1;
 		}
 		else
 		{
 			getcwd(tmp, PATH_LEN);
 			srch_str_in_arr(all, tmp);
-			status = "0";
+			status = 0;
 		}
 	}
 	else if (!all->cmd[k].arg[1])
@@ -111,11 +111,18 @@ void	cmd_cd(t_all *all, char **envp, int k)
 		if (find_var_in_arr(all->tline.env_arr, "HOME=") == -1)
 		{
 			printf("minishell: %s: HOME not set\n", all->cmd[k].arg[0]);
-			status = "1";
+			status = 1;
 		}
 		getcwd(tmp, PATH_LEN);
 		srch_str_in_arr(all, tmp);
 	}
+	else if (!ft_strcmp(all->cmd[k].arg[1], "."))
+	{
+		getcwd(tmp, PATH_LEN);
+		srch_str_in_arr(all, tmp);
+		status = 0;
+	}
 	add_oldpwd(all, path);
 	free(path);
+	free(tmp);
 }
