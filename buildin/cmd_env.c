@@ -15,7 +15,8 @@ void    get_envp(t_all *all, char **envp)
 		line++;
 	}
 	all->tline.env_arr[line] = NULL;
-	// check_shlvl(all, all->tline.env_arr);
+	check_shlvl(all, all->tline.env_arr);
+	split_path(all);
 }
 
 void    cmd_env(t_all *all, int k)
@@ -26,7 +27,7 @@ void    cmd_env(t_all *all, int k)
 	if (all->cmd[k].arg[1])
 	{
 		printf("%s: %s: %s\n", all->cmd[k].arg[0], all->cmd[k].arg[1], "No such file or directory");
-		status = "127";
+		status = 127;
 	}
 	else
 	{
@@ -35,6 +36,6 @@ void    cmd_env(t_all *all, int k)
 			printf("%s\n", all->tline.env_arr[i]);
 			i++;
 		}
-		status = "0";
+		status = 0;
 	}
 }
