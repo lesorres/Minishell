@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/27 15:39:23 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/29 20:40:26 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -398,8 +398,8 @@ void	parser(t_all *all, char **arg, char **envp)
 				{
 					if (all->line[i] == '$')
 						process_dollar_sign(all, &tmp, &i, &k);
-					if (all->line[i] == '>' || all->line[i] == '<')
-						process_redirections(all, &i)
+					// if (all->line[i] == '>' || all->line[i] == '<')
+					// 	i = process_redirections(all, i, j, line_len);
 					else
 						tmp[k++] = all->line[i++];
 				}
@@ -441,18 +441,5 @@ void	parser(t_all *all, char **arg, char **envp)
 		// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
 		semicolon_or_pipe(all, arg, envp);
 	}
-	print_parsed_string(all);
+	// print_parsed_string(all);
 }
-
-
-
-//echo                                \"   ckjvckvj     \"  kjfdvkdjf                           j
-// echo \"\"    \"\"
-// echo \" \"    \" \"
-//("echo \"\" fff  \"   \"");
-//("echo \"something\" \"  \"  ab\"\" .");
-//echo \"  \"    \"  \"\"\"
-//echo \"\'cd\'\"
-//echo \'a  \"  \"  a\'
-//echo \"a  \'  \'  a\"
-//echo \'\'\'\"asd
