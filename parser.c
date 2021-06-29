@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/29 20:40:26 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/29 21:25:26 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,6 +93,7 @@ void 	cmd_mem_alloc(t_all *all)
 		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
 			all->cmd[0].arg_n = 1;
 			all->cmd[1].null = 1;
+			all->cmd[0].o_rdir = 1; // NEW
 	}
 	else
 	{
@@ -110,6 +111,7 @@ void 	cmd_mem_alloc(t_all *all)
 		all->cmd[old_cmd_n].arg_n = 1;
 		all->cmd[all->cmd_n - 1].null = 1;
 		all->cmd[old_cmd_n].null = 0;
+		all->cmd[old_cmd_n].o_rdir = 1; // NEW
 	}
 }
 

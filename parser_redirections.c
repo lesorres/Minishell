@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 17:30:45 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/28 23:20:46 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/29 21:21:59 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 	file_name = ft_calloc(sizeof(char), line_len);
 	if (all->line[i] == ">" && all->line[i + 1] == ">")
 	{
+		i = i + 2;
 		i = skip_spaces(all, i);
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
@@ -37,6 +38,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 	}
 	else if (all->line[i] == ">")
 	{
+		i++;
 		i = skip_spaces(all, i);
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
@@ -45,6 +47,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 	}
 	else if (all->line[i] == "<" && all->line[i + 1] == "<")
 	{
+		i = i + 2;
 		i = skip_spaces(all, i);
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
@@ -53,6 +56,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 	}
 	else if (all->line[i] == "<")
 	{
+		i++;
 		i = skip_spaces(all, i);
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
