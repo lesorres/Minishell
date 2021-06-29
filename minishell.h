@@ -15,6 +15,8 @@
 // # include "parser_header.h"
 # include <errno.h>
 # include <sys/param.h>
+# include <sys/types.h>
+# include <sys/wait.h>
 
 
 typedef struct s_lst
@@ -33,9 +35,8 @@ typedef struct	s_cmd
 	int		null;
 	int		dq_fl;
 	int		sq_fl;
-	char	**i_rdir;
-	char	**o_rdir;
-	// int		delim; //если 0 - точка с запятой, если 1 - пайп
+	int		i_rdir;
+	int		o_rdir;
 }				t_cmd;
 
 typedef struct s_all
@@ -56,7 +57,7 @@ typedef struct s_all
 	int			out;
 }				t_all;
 
-char	*status;
+int		status;
 
 int		ft_putchar(char c);
 char	*read_line(int fd);
@@ -68,6 +69,7 @@ void	check_shlvl(t_all *all, char **envp);
 void    int_sign(int sign);
 void    quit_sign(int sign);
 void    kill_sig(int sign);
+int		check_valid_id(char *cmd, char *line);
 
 /*  buildin commands  */
 
@@ -90,5 +92,6 @@ void    pipe_exec(t_all *all, char**argv, char **envp);
 void	parser(t_all *all, char **arg, char **envp);
 // int		compare_with_env(t_all *all, char *line, int i);
 int		compare_with_env(t_all *all, char *line, int i);
+int		process_redirections(t_all *all, int i, int j, int line_len);
 
 #endif
