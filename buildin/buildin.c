@@ -135,6 +135,18 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 
 	i = all->cmd_i;
 	all->cmd_i++;
+	if (all->cmd[i].i_rdir != 0)
+	{
+		dup2(all->cmd[i].i_rdir, 0);
+		close(all->cmd[i].i_rdir);
+	}
+	if (all->cmd[i].o_rdir != 1)
+	{
+		dup2(all->cmd[i].o_rdir, 1);
+		close(all->cmd[i].o_rdir);
+	}
+	printf("i_rdir = %i\n", all->cmd[i].i_rdir);
+	printf("o_rdir = %i\n", all->cmd[i].o_rdir);
 	if (!ft_strcmp(all->cmd[i].arg[0], "cd"))
 		cmd_cd(all, all->tline.env_arr, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "echo"))
@@ -151,4 +163,11 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	    cmd_exit(all, arg, i);
 	else
 		status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp) / 256;
+	if (all->cmd[i].i_rdir != 0)
+		dup2(all->in, 0);
+	// 	close(0);
+	if (all->cmd[i].o_rdir != 1)
+		dup2(all->out, 1);
+	// 	close(1);
+	// 	close(all->cmd[i].o_rdir);
 }
