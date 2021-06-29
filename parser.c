@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/28 22:58:27 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/06/29 20:40:26 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -398,8 +398,8 @@ void	parser(t_all *all, char **arg, char **envp)
 				{
 					if (all->line[i] == '$')
 						process_dollar_sign(all, &tmp, &i, &k);
-					if (all->line[i] == '>' || all->line[i] == '<')
-						i = process_redirections(all, i, j, line_len);
+					// if (all->line[i] == '>' || all->line[i] == '<')
+					// 	i = process_redirections(all, i, j, line_len);
 					else
 						tmp[k++] = all->line[i++];
 				}
