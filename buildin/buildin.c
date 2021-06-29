@@ -74,6 +74,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	int		exec;
 	char	*tmp;
 	char	*path;
+	// int		stat;
 
 	i = 0;
 	pid = fork();
@@ -89,6 +90,11 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 				path = add_path(all, all->tline.env_arr);
 				cmd = ft_strjoin(path, name);
 				exec = execve(name, arg, all->tline.env_arr);
+				if (!errno)
+				{
+					status = 1;
+					exit (status);
+				}
 			}
 			else
 			{
@@ -97,6 +103,11 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 				else if (all->path_arr[0])
 					cmd = ft_strjoin(all->path_arr[i], all->tline.new_name);
 				exec = execve(cmd, arg, all->tline.env_arr);
+				if (!errno)
+				{
+					status = 1;
+					exit (status);
+				}
 			}
 			if (exec == -1)
 				i++;
@@ -105,18 +116,17 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 				if (ft_strncmp(name, "/", 1))
 					printf("minishell: %s: command not found\n", arg[0]);
 				else if (!ft_strncmp(name, "/", 1))
-					printf("minishell: %s: %s\n", arg[0], strerror(2));
+					printf("minishell: %s: %s\n", arg[0], strerror(2));			
 			}
 		}
 	}
 	else if (pid < 0)
-	{
-		printf("%s\n", "Error!");
-		exit (1);
-	}
+		printf("%s\n", strerror(errno));
 	else
-		wait(&pid);
-	return (1);
+		waitpid(pid, &status, 0);
+	WIFEXITED(status);
+	WEXITSTATUS(status);
+	return (status);
 }
 
 void    buildin_func(t_all *all, char **arg, char **envp)
@@ -140,5 +150,5 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	else if (!ft_strcmp(all->cmd[i].arg[0], "exit"))
 	    cmd_exit(all, arg, i);
 	else
-		execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
+		status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp) / 256;
 }
