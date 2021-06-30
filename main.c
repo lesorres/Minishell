@@ -200,12 +200,6 @@ void	split_path(t_all *all)
 		}
 		free(tmp_2);
 	}
-	// i = 0;
-	// while (all->path_arr[i])
-	// {
-	// 	printf("[%i] - %s\n", i, all->path_arr[i]);
-	// 	i++;
-	// }
 }
 
 void	find_line_in_arr(char **arr, char *line)
@@ -225,7 +219,6 @@ void	find_line_in_arr(char **arr, char *line)
 		j = find_env_equal(arr[i]) + 1;
 		num = ft_strlen(arr[i]) - j;
 		tmp = ft_substr(arr[i], j, num);
-
 	}
 }
 
@@ -251,7 +244,7 @@ void	check_shlvl(t_all *all, char **envp)
 		j = find_env_equal(all->tline.env_arr[i]);
 		num = ft_strlen(all->tline.env_arr[i]) - (j + 1);
 		value = ft_substr(all->tline.env_arr[i], j + 1, num);
-		if (isdigit_line(value))
+		if (!isdigit_line(value))
 			num = ft_atoi(value) + 1;
 		else
 			num = 1;
@@ -279,13 +272,15 @@ void res_terminal(struct  termios *term)
 void	init_all_vars(t_all *all)
 {
 	// all->line = malloc(1024);
-	all->status = ft_calloc(4, sizeof(char));
+	// status = ft_calloc(4, sizeof(char));
 	// all->status = status;
 	// all->tline.print_line = malloc(1024);
 	// all->tline.cursor = PROMPT;
 	// all->tline.symb_num = PROMPT;
 	// all->tline.curr_line = all->tline.line_num;
 }
+
+
 
 int main(int argc, char **arg, char **envp)
 {
@@ -303,6 +298,8 @@ int main(int argc, char **arg, char **envp)
 	char    *path;
 	char	*file_name;
 
+	all.in = dup(STDIN_FILENO);
+	all.out = dup(STDOUT_FILENO);
 	path = malloc(PATH_LEN + 1);
 	all.tline.path = getcwd(path, PATH_LEN);
 	file_name = ft_strjoin(all.tline.path, "/.HISTORY");
@@ -311,17 +308,17 @@ int main(int argc, char **arg, char **envp)
 	tgetent(0, TERM_NAME);
 	str = (char *)malloc(sizeof(char) * 100);
 	tline.line_num = hist_line_num(fd);
-	all.status = ft_calloc(4, sizeof(char));
+	// all.status = ft_calloc(4, sizeof(char));
 	get_envp(&all, envp);
-	check_shlvl(&all, all.tline.env_arr);
-
-	split_path(&all);
+	// check_shlvl(&all, all.tline.env_arr);
+	// init_all_vars(&all);
+	status = 0;
+	// split_path(&all);
 	while (ft_strcmp(str, "\4"))
 	{
 		set_terminal(&term);
-		init_all_vars(&all);
 		// all.status = status;
-		printf("status = %s\n", status);
+		// printf("status = %s\n", status);
 		all.line = malloc(1024);
 		all.tline.print_line = malloc(1024);
 		all.tline.cursor = PROMPT;
@@ -408,11 +405,13 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("nd", 0), 1);
 				}
 			}
-			else if (!ft_strcmp(str, "\4"))
+			else if (!ft_strcmp(str, "^C"))
 			{
-				write(1, "exit\n", 5);
-				exit (0);
+				write(1, "#minishell> ", PROMPT);
+				ft_putstr_fd(save_cursor, 1);
 			}
+			else if (!ft_strcmp(str, "^\\"))
+				status = 131;
 			else
 			{
 				all.tline.cursor += write(1, str, l);
@@ -423,19 +422,22 @@ int main(int argc, char **arg, char **envp)
 				count++;
 			}
 		}
+		if (!ft_strcmp(str, "\4"))
+		{
+			write(1, "exit\n", 5);
+			exit (0);
+		}
 		if (all.line[0] != '\n')
 			write(fd, all.line, ft_strlen(all.line));
 		all.line[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
 		parser(&all, arg, envp);
-		// printf("status - %s\n", status);
 		free(all.line);
 		tline.line_num++;
 	}
 	close(fd);
 	write(1, "\n", 1);
 	free (str);
-	// free_hisr_arr(&all);
 	return (0);
 }
