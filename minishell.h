@@ -55,6 +55,7 @@ typedef struct s_all
 	int			cmd_i;
 	int			in;
 	int			out;
+	int			set;
 }				t_all;
 
 int		status;
@@ -90,6 +91,8 @@ void    pipe_exec(t_all *all, char**argv, char **envp);
 
 // void	parser(t_all *all);
 void	parser(t_all *all, char **arg, char **envp);
+void	arr_mem_alloc(t_all *all, int j);
+void	cmd_mem_alloc(t_all *all);
 // int		compare_with_env(t_all *all, char *line, int i);
 int		compare_with_env(t_all *all, char *line, int i);
 int		process_redirections(t_all *all, int i, int j, int line_len);

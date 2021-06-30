@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
+#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/06/29 21:12:25 by fhyman           ###   ########.fr        #
+#    Updated: 2021/06/30 22:58:55 by kmeeseek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ BUILDINS = ./buildin/buildin.c ./buildin/cmd_exit.c ./buildin/cmd_export.c ./bui
 
 HEAD = *.h
 
-INPUT = main.c get_next_line.c get_next_line_utils.c parser.c parser_dollar_sign.c signals.c pipe_exec.c parser_redirections.c
+INPUT = main.c get_next_line.c get_next_line_utils.c parser.c parser_dollar_sign.c signals.c pipe_exec.c parser_redirections.c parser_mem_alloc.c
 
 FLAGS = -ltermcap -Wall -Werror -Wextra
 

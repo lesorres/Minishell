@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/30 19:17:31 by fhyman           ###   ########.fr       */
+/*   Updated: 2021/07/01 00:03:53 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,88 +50,6 @@ void error(char *str)
 {
 	printf("%s\n", str);
 	// exit(1);
-}
-void 	arr_mem_alloc(t_all *all, int j)
-{
-	int		i;
-	int		old_arg_n;
-	char	**tmp;
-
-	i = 0;
-	old_arg_n = all->cmd[j].arg_n;
-	all->cmd[j].arg_n = all->cmd[j].arg_n + 1;
-	if (!all->cmd[j].arg)
-	{
-		all->cmd[j].arg = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
-	}
-	else
-	{
-		tmp = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
-		while (i < old_arg_n)
-		{
-			tmp[i] = all->cmd[j].arg[i];
-			i++;
-		}
-		// сделать free all->cmd[j].arg и всех существующих строк
-		all->cmd[j].arg = tmp;
-		// free(tmp);
-	}
-}
-
-void 	cmd_mem_alloc(t_all *all)
-{
-	int i;
-	int old_cmd_n;
-	t_cmd *tmp;
-
-	i = 0;
-	old_cmd_n = all->cmd_n - 1;
-	all->cmd_n = all->cmd_n + 1;
-	if (!all->cmd)
-	{
-		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
-			all->cmd[0].arg_n = 1;
-			all->cmd[1].null = 1;
-			all->cmd[0].o_rdir = 1; // NEW
-	}
-	else
-	{
-		tmp = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
-		while (i < old_cmd_n)
-		{
-			tmp[i].arg_n = all->cmd[i].arg_n; //ДРУГИЕ ЭЛЕМЕНТЫ ДОБАВЬ
-			tmp[i].arg = all->cmd[i].arg;
-			// tmp[i].name = all->cmd[i].name;
-			i++;
-		}
-		// if (all->cmd)
-		// 	free(all->cmd);
-		all->cmd = tmp;
-		all->cmd[old_cmd_n].arg_n = 1;
-		all->cmd[all->cmd_n - 1].null = 1;
-		all->cmd[old_cmd_n].null = 0;
-		all->cmd[old_cmd_n].o_rdir = 1; // NEW
-	}
-}
-
-void extract_cmd_name(t_all *all, int j) //утечек нет (вроде бы)
-{
-	int		i;
-	char	**tmp;
-
-	if (!all->cmd[j].null && all->cmd[j].arg)
-	{
-		i = 0;
-		all->cmd[j].name = all->cmd[j].arg[0];
-		tmp = ft_calloc((all->cmd[j].arg_n - 1), sizeof(char *));
-		while (all->cmd[j].arg[i + 1])
-		{
-			tmp[i] = all->cmd[j].arg[i + 1];
-			i++;
-		}
-		free(all->cmd[j].arg); //free_arr? не должны зачищаться строки
-		all->cmd[j].arg = tmp;
-	}
 }
 
 int		quotes_flags_switch(t_all *all, char *line, int i, int j)
@@ -288,6 +206,8 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 		while (loc_stat[z])
 			(*tmp)[(*k)++] = loc_stat[z++];
 	}
+	else if (all->line[*i] == '$' && 47 < all->line[*i + 1] && all->line[*i + 1] < 58)
+		*i = *i + 2;
 	else if (all->line[*i] == '$')
 	{
 		val_len = compare_with_env(all, all->line, *i);
@@ -321,8 +241,6 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 					// 	}
 					// }
 
-// void	parser(t_all *all)
-
 void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 {
 	int i;
@@ -340,6 +258,7 @@ void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 	all->p_num = 0;
 }
 
+// void	parser(t_all *all)
 void	parser(t_all *all, char **arg, char **envp)
 {
 	int i;					//счетчик line
@@ -347,17 +266,16 @@ void	parser(t_all *all, char **arg, char **envp)
 	int n;					//номер аргумента
 	int k;					//счетчик tmp
 	int	d;					//разница между i
-	// int z;				//счетчик для печати status
+	int set;				//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
 	int	line_len;
 	char *tmp;
-	// int val_len;
 
-	// printf("\nline = %s\n\n", all->line);
 	all->p_num = 0;
 	i = 0;
 	j = 0;
 	n = 0;
 	d = 0;
+	all->set = 0;
 	all->cmd_n = 1;
 	all->line = ft_strtrim(all->line, " \t");
 	if (check_line_validity(all->line) == 1)
@@ -379,6 +297,7 @@ void	parser(t_all *all, char **arg, char **envp)
 			}
 			else
 			{
+				all->set = 1;
 				while (all->line[i] == '\"' || all->line[i] == '\'')
 				{
 					while (all->line[i] == '\"')
@@ -399,7 +318,7 @@ void	parser(t_all *all, char **arg, char **envp)
 				{
 					if (all->line[i] == '$')
 						process_dollar_sign(all, &tmp, &i, &k);
-					if (all->line[i] == '>' || all->line[i] == '<')
+					else if (all->line[i] == '>' || all->line[i] == '<')
 						i = process_redirections(all, i, j, line_len);
 					else
 						tmp[k++] = all->line[i++];
@@ -407,16 +326,16 @@ void	parser(t_all *all, char **arg, char **envp)
 			}
 		}
 		tmp[k] = '\0';
-		if (tmp[0]) //здесь записываем слова в массив
+		if (all->set == 1) //здесь записываем слова в массив  //убрала для кейса echo """"""""""       :"" хз не сломалось ли что еще 
 		{
 			arr_mem_alloc(all, j);
 			all->cmd[j].arg[n] = malloc(ft_strlen(tmp) + 1);
 			ft_strcpy(all->cmd[j].arg[n], tmp);
 			n++;
 		}
+		all->set = 0;
 		if (all->line[i - 1] == ';')
 		{
-			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
 			// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
 			semicolon_or_pipe(all, arg, envp);
@@ -426,7 +345,6 @@ void	parser(t_all *all, char **arg, char **envp)
 		}
 		if (all->line[i - 1] == '|')
 		{
-			// extract_cmd_name(all, j);
 			check_echo_n_flag(all, j);
 			j++;
 			cmd_mem_alloc(all);
@@ -435,12 +353,12 @@ void	parser(t_all *all, char **arg, char **envp)
 		}
 		free(tmp);
 	}
-	// extract_cmd_name(all, all->cmd_n - 2); //последняя команда не попадает под условие if (line[i - 1] == ';')
+	//последняя команда не попадает под условие if (line[i - 1] == ';')
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		check_echo_n_flag(all, j);
 		// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
 		semicolon_or_pipe(all, arg, envp);
 	}
-	// print_parsed_string(all);
+	print_parsed_string(all);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
+/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 17:30:45 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/29 22:11:27 by fhyman           ###   ########.fr       */
+/*   Updated: 2021/07/01 00:04:41 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 	int		n;
 	int		tmp_fd;
 
-	printf("i_rdir = %i\n", all->cmd[j].i_rdir);
-	printf("o_rdir = %i\n", all->cmd[j].o_rdir);
 	n = 0;
 	file_name = ft_calloc(sizeof(char), line_len);
 	if (all->line[i] == '>' && all->line[i + 1] == '>')
@@ -54,7 +52,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
 		file_name[n] = '\0';
-		all->cmd[j].i_rdir = open(file_name, O_RDONLY | O_CREAT, 0644);
+		all->cmd[j].i_rdir = open(file_name, O_WRONLY | O_CREAT, 0644);
 	}
 	else if (all->line[i] == '<')
 	{
@@ -63,10 +61,9 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
 		file_name[n] = '\0';
-		all->cmd[j].i_rdir = open(file_name, O_RDONLY, 0644);
+		all->cmd[j].i_rdir = open(file_name, O_WRONLY, 0644);
 	}
 	free(file_name);
-	printf("i_rdir after open = %i\n", all->cmd[j].i_rdir);
-	printf("o_rdir after open = %i\n", all->cmd[j].o_rdir);
+	all->set = 0;
 	return (i);
 }
