@@ -11,7 +11,6 @@ void    pipe_exec(t_all *all, char**argv, char **envp)
 
 	k = all->p_num;
 	i = 0;
-	printf("all->p_num = k = %d\n", k);
 	fd = (int**)malloc(sizeof(int*) * (k));
 	while (i < (k + 1)){
 		fd[i] = malloc(sizeof(int) * 2);
@@ -39,7 +38,6 @@ void    pipe_exec(t_all *all, char**argv, char **envp)
 				close(fd[i][1]);
 			if (i != 0)
 				close(fd[i - 1][0]);
-			printf("[%i] - parent closed fds\n", i);
 		}
 		all->cmd_i++;
 		i++;
