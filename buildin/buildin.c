@@ -66,6 +66,14 @@ int		cmp_path(t_all *all, char *str, char *name)
 	return (0);
 }
 
+void	print_err2(t_all *all, char *cmd, char *err_name)
+{
+	write(2, "minishell: ", 11);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, err_name, ft_strlen(err_name));
+	write(2, "\n", 1);
+}
+
 int	execute(t_all *all, char *name, char **arg, char **envp)
 {
 	char	*cmd;
@@ -80,7 +88,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	pid = fork();
 	signal(SIGINT, int_sign);
 	signal(SIGQUIT, quit_sign);
-	// signal(EOF, kill_sig);
+	signal(EOF, kill_sig);
 	if (!pid)
 	{
 		while (all->path_arr[i])
@@ -114,9 +122,19 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 			if (all->path_arr[i] == NULL && exec == -1)
 			{
 				if (ft_strncmp(name, "/", 1))
-					printf("minishell: %s: command not found\n", arg[0]);
+				{
+					print_err2(all, arg[0], ": command not found");
+					// write(2, "minishell: ", 11);
+					// write(2, arg[0], ft_strlen(arg[0]));
+					// write(2, ": command not found\n", 20);
+					return (1);
+				}
 				else if (!ft_strncmp(name, "/", 1))
-					printf("minishell: %s: %s\n", arg[0], strerror(2));			
+				{
+					print_err2(all, arg[0], strerror(2));
+					// printf("minishell: %s: %s\n", arg[0], strerror(2));			
+					return (1);
+				}
 			}
 		}
 	}
