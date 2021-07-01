@@ -46,7 +46,7 @@ typedef struct s_all
 	t_lst		builds;
 	pid_t		*pid;
 	t_termline	tline;
-	char		*status;
+	int			status;
 	char		**hist_arr; //возможно можно будет удалить 
 	char		**path_arr;
 	int			p_num; // количество пайпов
