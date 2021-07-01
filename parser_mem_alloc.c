@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 22:31:05 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/30 22:33:00 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/01 22:12:07 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ void	cmd_mem_alloc(t_all *all)
 		{
 			tmp[i].arg_n = all->cmd[i].arg_n; //ДРУГИЕ ЭЛЕМЕНТЫ ДОБАВЬ
 			tmp[i].arg = all->cmd[i].arg;
+			tmp[i].o_rdir = all->cmd[i].o_rdir;
+			tmp[i].i_rdir = all->cmd[i].i_rdir;
 			// tmp[i].name = all->cmd[i].name;
 			i++;
 		}

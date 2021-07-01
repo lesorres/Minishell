@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/01 00:03:53 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/01 22:22:28 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,7 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 	i = 0;
 }
 
-void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
+void	process_dollar_sign(t_all *all, int *i, int *k)
 {
 	int z;					//счетчик для печати status
 	int val_len;
@@ -204,17 +204,17 @@ void	process_dollar_sign(t_all *all, char **tmp, int *i, int *k)
 		*i = *i + 2;
 		z = 0;
 		while (loc_stat[z])
-			(*tmp)[(*k)++] = loc_stat[z++];
+			all->tmp[(*k)++] = loc_stat[z++];
 	}
 	else if (all->line[*i] == '$' && 47 < all->line[*i + 1] && all->line[*i + 1] < 58)
 		*i = *i + 2;
 	else if (all->line[*i] == '$')
 	{
 		val_len = compare_with_env(all, all->line, *i);
-		*tmp = ft_realloc(*tmp, ft_strlen(all->line));
+		all->tmp = ft_realloc(all->tmp, ft_strlen(all->line));
 		while (all->line[*i] && val_len > 0)
 		{
-			(*tmp)[(*k)++] = all->line[(*i)++];
+			all->tmp[(*k)++] = all->line[(*i)++];
 			val_len--;
 		}
 	}
@@ -253,9 +253,31 @@ void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 	else
 	{
 		all->cmd_i = all->cmd_n - 2 - all->p_num;
+		// printf ("o_rdir in semicolon or pipe= %i\n", all->cmd[0].o_rdir);
 		pipe_exec(all, arg, envp);
 	}
 	all->p_num = 0;
+}
+
+int		process_quotes(t_all *all, int i, int *k, int j)
+{
+	while (all->line[i] == '\"' || all->line[i] == '\'')
+	{
+		while (all->line[i] == '\"')
+			i = quotes_flags_switch(all, all->line, i, j);
+		while (all->line[i] == '\'' && !all->cmd[j].dq_fl)
+			i = quotes_flags_switch(all, all->line, i, j);
+		while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
+		{
+			// i = check_qoutes_content(all, all->line, i, j);
+			if (all->line[i] == '$' && all->cmd[j].dq_fl)
+				process_dollar_sign(all, &i, k);
+			else
+				(all->tmp)[(*k)++] = all->line[i++];
+			i = quotes_flags_switch(all, all->line, i, j);
+		}
+	}
+	return (i);
 }
 
 // void	parser(t_all *all)
@@ -265,16 +287,12 @@ void	parser(t_all *all, char **arg, char **envp)
 	int j;					//номер команды
 	int n;					//номер аргумента
 	int k;					//счетчик tmp
-	int	d;					//разница между i
-	int set;				//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
 	int	line_len;
-	char *tmp;
 
 	all->p_num = 0;
 	i = 0;
 	j = 0;
 	n = 0;
-	d = 0;
 	all->set = 0;
 	all->cmd_n = 1;
 	all->line = ft_strtrim(all->line, " \t");
@@ -285,9 +303,8 @@ void	parser(t_all *all, char **arg, char **envp)
 	while(all->line[i])
 	{
 		k = 0;
-		tmp = malloc(line_len);
-		while (all->line[i] == ' ' || all->line[i] == '\t')
-			i++;
+		all->tmp = malloc(line_len);
+		i = skip_spaces(all, i);
 		while (all->line[i] != ' ' && all->line[i])
 		{
 			if (all->line[i] == ';'|| all->line[i] == '|')
@@ -298,39 +315,40 @@ void	parser(t_all *all, char **arg, char **envp)
 			else
 			{
 				all->set = 1;
-				while (all->line[i] == '\"' || all->line[i] == '\'')
-				{
-					while (all->line[i] == '\"')
-						i = quotes_flags_switch(all, all->line, i, j);
-					while (all->line[i] == '\'' && !all->cmd[j].dq_fl)
-						i = quotes_flags_switch(all, all->line, i, j);
-					while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
-					{
-						// i = check_qoutes_content(all, all->line, i, j);
-						if (all->line[i] == '$' && all->cmd[j].dq_fl)
-							process_dollar_sign(all, &tmp, &i, &k);
-						else
-							tmp[k++] = all->line[i++];
-						i = quotes_flags_switch(all, all->line, i, j);
-					}
-				}
+				i = process_quotes(all, i, &k, j);
+				// while (all->line[i] == '\"' || all->line[i] == '\'')
+				// {
+				// 	while (all->line[i] == '\"')
+				// 		i = quotes_flags_switch(all, all->line, i, j);
+				// 	while (all->line[i] == '\'' && !all->cmd[j].dq_fl)
+				// 		i = quotes_flags_switch(all, all->line, i, j);
+				// 	while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
+				// 	{
+				// 		// i = check_qoutes_content(all, all->line, i, j);
+				// 		if (all->line[i] == '$' && all->cmd[j].dq_fl)
+				// 			process_dollar_sign(all, &i, &k);
+				// 		else
+				// 			(all->tmp)[k++] = all->line[i++];
+				// 		i = quotes_flags_switch(all, all->line, i, j);
+				// 	}
+				// }
 				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i] != '|' && all->line[i])
 				{
 					if (all->line[i] == '$')
-						process_dollar_sign(all, &tmp, &i, &k);
+						process_dollar_sign(all, &i, &k);
 					else if (all->line[i] == '>' || all->line[i] == '<')
 						i = process_redirections(all, i, j, line_len);
 					else
-						tmp[k++] = all->line[i++];
+						(all->tmp)[k++] = all->line[i++];
 				}
 			}
 		}
-		tmp[k] = '\0';
+		(all->tmp)[k] = '\0';
 		if (all->set == 1) //здесь записываем слова в массив  //убрала для кейса echo """"""""""       :"" хз не сломалось ли что еще 
 		{
 			arr_mem_alloc(all, j);
-			all->cmd[j].arg[n] = malloc(ft_strlen(tmp) + 1);
-			ft_strcpy(all->cmd[j].arg[n], tmp);
+			all->cmd[j].arg[n] = malloc(ft_strlen(all->tmp) + 1);
+			ft_strcpy(all->cmd[j].arg[n], all->tmp);
 			n++;
 		}
 		all->set = 0;
@@ -345,19 +363,22 @@ void	parser(t_all *all, char **arg, char **envp)
 		}
 		if (all->line[i - 1] == '|')
 		{
+			// printf ("o_rdir before pipe= %i\n", all->cmd[0].o_rdir);
 			check_echo_n_flag(all, j);
 			j++;
 			cmd_mem_alloc(all);
+			// printf ("o_rdir aftefr pipe= %i\n", all->cmd[0].o_rdir);
 			n = 0;
 			all->p_num++;
 		}
-		free(tmp);
+		free(all->tmp);
 	}
 	//последняя команда не попадает под условие if (line[i - 1] == ';')
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		check_echo_n_flag(all, j);
 		// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
+		// printf ("o_rdir before semicolon or pipe= %i\n", all->cmd[0].o_rdir);
 		semicolon_or_pipe(all, arg, envp);
 	}
 	print_parsed_string(all);

@@ -28,7 +28,7 @@ typedef struct s_lst
 
 typedef struct	s_cmd
 {
-	char	*name;
+	// char	*name;
 	int		arg_n;
 	char	**arg;
 	int		echo_n;
@@ -50,12 +50,13 @@ typedef struct s_all
 	char		**hist_arr; //возможно можно будет удалить 
 	char		**path_arr;
 	int			p_num; // количество пайпов
-	char		*tmp; //где используется?
+	// char		*tmp; //где используется?
 	char		*line;
 	int			cmd_i;
 	int			in;
 	int			out;
-	int			set;
+	int			set; 			//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
+	char		*tmp;
 }				t_all;
 
 int		status;
@@ -96,5 +97,6 @@ void	cmd_mem_alloc(t_all *all);
 // int		compare_with_env(t_all *all, char *line, int i);
 int		compare_with_env(t_all *all, char *line, int i);
 int		process_redirections(t_all *all, int i, int j, int line_len);
+int		skip_spaces(t_all *all, int i);
 
 #endif

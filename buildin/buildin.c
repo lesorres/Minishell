@@ -155,6 +155,15 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 
 	i = all->cmd_i;
 	all->cmd_i++;
+	// write (all->out, "cmd num in buildin = ", 21);
+	// char *bla = ft_itoa(i);
+	// write (all->out, bla, 1);
+	// write (all->out, "\n\n", 2);
+	// write (all->out, "o_rdir before if = ", 19);
+	// char *bla1 = ft_itoa(all->cmd[i].o_rdir);
+	// write (all->out, bla1, 1);
+	// write (all->out, "\n\n", 2);
+	// printf ("o_rdir before if= %i\n", all->cmd[i].o_rdir);
 	if (all->cmd[i].i_rdir != 0)
 	{
 		dp1 = dup2(all->cmd[i].i_rdir, 0);
@@ -162,6 +171,7 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	}
 	if (all->cmd[i].o_rdir != 1)
 	{
+		// printf ("o_rdir in buildin = %i\n", all->cmd[i].o_rdir);
 		dp2 = dup2(all->cmd[i].o_rdir, 1);
 		close(all->cmd[i].o_rdir);
 	}
@@ -184,10 +194,14 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	else
 		status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp) / 256;
 	if (all->cmd[i].i_rdir != 0)
+	{
+		close(all->cmd[i].i_rdir);
 		dup2(all->in, 0);
-	// 	close(0);
+	}
 	if (all->cmd[i].o_rdir != 1)
+	{
+		close(all->cmd[i].o_rdir);
 		dup2(all->out, 1);
-	// 	close(1);
+	}
 	// 	close(all->cmd[i].o_rdir);
 }
