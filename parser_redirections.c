@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 17:30:45 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/01 22:17:33 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/02 19:43:38 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
 		file_name[n] = '\0';
-		all->cmd[j].i_rdir = open(file_name, O_WRONLY | O_CREAT, 0644);
+		all->cmd[j].i_rdir = open(file_name, O_RDONLY | O_CREAT, 0644);
 	}
 	else if (all->line[i] == '<')
 	{
@@ -62,7 +62,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		while (!ft_strchr(" ;|<>\0", all->line[i]))
 			file_name[n++] = all->line[i++];
 		file_name[n] = '\0';
-		all->cmd[j].i_rdir = open(file_name, O_WRONLY, 0644);
+		all->cmd[j].i_rdir = open(file_name, O_RDONLY, 0644);
 	}
 	// printf ("o_rdir in p_redir = %i\n", all->cmd[j].o_rdir);
 	free(file_name);
