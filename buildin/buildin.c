@@ -70,6 +70,7 @@ void	print_err2(t_all *all, char *cmd, char *err_name)
 {
 	write(2, "minishell: ", 11);
 	write(2, cmd, ft_strlen(cmd));
+	write(2, ": ", 2);
 	write(2, err_name, ft_strlen(err_name));
 	write(2, "\n", 1);
 }
@@ -123,7 +124,8 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 			{
 				if (ft_strncmp(name, "/", 1))
 				{
-					print_err2(all, arg[0], ": command not found");
+					print_err2(all, arg[0], "command not found");
+					all->status = 127;
 					// write(2, "minishell: ", 11);
 					// write(2, arg[0], ft_strlen(arg[0]));
 					// write(2, ": command not found\n", 20);
@@ -132,6 +134,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 				else if (!ft_strncmp(name, "/", 1))
 				{
 					print_err2(all, arg[0], strerror(2));
+					status = 1;
 					// printf("minishell: %s: %s\n", arg[0], strerror(2));			
 					return (1);
 				}
@@ -164,6 +167,8 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	// write (all->out, bla1, 1);
 	// write (all->out, "\n\n", 2);
 	// printf ("o_rdir before if= %i\n", all->cmd[i].o_rdir);
+	if (all->cmd[i].i_rdir == -1 || all->cmd[i].o_rdir == -1)
+        return;
 	if (all->cmd[i].i_rdir != 0)
 	{
 		dp1 = dup2(all->cmd[i].i_rdir, 0);
