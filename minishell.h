@@ -72,6 +72,7 @@ void    int_sign(int sign);
 void    quit_sign(int sign);
 void    kill_sig(int sign);
 int		check_valid_id(char *cmd, char *line);
+void	print_err2(t_all *all, char *cmd, char *err_name);
 
 /*  buildin commands  */
 
