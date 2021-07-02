@@ -5,15 +5,26 @@ int		exit_error(t_all *all, char *cmd, char *arg, int k)
 	printf("%s\n", all->cmd[k].arg[0]);
 	write(1, "minishell: ", PROMPT);
 	printf("%s: %s: %s\n", cmd, arg, "numeric argument required");
-	all->status = "255";
-	exit (0);
+	status = 255;
+	exit (1);
 	// return (0);
 }
 
-void	print_exit(t_all *all, int k)
+void	print_exit(char *cmd)
 {
-	printf("%s\n", all->cmd[k].arg[0]);
-	// exit (0);
+	int		stts;
+
+	stts = ft_atoi(cmd);
+	if (stts > 256)
+		stts %= 256;
+	else if (stts < 0)
+	{
+		stts %= 256;
+		stts = 256 + stts;
+	}
+	status = stts;
+	printf("%s\n", cmd);
+	exit (status);
 }
 
 int	isdigit_line(char *str)
@@ -23,53 +34,38 @@ int	isdigit_line(char *str)
 	c = 0;
 	while (str[c])
     {
-        if (ft_isdigit(str[c]))
+        if (str[0] == '-' || ft_isdigit(str[c]))
 		    c++;
         else
-            return (0);   
+            return (1);   
     }
-	return (1);
+	return (0);
 }
 
 void	cmd_exit(t_all *all, char **arg, int k)
 {
-	char	*status;
-	int		stts;
 
-	if (all->cmd[k].arg[1])
+	if (all->cmd[k].arg[1])                            // exit ...
 	{
-		if (isdigit_line(all->cmd[k].arg[1]))
+		if (!isdigit_line(all->cmd[k].arg[1]))
 		{
-			if (!all->cmd[k].arg[2])
-			{
-				print_exit(all, k);
-				stts = ft_atoi(all->cmd[k].arg[1]);
-				stts %= 255;
-				printf("stts - atoi = %d\n", stts);
-				status = ft_itoa(stts);
-				printf("status - itoa = %s\n", all->status);
-				// status = " ";
-				exit (0);
-			}
-			else
+			if (!all->cmd[k].arg[2])                   //exit 123
+				print_exit(all->cmd[k].arg[1]);
+			else                                       //exit 123 hgrfe
 			{
                 printf("%s\n", all->cmd[k].arg[0]);
 				write(1, "minishell: ", PROMPT);
 				printf("%s: %s \n", all->cmd[k].arg[0], "too many arguments");
-				status = "1";
+				status = 1;
 			}
 		}
-		else
-		{
+		else                                           //exit qwr 123
 			exit_error(all, all->cmd[k].arg[0], all->cmd[k].arg[1], k);
-			// all->status = "255";
-			// exit (0);
-		}
 	}
-	else
+	else                                               // exit\n
 	{
-		print_exit(all, k);
-		all->status = "0";
+		printf("%s\n", all->cmd[k].arg[0]);
+		status = 0;
 		exit (0);
 	}
 }
