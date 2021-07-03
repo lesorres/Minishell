@@ -89,10 +89,15 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	pid = fork();
 	signal(SIGINT, int_sign);
 	signal(SIGQUIT, quit_sign);
-	signal(EOF, kill_sig);
+	// signal(EOF, kill_sig);
 	if (!pid)
 	{
-		while (all->path_arr[i])
+		if (all->path_arr == NULL)
+		{
+			print_err2(all, arg[0], strerror(2));
+			status = 127;
+		} 
+		while (all->path_arr)       // all->path_arr[i]
 		{
 			if (ft_strncmp(name, "./", 2) == 0 || ft_strrncmp(name, "/minishell", 10) == 0)
 			{
@@ -122,21 +127,27 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 				i++;
 			if (all->path_arr[i] == NULL && exec == -1)
 			{
-				if (ft_strncmp(name, "/", 1))
+				if (ft_strncmp(name, "/", 1) && ft_strncmp(name, "./", 2))
 				{
 					print_err2(all, arg[0], "command not found");
 					all->status = 127;
 					// write(2, "minishell: ", 11);
 					// write(2, arg[0], ft_strlen(arg[0]));
 					// write(2, ": command not found\n", 20);
-					return (1);
+					exit(status);
 				}
-				else if (!ft_strncmp(name, "/", 1))
+				else if (!ft_strncmp(name, "/", 1) && name[1] == '\0')
+				{
+					print_err2(all, arg[0], strerror(21));
+					status = 126;
+					exit(status);
+				}
+				else if (!ft_strncmp(name, "/", 1) || !ft_strncmp(name, "./", 2))
 				{
 					print_err2(all, arg[0], strerror(2));
 					status = 1;
-					// printf("minishell: %s: %s\n", arg[0], strerror(2));			
-					return (1);
+					// printf("minishell: %s: %s\n", arg[0], strerror(2));
+					exit(status);
 				}
 			}
 		}
@@ -197,7 +208,16 @@ void    buildin_func(t_all *all, char **arg, char **envp)
 	else if (!ft_strcmp(all->cmd[i].arg[0], "exit"))
 	    cmd_exit(all, arg, i);
 	else
-		status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp) / 256;
+	{
+		status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
+		if (status > 256)
+			status /= 256;
+		if (all->status != 0)
+		{
+			status = all->status;
+			all->status = 0;
+		}
+	}
 	if (all->cmd[i].i_rdir != 0)
 	{
 		close(all->cmd[i].i_rdir);
