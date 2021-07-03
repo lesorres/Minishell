@@ -241,17 +241,19 @@ void	check_shlvl(t_all *all, char **envp)
 	}
 	else
 	{
-		j = find_env_equal(all->tline.env_arr[i]);
-		num = ft_strlen(all->tline.env_arr[i]) - (j + 1);
-		value = ft_substr(all->tline.env_arr[i], j + 1, num);
+		// j = find_env_equal(all->tline.env_arr[i]);
+		num = ft_strlen(all->tline.env_arr[i]) - 6;
+		value = ft_substr(all->tline.env_arr[i], 6, num); //leak
 		if (!isdigit_line(value))
 			num = ft_atoi(value) + 1;
 		else
 			num = 1;
-		num_ch = ft_itoa(num);
+		num_ch = ft_itoa(num);  //leak
 		tmp = ft_strjoin("SHLVL=", num_ch);
-		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(tmp));
-		ft_strcpy(all->tline.env_arr[i], tmp);
+		// all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(tmp) + 1);
+		// ft_strcpy(all->tline.env_arr[i], tmp);
+		free (all->tline.env_arr[i]);
+		all->tline.env_arr[i] = tmp;
 	}
 }
 
@@ -313,6 +315,7 @@ int main(int argc, char **arg, char **envp)
 	char    *path;
 	char	*file_name;
 
+	// all = ft_calloc(1, sizeof(t_all));
 	all.in = dup(STDIN_FILENO);
 	all.out = dup(STDOUT_FILENO);
 	path = malloc(PATH_LEN + 1);
@@ -321,7 +324,7 @@ int main(int argc, char **arg, char **envp)
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
 	tgetent(0, TERM_NAME);
-	str = (char *)malloc(sizeof(char) * 10);
+	str = ft_calloc(10, sizeof(char));
 	tline.line_num = hist_line_num(fd);
 	all.status = 0;
 	get_envp(&all, envp);
@@ -334,8 +337,8 @@ int main(int argc, char **arg, char **envp)
 		set_terminal(&term);
 		// all.status = status;
 		// printf("status = %s\n", status);
-		all.line = malloc(1024);
-		all.tline.print_line = malloc(1024);
+		all.line = malloc(1024);				//leak
+		all.tline.print_line = malloc(1024); 	//leak
 		all.tline.cursor = PROMPT;
 		all.tline.symb_num = PROMPT;
 		// all.tline.print_line = NULL;
@@ -348,7 +351,7 @@ int main(int argc, char **arg, char **envp)
 		{
 			if (all.tline.symb_num < all.tline.cursor)
 				all.tline.symb_num = all.tline.cursor;
-			l = read(1, str, 20);
+			l = read(1, str, 10);
 			str[l] = 0;
 			if (!ft_strcmp(str, UP) || !ft_strcmp(str, OPT_UP) || !ft_strcmp(str, SHF_UP) || !ft_strcmp(str, CTRL_UP))
 			{
