@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/01 22:22:28 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/03 17:44:03 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -303,7 +303,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	while(all->line[i])
 	{
 		k = 0;
-		all->tmp = malloc(line_len);
+		all->tmp = ft_calloc(line_len, sizeof(char));
 		i = skip_spaces(all, i);
 		while (all->line[i] != ' ' && all->line[i])
 		{

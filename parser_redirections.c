@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 17:30:45 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/02 19:58:34 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/03 17:38:50 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 	}
 	// printf ("o_rdir in p_redir = %i\n", all->cmd[j].o_rdir);
 	free(file_name);
-	all->set = 0;
+	if (!all->tmp[0])
+		all->set = 0;
 	return (i);
 }
