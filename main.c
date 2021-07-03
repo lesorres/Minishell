@@ -306,9 +306,9 @@ int main(int argc, char **arg, char **envp)
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
 	tgetent(0, TERM_NAME);
-	str = (char *)malloc(sizeof(char) * 100);
+	str = (char *)malloc(sizeof(char) * 10);
 	tline.line_num = hist_line_num(fd);
-	// all.status = ft_calloc(4, sizeof(char));
+	all.status = 0;
 	get_envp(&all, envp);
 	// check_shlvl(&all, all.tline.env_arr);
 	// init_all_vars(&all);
@@ -405,15 +405,14 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(tgetstr("nd", 0), 1);
 				}
 			}
-			else if (!ft_strcmp(str, "^C"))
+			else if (!ft_strcmp(str, "\003"))
 			{
-				write(1, "#minishell> ", PROMPT);
+				write(1, "\n#minishell> ", PROMPT + 1);
 				ft_putstr_fd(save_cursor, 1);
 			}
-			else if (!ft_strcmp(str, "^\\"))
-				status = 131;
-			else
+			else if (ft_isprint(str[0]) || str[0] == '\n')
 			{
+				// printf("count = %i\n", count);
 				all.tline.cursor += write(1, str, l);
 				all.tline.print_line[count] = str[0];
 				all.tline.print_line[count + 1] = 0;
@@ -429,6 +428,7 @@ int main(int argc, char **arg, char **envp)
 		}
 		if (all.line[0] != '\n')
 			write(fd, all.line, ft_strlen(all.line));
+			// write(fd, all.tline.print_line, ft_strlen(all.tline.print_line));
 		all.line[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
