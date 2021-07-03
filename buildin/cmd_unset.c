@@ -45,17 +45,22 @@ int    cmd_unset(t_all *all, int k)
         while (all->cmd[k].arg[n])
         {
     		i = 0;
-			while (all->tline.env_arr[i])
+			if (check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[n]))
+				return (1);
+			else
 			{
-				j = find_env_equal(all->tline.env_arr[i]);
-				tmp = ft_substr(all->tline.env_arr[i], 0, j);
-				if (ft_strcmp(tmp, all->cmd[k].arg[n]) == 0)
-            		del_env_line(all, i);
-				i++;
-				free (tmp);
+				while (all->tline.env_arr[i])
+				{
+					j = find_env_equal(all->tline.env_arr[i]);
+					tmp = ft_substr(all->tline.env_arr[i], 0, j);
+					if (ft_strcmp(tmp, all->cmd[k].arg[n]) == 0)
+            			del_env_line(all, i);
+					i++;
+					free (tmp);
+				}
+        		n++;
 			}
-        	n++;
         }
     }
-    return(1);
+    return(0);
 }
