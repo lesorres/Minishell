@@ -280,7 +280,22 @@ void	init_all_vars(t_all *all)
 	// all->tline.curr_line = all->tline.line_num;
 }
 
+// char *ft_incert_char(char *all_line, char c, int cursor)
+// {
+// 	char	*end;
+// 	int		i;
 
+// 	i = 0;
+// 	printf("all_line before = %s\n", all_line);
+// 	end = malloc(ft_strlen(&all_line[cursor - PROMPT]) + 1);
+// 	end = ft_strcpy(end, &all_line[cursor - PROMPT]);
+// 	all_line[(cursor++) - PROMPT] = c;
+// 	while(end[i])
+// 		all_line[(cursor++) - PROMPT] = end[i++];
+// 	free(end);
+// 	printf("all_line after = %s\n", all_line);
+// 	return(all_line);
+// }
 
 int main(int argc, char **arg, char **envp)
 {
@@ -323,6 +338,7 @@ int main(int argc, char **arg, char **envp)
 		all.tline.print_line = malloc(1024);
 		all.tline.cursor = PROMPT;
 		all.tline.symb_num = PROMPT;
+		// all.tline.print_line = NULL;
 		tline.curr_line = tline.line_num;
 		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
@@ -375,7 +391,12 @@ int main(int argc, char **arg, char **envp)
 					write(1, all.line, ft_strlen(all.line));
 				}
 				else if (tline.curr_line == tline.line_num)
+				{
 					write(1, all.tline.print_line, ft_strlen(all.tline.print_line));
+					all.line = ft_calloc(1024, sizeof(char));
+					all.line = ft_strcpy(all.line, all.tline.print_line);
+					count = ft_strlen(all.line);
+				}
 				close(hist_fd);
 			}
 			else if (!ft_strcmp(str, key_backspace) || !ft_strcmp(str, "\177"))
@@ -410,6 +431,14 @@ int main(int argc, char **arg, char **envp)
 				write(1, "\n#minishell> ", PROMPT + 1);
 				ft_putstr_fd(save_cursor, 1);
 			}
+			// else if (all.tline.symb_num > all.tline.cursor)
+			// {
+			// 	all.line = ft_incert_char(all.line, str[0], all.tline.cursor);
+			// 	ft_putstr_fd(tgetstr("im", 0), 1);
+			// 	all.tline.cursor += write(1, str, 1);
+			// 	all.tline.symb_num++;
+			// 	ft_putstr_fd(tgetstr("ei", 0), 1);
+			// }
 			else if (ft_isprint(str[0]) || str[0] == '\n')
 			{
 				// printf("count = %i\n", count);
