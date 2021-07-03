@@ -85,23 +85,24 @@ char	*add_quotes(t_all *all, char *line)
 	char	*tmp;
 	int 	len;
 
-	if (all->tline.equal_sign == 1)
-		len = ft_strlen(line) + 3;
-	else 
+	// if (all->tline.equal_sign == 1)
+	// 	len = ft_strlen(line) + 3;
+	// else 
 	if (all->tline.equal_sign == 0)
-		len = ft_strlen(line) + 4;
+		len = ft_strlen(line) + 3;
 	tmp = malloc(sizeof(len));
-	if (all->tline.equal_sign == 1)
-		tmp = ft_strjoin(line, "''");
-	else if (all->tline.equal_sign == 0)
-		tmp = ft_strjoin(line, "=''");
+	// if (all->tline.equal_sign == 1)
+	// 	tmp = ft_strjoin(line, "''");
+	// else 
+	if (all->tline.equal_sign == 0)
+		tmp = ft_strjoin(line, "=");
 	tmp[len] = '\0';
 	return (tmp);
 }
 
 void	add_env_val(t_all *all, int i, char *line)
 {
-	if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)  //
+	if (all->tline.equal_sign == 0) // || all->tline.equal_sign == 1)  //
 		all->tline.env_arr[i] = add_quotes(all, line);
 	else
 	{
@@ -118,14 +119,22 @@ int	check_valid_id(char *cmd, char *line)
 	if (!ft_isalpha(line[0]) && line[0] != '_' && line[0] != '\'' && line[0] != '\"') //сделать доп проверку кавычек 
 	{
 		printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
+		status = 1;
 		return (1);
 	}
 	while (line[i])
 	{
 		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) || line[i] == '_' || line[0] != '\'' || line[0] != '\"')
+		{
+			status = 0;
 			return (0);
+		}
 		else
+		{
 			printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
+			status = 1;
+			return (1);
+		}
 		i++;
 	}
 	return (0);
@@ -179,14 +188,20 @@ void    cmd_export(t_all *all, int k)
 		// else if (!check_val(all, all->cmd[k].arg[j], k))
 		if (!check_val(all, all->cmd[k].arg[j], k))
 		{
-			if (all->tline.equal_sign == 0 || all->tline.equal_sign == 1)
+			if (all->tline.equal_sign == 0) // || all->tline.equal_sign == 1)
 			{
 				tmp = add_quotes(all, all->cmd[k].arg[j]);
 				if (!check_val(all, all->cmd[k].arg[j], k) && !check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))   //without && !check...
+				{
 					add_new_env_param(all, tmp);
+					status = 0;
+				}
 			}
 			else if (!check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))   //else
+			{
 				add_new_env_param(all, all->cmd[k].arg[j]);
+				status = 0;
+			}
 		}
 		j++;
 	}
@@ -196,8 +211,9 @@ void    cmd_export(t_all *all, int k)
 	{
 		while (all->tline.export_arr[i])
 		{
-		    printf("declare -x %s\n", all->tline.export_arr[i]); //убрать d
+		    printf("declare -x %s\n", all->tline.export_arr[i]);
 			i++;
 		}
+		status = 0;
 	}
 }
