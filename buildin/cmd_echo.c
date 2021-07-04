@@ -1,8 +1,8 @@
 #include "../minishell.h"
 
-void cmd_echo(t_all *all, char **argv, int k)
+void	cmd_echo(t_all *all, char **argv, int k)
 {
-	int     i;
+	int	i;
 
 	i = 1;
 	if (all->cmd[k].arg[i] == NULL && all->cmd[k].echo_n != 1)
