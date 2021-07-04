@@ -6,11 +6,11 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 22:31:05 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/01 22:12:07 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:27:23 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
 void	arr_mem_alloc(t_all *all, int j)
 {
@@ -22,57 +22,61 @@ void	arr_mem_alloc(t_all *all, int j)
 	old_arg_n = all->cmd[j].arg_n;
 	all->cmd[j].arg_n = all->cmd[j].arg_n + 1;
 	if (!all->cmd[j].arg)
-	{
-		all->cmd[j].arg = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
-	}
+		all->cmd[j].arg = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL //leak
 	else
 	{
-		tmp = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL
+		tmp = ft_calloc(all->cmd[j].arg_n, sizeof(char *)); //не забудь проверку на NULL //leak
 		while (i < old_arg_n)
 		{
 			tmp[i] = all->cmd[j].arg[i];
 			i++;
 		}
-		// сделать free all->cmd[j].arg и всех существующих строк
+		free(all->cmd[j].arg);
 		all->cmd[j].arg = tmp;
-		// free(tmp);
 	}
+}
+
+void	fill_in_last_cmd(t_all *all, t_cmd *tmp, int old_cmd_n)
+{
+	all->cmd = tmp;
+	all->cmd[old_cmd_n].arg_n = 1;
+	all->cmd[all->cmd_n - 1].null = 1;
+	all->cmd[old_cmd_n].null = 0;
+	all->cmd[old_cmd_n].o_rdir = 1; // NEW
+}
+
+int	fill_in_new_cmd_arr(t_all *all, t_cmd *tmp, int i)
+{
+	tmp[i].arg_n = all->cmd[i].arg_n; //ДРУГИЕ ЭЛЕМЕНТЫ ДОБАВЬ
+	tmp[i].arg = all->cmd[i].arg;
+	tmp[i].o_rdir = all->cmd[i].o_rdir;
+	tmp[i].i_rdir = all->cmd[i].i_rdir;
+	i++;
+	return (i);
 }
 
 void	cmd_mem_alloc(t_all *all)
 {
-	int i;
-	int old_cmd_n;
-	t_cmd *tmp;
+	int		i;
+	int		old_cmd_n;
+	t_cmd	*tmp;
 
 	i = 0;
 	old_cmd_n = all->cmd_n - 1;
-	all->cmd_n = all->cmd_n + 1;
+	all->cmd_n = all->cmd_n + 1; //колич выделяемой памяти и колич структур, вкл посленюю структуру зануление
 	if (!all->cmd)
 	{
-		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
-			all->cmd[0].arg_n = 1;
-			all->cmd[1].null = 1;
-			all->cmd[0].o_rdir = 1; // NEW
+		all->cmd = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL //leak -  вроде исправила
+		all->cmd[0].arg_n = 1;
+		all->cmd[1].null = 1;
+		all->cmd[0].o_rdir = 1; // NEW
 	}
 	else
 	{
-		tmp = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL
+		tmp = ft_calloc(all->cmd_n, sizeof(t_cmd)); //не забудь проверку на NULL //leak -  вроде исправила
 		while (i < old_cmd_n)
-		{
-			tmp[i].arg_n = all->cmd[i].arg_n; //ДРУГИЕ ЭЛЕМЕНТЫ ДОБАВЬ
-			tmp[i].arg = all->cmd[i].arg;
-			tmp[i].o_rdir = all->cmd[i].o_rdir;
-			tmp[i].i_rdir = all->cmd[i].i_rdir;
-			// tmp[i].name = all->cmd[i].name;
-			i++;
-		}
-		// if (all->cmd)
-		// 	free(all->cmd);
-		all->cmd = tmp;
-		all->cmd[old_cmd_n].arg_n = 1;
-		all->cmd[all->cmd_n - 1].null = 1;
-		all->cmd[old_cmd_n].null = 0;
-		all->cmd[old_cmd_n].o_rdir = 1; // NEW
+			i = fill_in_new_cmd_arr(all, tmp, i);
+		free(all->cmd);
+		fill_in_last_cmd(all, tmp, old_cmd_n);
 	}
 }

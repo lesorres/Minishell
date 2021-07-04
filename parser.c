@@ -6,16 +6,16 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/03 17:44:03 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/04 21:36:17 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-# include "minishell.h"
+#include "minishell.h"
 
-void free_arr(char ***arr)
+void	free_arr(char ***arr)
 {
 	int	i;
-	
+
 	i = 0;
 	while ((*arr)[i])
 	{
@@ -24,10 +24,13 @@ void free_arr(char ***arr)
 	}
 }
 
-void print_parsed_string(t_all *all)
+void	print_parsed_string(t_all *all)
 {
-	int n = 0;
-	int j = 0;
+	int	n;
+	int	j;
+
+	n = 0;
+	j = 0;
 	while (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		// printf("\nname(#%i _)  = |%s|\n\n", j, all->cmd[j].name);
@@ -46,13 +49,7 @@ void print_parsed_string(t_all *all)
 	}
 }
 
-void error(char *str)
-{
-	printf("%s\n", str);
-	// exit(1);
-}
-
-int		quotes_flags_switch(t_all *all, char *line, int i, int j)
+int	quotes_flags_switch(t_all *all, char *line, int i, int j)
 {
 	if (line[i] == '\'' && !all->cmd[j].sq_fl && !all->cmd[j].dq_fl)
 	{
@@ -74,65 +71,40 @@ int		quotes_flags_switch(t_all *all, char *line, int i, int j)
 		all->cmd[j].dq_fl = 0;
 		i++;
 	}
-	return	(i);
+	return (i);
 }
 
-// void	check_qoutes_content(all, line, i, j)
-// {
-// 	if (all->cmd[j].dq_fl)
-// 	{
-		
-// 	}
-// }
+int	error(char *str, char c, char c2)
+{
+	if (c2 != '\0')
+		printf("%s%c%c'\n", str, c, c2);
+	else
+		printf("%s%c'\n", str, c);
+	return (1);
+}
 
-int		check_line_validity(char *line)
+int	check_line_validity(char *line)
 {
 	int	i;
 
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == ';' && line[i + 1] == ';')
-		{
-			error("syntax error near unexpected token `;;'");
-			return(1);
-		}
-		if (line[i] == '|' && line[i + 1] == '|')
-		{
-			error("syntax error near unexpected token `||'");
-			return(1);
-		}
-		if (line[0] == ';')
-		{
-			error("syntax error near unexpected token `;'");
-			return(1);
-		}
-		if (line[0] == '|')
-		{
-			error("syntax error near unexpected token `|'");
-			return(1);
-		}
-		if (line[i] == ';')
+		if ((line[i] == ';' && line[i + 1] == ';')
+			|| (line[i] == '|' && line[i + 1] == '|'))
+			return (error("syntax error near unexpected token `",
+				line[i], line[i]));
+		if (ft_strchr(";|", line[0]))
+			return (error("syntax error near unexpected token `",
+				line[0], '\0'));
+		if (ft_strchr(";|", line[i]))
 		{
 			i++;
 			while (line[i] && line[i] == ' ')
 				i++;
-			if (line[i] && line[i] == ';')
-			{
-				error("syntax error near unexpected token `;'");
-				return(1);
-			}
-		}
-		if (line[i] == '|')
-		{
-			i++;
-			while (line[i] && line[i] == ' ')
-				i++;
-			if (line[i] && line[i] == '|')
-			{
-				error("syntax error near unexpected token `|'");
-				return(1);
-			}
+			if (line[i] && ft_strchr(";|", line[i]))
+				return (error("syntax error near unexpected token `",
+					line[i], '\0'));
 		}
 		i++;
 	}
@@ -165,8 +137,8 @@ void	clean_echo_from_flags(t_all *all, int i, int j) //ликов быть не 
 void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 {
 	int	i;
-	int k;
-	int flag;
+	int	k;
+	int	flag;
 
 	if (!ft_strcmp(all->cmd[j].arg[0], "echo")) //&& all->cmd[j].arg[1])
 	{
@@ -177,12 +149,12 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 			while (all->cmd[j].arg[i][k] == 'n')
 				k++;
 			if (all->cmd[j].arg[i][k])
-				break;
+				break ;
 			else
 				i++;
 		}
 		if (i == 1)
-			return;
+			return ;
 		else
 		{
 			all->cmd[j].echo_n = 1;
@@ -194,9 +166,9 @@ void	check_echo_n_flag(t_all *all, int j) // ЕСТЬ ЛИКИ
 
 void	process_dollar_sign(t_all *all, int *i, int *k)
 {
-	int z;					//счетчик для печати status
-	int val_len;
-	char *loc_stat;
+	int		z;					//счетчик для печати status
+	int		val_len;
+	char	*loc_stat;
 
 	loc_stat = ft_itoa(status);
 	if (all->line[*i] == '$' && all->line[*i + 1] == '?')
@@ -206,7 +178,8 @@ void	process_dollar_sign(t_all *all, int *i, int *k)
 		while (loc_stat[z])
 			all->tmp[(*k)++] = loc_stat[z++];
 	}
-	else if (all->line[*i] == '$' && 47 < all->line[*i + 1] && all->line[*i + 1] < 58)
+	else if (all->line[*i] == '$' && 47 < all->line[*i + 1]
+			&& all->line[*i + 1] < 58)
 		*i = *i + 2;
 	else if (all->line[*i] == '$')
 	{
@@ -243,7 +216,7 @@ void	process_dollar_sign(t_all *all, int *i, int *k)
 
 void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 {
-	int i;
+	int	i;
 
 	if (all->p_num == 0)
 	{
@@ -259,7 +232,7 @@ void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
 	all->p_num = 0;
 }
 
-int		process_quotes(t_all *all, int i, int *k, int j)
+int	process_quotes(t_all *all, int i, int *k, int j)
 {
 	while (all->line[i] == '\"' || all->line[i] == '\'')
 	{
@@ -269,7 +242,6 @@ int		process_quotes(t_all *all, int i, int *k, int j)
 			i = quotes_flags_switch(all, all->line, i, j);
 		while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
 		{
-			// i = check_qoutes_content(all, all->line, i, j);
 			if (all->line[i] == '$' && all->cmd[j].dq_fl)
 				process_dollar_sign(all, &i, k);
 			else
@@ -283,10 +255,10 @@ int		process_quotes(t_all *all, int i, int *k, int j)
 // void	parser(t_all *all)
 void	parser(t_all *all, char **arg, char **envp)
 {
-	int i;					//счетчик line
-	int j;					//номер команды
-	int n;					//номер аргумента
-	int k;					//счетчик tmp
+	int	i;					//счетчик line
+	int	j;					//номер команды
+	int	n;					//номер аргумента
+	int	k;					//счетчик tmp
 	int	line_len;
 
 	all->p_num = 0;
@@ -297,42 +269,28 @@ void	parser(t_all *all, char **arg, char **envp)
 	all->cmd_n = 1;
 	all->line = ft_strtrim(all->line, " \t");
 	if (check_line_validity(all->line) == 1)
-		return;
+		return ;
 	line_len = ft_strlen(all->line);
+	all->cmd = NULL;
 	cmd_mem_alloc(all);
-	while(all->line[i])
+	while (all->line[i])
 	{
 		k = 0;
-		all->tmp = ft_calloc(line_len, sizeof(char));
+		all->tmp = ft_calloc(line_len + 1, sizeof(char));
 		i = skip_spaces(all, i);
 		while (all->line[i] != ' ' && all->line[i])
 		{
-			if (all->line[i] == ';'|| all->line[i] == '|')
+			if (all->line[i] == ';' || all->line[i] == '|')
 			{
 				i++;
-				break;
+				break ;
 			}
 			else
 			{
 				all->set = 1;
 				i = process_quotes(all, i, &k, j);
-				// while (all->line[i] == '\"' || all->line[i] == '\'')
-				// {
-				// 	while (all->line[i] == '\"')
-				// 		i = quotes_flags_switch(all, all->line, i, j);
-				// 	while (all->line[i] == '\'' && !all->cmd[j].dq_fl)
-				// 		i = quotes_flags_switch(all, all->line, i, j);
-				// 	while ((all->cmd[j].dq_fl || all->cmd[j].sq_fl) && all->line[i])
-				// 	{
-				// 		// i = check_qoutes_content(all, all->line, i, j);
-				// 		if (all->line[i] == '$' && all->cmd[j].dq_fl)
-				// 			process_dollar_sign(all, &i, &k);
-				// 		else
-				// 			(all->tmp)[k++] = all->line[i++];
-				// 		i = quotes_flags_switch(all, all->line, i, j);
-				// 	}
-				// }
-				if (all->line[i] != ' ' && all->line[i] != ';' && all->line[i] != '|' && all->line[i])
+				if (all->line[i] != ' ' && all->line[i] != ';'
+					&& all->line[i] != '|' && all->line[i])
 				{
 					if (all->line[i] == '$')
 						process_dollar_sign(all, &i, &k);
@@ -355,7 +313,6 @@ void	parser(t_all *all, char **arg, char **envp)
 		if (all->line[i - 1] == ';')
 		{
 			check_echo_n_flag(all, j);
-			// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
 			semicolon_or_pipe(all, arg, envp);
 			j++;
 			cmd_mem_alloc(all);
@@ -363,11 +320,9 @@ void	parser(t_all *all, char **arg, char **envp)
 		}
 		if (all->line[i - 1] == '|')
 		{
-			// printf ("o_rdir before pipe= %i\n", all->cmd[0].o_rdir);
 			check_echo_n_flag(all, j);
 			j++;
 			cmd_mem_alloc(all);
-			// printf ("o_rdir aftefr pipe= %i\n", all->cmd[0].o_rdir);
 			n = 0;
 			all->p_num++;
 		}
@@ -377,9 +332,7 @@ void	parser(t_all *all, char **arg, char **envp)
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		check_echo_n_flag(all, j);
-		// buildin_func(all, arg, envp); заменила на semicolon_or_pipe
-		// printf ("o_rdir before semicolon or pipe= %i\n", all->cmd[0].o_rdir);
 		semicolon_or_pipe(all, arg, envp);
 	}
-	print_parsed_string(all);
+	// print_parsed_string(all);
 }
