@@ -1,9 +1,9 @@
 #include "../minishell.h"
 
-void    cmd_pwd(t_all *all, char **envp)    // ok???
+void	cmd_pwd(t_all *all, char **envp)
 {
-	char    *path;
-	char    *tmp;
+	char	*path;
+	char	*tmp;
 
 	path = malloc(PATH_LEN + 1);
 	tmp = getcwd(path, PATH_LEN);
