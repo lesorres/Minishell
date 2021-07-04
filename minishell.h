@@ -6,7 +6,6 @@
 # include <string.h>
 # include <stdlib.h>
 # include "libft/libft.h"
-# include "get_next_line.h"
 # include "execute_header.h"
 # include <curses.h>
 # include <term.h>
@@ -85,11 +84,11 @@ void	cmd_cd(t_all *all, char **envp, int k);
 void	cmd_echo(t_all *all, char **argv, int k);
 void	cmd_env(t_all *all, int k);
 void	cmd_export(t_all *all, int k);
-
 void	cmd_pwd(t_all *all, char **envp);
 int		cmd_unset(t_all *all, int k);
 void	cmd_exit(t_all *all, char **arg, int k);
 int		cmp_path(t_all *all, char *str, char *name);
+int		execute(t_all *all, char *name, char **arg, char **envp);
 void	add_new_env_param(t_all *all, char *line);
 void	get_envp(t_all *all, char **envp);
 void	split_path(t_all *all);
