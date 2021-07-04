@@ -19,7 +19,7 @@ void	srch_str_in_arr(t_all *all, char *tmp)
 	else
 	{
 		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i],
-				ft_strlen(pwd));
+				ft_strlen(pwd) + 1);
 		ft_strcpy(all->tline.env_arr[i], pwd);
 	}
 }
