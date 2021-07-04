@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
+#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/06/30 22:58:55 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/07/04 14:26:05 by fhyman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ NAME = minishell
 
 LIB = ./libft/libft.a
 
-BUILDINS = ./buildin/buildin.c ./buildin/cmd_exit.c ./buildin/cmd_export.c ./buildin/cmd_cd.c ./buildin/cmd_env.c ./buildin/cmd_echo.c ./buildin/cmd_pwd.c ./buildin/cmd_unset.c
+BUILDINS = ./buildin/buildin.c ./buildin/cmd_exit.c ./buildin/cmd_export.c ./buildin/cmd_cd.c ./buildin/cmd_env.c ./buildin/cmd_echo.c ./buildin/cmd_pwd.c ./buildin/cmd_unset.c ./buildin/export_utils.c ./buildin/cd_utils.c ./buildin/buildin_part2.c
 
 HEAD = *.h
 
@@ -38,7 +38,7 @@ all: $(NAME)
 $(NAME): $(OBJS) $(OBJS_BUILDIN)
 	$(MAKE) -C ./libft
 	gcc -g $(OBJS) $(OBJS_BUILDIN) $(LIB) $(FLAGS) -o $(NAME)
-#	$(NORM)
+	# $(NORM) #
 parser:
 	gcc -g parser_main.c parser.c minishell.h parser_dollar_sign.c libft/libft.a
 s_parser:
