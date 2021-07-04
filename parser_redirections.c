@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_redirections.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 17:30:45 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/03 17:38:50 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/04 13:40:50 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		file_name[n] = '\0';
 		all->cmd[j].o_rdir = open(file_name, O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (all->cmd[j].o_rdir == -1)
-			print_err2(all, all->cmd[j].arg[0], strerror(errno));
+			print_err2(all->cmd[j].arg[0], strerror(errno));
 	}
 	else if (all->line[i] == '>')
 	{
@@ -48,7 +48,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		file_name[n] = '\0';
 		all->cmd[j].o_rdir = open(file_name, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (all->cmd[j].o_rdir == -1)
-			print_err2(all, all->cmd[j].arg[0], strerror(errno));
+			print_err2(all->cmd[j].arg[0], strerror(errno));
 	}
 	else if (all->line[i] == '<' && all->line[i + 1] == '<')
 	{
@@ -59,7 +59,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		file_name[n] = '\0';
 		all->cmd[j].i_rdir = open(file_name, O_RDONLY | O_CREAT, 0644);
 		if (all->cmd[j].i_rdir == -1)
-			print_err2(all, all->cmd[j].arg[0], strerror(errno));
+			print_err2(all->cmd[j].arg[0], strerror(errno));
 	}
 	else if (all->line[i] == '<')
 	{
@@ -70,7 +70,7 @@ int	process_redirections(t_all *all, int i, int j, int line_len)
 		file_name[n] = '\0';
 		all->cmd[j].i_rdir = open(file_name, O_RDONLY, 0644);
 		if (all->cmd[j].i_rdir == -1)
-			print_err2(all, all->cmd[j].arg[0], strerror(errno));
+			print_err2(all->cmd[j].arg[0], strerror(errno));
 	}
 	// printf ("o_rdir in p_redir = %i\n", all->cmd[j].o_rdir);
 	free(file_name);
