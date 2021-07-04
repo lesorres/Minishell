@@ -23,7 +23,7 @@ void	add_oldpwd(t_all *all, char *path)
 		{
 			all->builds.oldpwd = ft_strjoin("OLDPWD=", path);
 			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i],
-					ft_strlen(all->builds.oldpwd));
+					ft_strlen(all->builds.oldpwd) + 1);
 			ft_strcpy(all->tline.env_arr[i], all->builds.oldpwd);
 			break ;
 		}
