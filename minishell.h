@@ -69,7 +69,6 @@ int		find_env_equal(char *line);
 void	check_shlvl(t_all *all, char **envp);
 void	int_sign(int sign);
 void	quit_sign(int sign);
-void	kill_sig(int sign);
 int		check_valid_id(char *cmd, char *line);
 int		find_equal_sign(t_all *all, char *line);
 void	copy_env(t_all *all);
