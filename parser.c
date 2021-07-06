@@ -6,7 +6,7 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/04 21:36:17 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/07 00:18:26 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	print_parsed_string(t_all *all)
 			n++;
 		}
 		// printf("arg_n = %i\n", all->cmd[j].arg_n);
+		printf("all.cmd_n = %i\n", all->cmd_n);
 		printf("\n");
 		j++;
 		n = 0;
@@ -336,5 +337,5 @@ void	parser(t_all *all, char **arg, char **envp)
 		check_echo_n_flag(all, j);
 		semicolon_or_pipe(all, arg, envp);
 	}
-	// print_parsed_string(all);
+	print_parsed_string(all);
 }

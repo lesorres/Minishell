@@ -474,7 +474,13 @@ int main(int argc, char **arg, char **envp)
 		res_terminal(&term);
 		parser(&all, arg, envp);
 //		__print_arr(all.cmd->arg);
-		__free_arr(all.cmd->arg); // new
+		i = 0;
+		while (i < (all.cmd_n - 1))
+		{
+			__free_arr(all.cmd[i].arg); // new
+			i++;
+		}
+		free (all.cmd);
 		// __free_arr(all.tline.env_arr); // new - были проблемы двойного очищения памяти
 		free(all.line);  //проверить
 		free(all.tline.print_line); //проверить

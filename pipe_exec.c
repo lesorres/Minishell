@@ -1,13 +1,21 @@
 #include  "minishell.h"
 
-void free_int_2d_arr(int ***arr)
-{
-	int	i;
+// void free_int_2d_arr(int ***arr)
+// {
+// 	int	i;
 	
-	i = 0;
-	while ((*arr)[i])
-		free((*arr)[i++]);
-	free(*arr);
+// 	i = 0;
+// 	while ((*arr)[i])
+// 		free((*arr)[i++]);
+// 	free(*arr);
+// }
+
+void __free_int_arr(int **arr) {
+	int i = 0;
+	while (arr[i]) {
+		free(arr[i++]);
+	}
+	free(arr);
 }
 
 void	pipe_exec(t_all *all, char**argv, char **envp)
@@ -21,8 +29,9 @@ void	pipe_exec(t_all *all, char**argv, char **envp)
 
 	k = all->p_num;
 	i = 0;
-	fd = (int**)malloc(sizeof(int*) * (k));
-	while (i < (k + 1)){
+	// fd = (int**)malloc(sizeof(int*) * (k));
+	fd = ft_calloc((k + 1), sizeof(int *));
+	while (i < k){
 		fd[i] = malloc(sizeof(int) * 2);
 		i++;
 	}
@@ -53,5 +62,5 @@ void	pipe_exec(t_all *all, char**argv, char **envp)
 		all->cmd_i++;
 		i++;
 	}
-	free_int_2d_arr(&fd);
+	__free_int_arr(fd);  //вызывает двойное высвобождение памяти, но если убрать, появляются лики
 }
