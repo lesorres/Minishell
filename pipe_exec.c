@@ -1,13 +1,23 @@
 #include  "minishell.h"
 
-void    pipe_exec(t_all *all, char**argv, char **envp)
+void free_int_2d_arr(int ***arr)
 {
-	int     **fd;
-	pid_t   pid;
-	char    c;
-	int     status;
-	int     k;
-	int     i;
+	int	i;
+	
+	i = 0;
+	while ((*arr)[i])
+		free((*arr)[i++]);
+	free(*arr);
+}
+
+void	pipe_exec(t_all *all, char**argv, char **envp)
+{
+	int		**fd;
+	pid_t	pid;
+	char	c;
+	int		status;
+	int		k;
+	int		i;
 
 	k = all->p_num;
 	i = 0;
@@ -23,12 +33,13 @@ void    pipe_exec(t_all *all, char**argv, char **envp)
 			pipe(fd[i]);
 		pid = fork();
 		if (pid == 0)
-		{           
+		{
 			if (i < k)
 				dup2(fd[i][1], 1);
 			if (i != 0)
 				dup2(fd[i - 1][0], 0);
 			buildin_func(all, argv, envp);
+			// free_int_2d_arr(&fd);
 			exit(0);
 		}
 		else
@@ -42,4 +53,5 @@ void    pipe_exec(t_all *all, char**argv, char **envp)
 		all->cmd_i++;
 		i++;
 	}
-} 
+	free_int_2d_arr(&fd);
+}

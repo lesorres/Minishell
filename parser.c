@@ -267,7 +267,9 @@ void	parser(t_all *all, char **arg, char **envp)
 	n = 0;
 	all->set = 0;
 	all->cmd_n = 1;
+	char * tmp = all->line;
 	all->line = ft_strtrim(all->line, " \t");
+	free(tmp);//==========
 	if (check_line_validity(all->line) == 1)
 		return ;
 	line_len = ft_strlen(all->line);

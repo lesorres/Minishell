@@ -10,15 +10,17 @@ void	get_envp(t_all *all, char **envp)
 		all->tline.env_line_num++;
 	// all->tline.env_arr = (char **)malloc(sizeof(char *)
 		// * (all->tline.env_line_num + 1));
-	all->tline.env_arr = ft_calloc((all->tline.env_line_num + 1),
+	all->tline.env_arr = ft_calloc((all->tline.env_line_num + 1), //leak
 			sizeof(char *));
 	while (line < all->tline.env_line_num)
 	{
-		all->tline.env_arr[line] = ft_strdup(envp[line]);
+		all->tline.env_arr[line] = ft_strdup(envp[line]); //leak
 		line++;
 	}
 	// all->tline.env_arr[line] = NULL;
 	check_shlvl(all, all->tline.env_arr);
+	write(1, "333\n", 4);  // debug
+//	while (1){}  // debug
 	split_path(all);
 }
 

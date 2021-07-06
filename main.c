@@ -101,24 +101,6 @@
 // 	return (i);
 // }
 
-int add_l_char(char **line, char ch) //нужно переписать
-{
-    int i;
-    char *out;
-    char *tmp;
-
-    tmp = *line;
-    i = ft_strlen(tmp);
-    if(!(out = malloc(sizeof(char) * (i + 2))))
-        return (0);
-	ft_strcpy(out, tmp);
-	out[i++] = ch;
-    out[i] = '\0';
-    free(*line);
-    *line = out;
-    return (1);
-}
-
 // void	free_hisr_arr(t_all *all)
 // {
 // 	int	i;
@@ -232,14 +214,16 @@ void	check_shlvl(t_all *all, char **envp)
 	char	*num_ch;
 
 	i = 0;
-	while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
+	while (all->tline.env_arr[i] && ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
 		i++;
-	if (ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	if (all->tline.env_arr[i] && ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
 	{
 		add_new_env_param(all, "SHLVL=1");
 		all->tline.first_shlvl = 1;
+		write(1, "111\n", 4);  // debug
+//		while (1){}  // debug
 	}
-	else
+	else if (all->tline.env_arr[i])
 	{
 		// j = find_env_equal(all->tline.env_arr[i]);
 		num = ft_strlen(all->tline.env_arr[i]) - 6;
@@ -256,6 +240,8 @@ void	check_shlvl(t_all *all, char **envp)
 		free(num_ch); // new line
 		free(value); // new line
 		all->tline.env_arr[i] = tmp;
+		write(1, "222\n", 4); // debug
+//		while (1){} // debug
 	}
 }
 
@@ -301,14 +287,20 @@ void	init_all_vars(t_all *all)
 // 	return(all_line);
 // }
 
-void __free_arr(char **arr) 
-{
-	int i;
-
-	i = 0;
-	while (arr[i]) 
+void __free_arr(char **arr) {
+	int i = 0;
+	while (arr[i]) {
 		free(arr[i++]);
+	}
 	free(arr);
+}
+
+void __print_arr(char **arr) {
+	printf("print\n");
+	int i = 0;
+	while (arr[i]) {
+		printf("%s\n", arr[i++]);
+	}
 }
 
 int main(int argc, char **arg, char **envp)
@@ -324,13 +316,14 @@ int main(int argc, char **arg, char **envp)
 	int		count;
 	int		k;
 	int		fd;
-	char    *path;
+	// char    *path;
 	char	*file_name;
 
 	// all = ft_calloc(1, sizeof(t_all));
 	all.in = dup(STDIN_FILENO);
 	all.out = dup(STDOUT_FILENO);
 	// path = malloc(PATH_LEN + 1);
+	// all.tline.path = getcwd(path, PATH_LEN);
 	all.tline.path = NULL;
 	all.tline.path = getcwd(all.tline.path, PATH_LEN);
 	file_name = ft_strjoin(all.tline.path, "/.HISTORY");
@@ -351,7 +344,7 @@ int main(int argc, char **arg, char **envp)
 		// all.status = status;
 		// printf("status = %s\n", status);
 		all.line = malloc(1024);				//leak
-		all.tline.print_line = malloc(1024); 	//leak
+		all.tline.print_line = malloc(1024); 	//leak - исправила с помощью free внизу
 		all.tline.cursor = PROMPT;
 		all.tline.symb_num = PROMPT;
 		// all.tline.print_line = NULL;
@@ -409,10 +402,13 @@ int main(int argc, char **arg, char **envp)
 				else if (tline.curr_line == tline.line_num)
 				{
 					write(1, all.tline.print_line, ft_strlen(all.tline.print_line));
-					free(all.line);
+					free(all.line); // new line
 					all.line = ft_calloc(1024, sizeof(char));
 					all.line = ft_strcpy(all.line, all.tline.print_line);
 					count = ft_strlen(all.line);
+				}
+				else {
+					free(all.line);
 				}
 				close(hist_fd);
 			}
@@ -426,6 +422,7 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(cursor_left, 1);
 					ft_putstr_fd(tgetstr("dc", 0), 1);
 				}
+
 			}
 			else if (!ft_strcmp(str, LEFT))
 			{
@@ -478,9 +475,10 @@ int main(int argc, char **arg, char **envp)
 		all.line[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
+		parser(&all, arg, envp);
+//		__print_arr(all.cmd->arg);
 		__free_arr(all.cmd->arg); // new
 		__free_arr(all.tline.env_arr); // new
-		parser(&all, arg, envp);
 		free(all.line);
 		free(all.tline.print_line);
 		tline.line_num++;

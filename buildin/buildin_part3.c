@@ -37,8 +37,6 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 	if (ft_strncmp(name, "./", 2) == 0
 		|| ft_strrncmp(name, "/minishell", 10) == 0)
 	{
-		path = add_path(all, all->tline.env_arr);
-		cmd = ft_strjoin(path, name);
 		exec = execve(name, arg, all->tline.env_arr);
 		if (!errno)
 			status_exit();

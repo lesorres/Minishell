@@ -40,7 +40,8 @@ char	*add_path(t_all *all, char **envp)
 {
 	char	*path;
 
-	path = malloc(PATH_LEN + 1);
+	// path = malloc(PATH_LEN + 1); //раньше сегалась
+	path = NULL;
 	path = getcwd(path, PATH_LEN);
 	return (path);
 }

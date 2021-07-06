@@ -23,7 +23,7 @@ char	*ft_strnstr(const char *haystack, const char *needle, size_t len)
 		return (0);
 	if (!needle[i])
 		return ((char *)haystack);
-	while (haystack[i] && i < len)
+	while (haystack && haystack[i] && i < len)
 	{
 		if (haystack[i] == needle[n])
 		{
