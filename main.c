@@ -407,9 +407,6 @@ int main(int argc, char **arg, char **envp)
 					all.line = ft_strcpy(all.line, all.tline.print_line);
 					count = ft_strlen(all.line);
 				}
-				else {
-					free(all.line);
-				}
 				close(hist_fd);
 			}
 			else if (!ft_strcmp(str, key_backspace) || !ft_strcmp(str, "\177"))
@@ -478,9 +475,9 @@ int main(int argc, char **arg, char **envp)
 		parser(&all, arg, envp);
 //		__print_arr(all.cmd->arg);
 		__free_arr(all.cmd->arg); // new
-		__free_arr(all.tline.env_arr); // new
-		free(all.line);
-		free(all.tline.print_line);
+		// __free_arr(all.tline.env_arr); // new - были проблемы двойного очищения памяти
+		free(all.line);  //проверить
+		free(all.tline.print_line); //проверить
 		tline.line_num++;
 	}
 	close(fd);
