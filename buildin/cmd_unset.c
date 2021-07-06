@@ -15,19 +15,6 @@ void	del_env_line(t_all *all, int i)
 	all->tline.env_arr[i] = NULL;
 }
 
-void	free_path_arr(t_all *all)
-{
-	int		i;
-
-	i = 0;
-	while (all->path_arr[i])
-	{
-		free(all->path_arr[i]);
-		i++;
-	}
-	free (all->path_arr);
-}
-
 void	check_cycle(t_all *all, int k)
 {
 	int		i;
@@ -68,7 +55,7 @@ int	cmd_unset(t_all *all, int k)
 	else
 	{
 		if (!ft_strncmp(all->cmd[k].arg[n], "PATH", 4))
-			free_path_arr(all);
+			__free_arr(all->path_arr);
 		check_cycle(all, k);
 	}
 	return (0);
