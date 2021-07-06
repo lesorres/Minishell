@@ -232,14 +232,14 @@ void	check_shlvl(t_all *all, char **envp)
 	char	*num_ch;
 
 	i = 0;
-	while (ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
+	while (all->tline.env_arr[i] && ft_strnstr(all->tline.env_arr[i], "SHLVL=", 6) == NULL)
 		i++;
-	if (ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	if (all->tline.env_arr[i] && ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
 	{
 		add_new_env_param(all, "SHLVL=1");
 		all->tline.first_shlvl = 1;
 	}
-	else
+	else if (all->tline.env_arr[i])
 	{
 		// j = find_env_equal(all->tline.env_arr[i]);
 		num = ft_strlen(all->tline.env_arr[i]) - 6;
