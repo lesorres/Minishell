@@ -253,6 +253,8 @@ void	check_shlvl(t_all *all, char **envp)
 		// all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i], ft_strlen(tmp) + 1);
 		// ft_strcpy(all->tline.env_arr[i], tmp);
 		free (all->tline.env_arr[i]);
+		free(num_ch); // new line
+		free(value); // new line
 		all->tline.env_arr[i] = tmp;
 	}
 }
@@ -299,6 +301,16 @@ void	init_all_vars(t_all *all)
 // 	return(all_line);
 // }
 
+void __free_arr(char **arr) 
+{
+	int i;
+
+	i = 0;
+	while (arr[i]) 
+		free(arr[i++]);
+	free(arr);
+}
+
 int main(int argc, char **arg, char **envp)
 {
 	t_cmd 	cmd;
@@ -318,8 +330,9 @@ int main(int argc, char **arg, char **envp)
 	// all = ft_calloc(1, sizeof(t_all));
 	all.in = dup(STDIN_FILENO);
 	all.out = dup(STDOUT_FILENO);
-	path = malloc(PATH_LEN + 1);
-	all.tline.path = getcwd(path, PATH_LEN);
+	// path = malloc(PATH_LEN + 1);
+	all.tline.path = NULL;
+	all.tline.path = getcwd(all.tline.path, PATH_LEN);
 	file_name = ft_strjoin(all.tline.path, "/.HISTORY");
 	fd = open(file_name, O_RDWR | O_CREAT, 0777);
 	tcgetattr(0, &term);
@@ -396,6 +409,7 @@ int main(int argc, char **arg, char **envp)
 				else if (tline.curr_line == tline.line_num)
 				{
 					write(1, all.tline.print_line, ft_strlen(all.tline.print_line));
+					free(all.line);
 					all.line = ft_calloc(1024, sizeof(char));
 					all.line = ft_strcpy(all.line, all.tline.print_line);
 					count = ft_strlen(all.line);
@@ -464,8 +478,11 @@ int main(int argc, char **arg, char **envp)
 		all.line[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
+		__free_arr(all.cmd->arg); // new
+		__free_arr(all.tline.env_arr); // new
 		parser(&all, arg, envp);
 		free(all.line);
+		free(all.tline.print_line);
 		tline.line_num++;
 	}
 	close(fd);
