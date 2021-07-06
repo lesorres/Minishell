@@ -62,6 +62,7 @@ int		status;
 int		ft_putchar(char c);
 char	*read_line(int fd);
 int		len(char **str);
+void	__free_arr(char **arr);
 char	*add_quotes(t_all *all, char *line);
 char	*add_path(t_all *all, char **envp);
 void	add_oldpwd(t_all *all, char *path);
