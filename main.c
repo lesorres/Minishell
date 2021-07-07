@@ -295,12 +295,16 @@ void __free_arr(char **arr) {
 	free(arr);
 }
 
-void __print_arr(char **arr) {
-	printf("print\n");
-	int i = 0;
-	while (arr[i]) {
-		printf("%s\n", arr[i++]);
-	}
+int check_for_EOF() 
+{
+	int c; // = getc(stdin);
+	if (feof(stdin)) 
+		ungetc(c, stdin);
+		// return 1;
+	if (c == EOF) 
+		exit (0);
+		// return 1;
+	return (0);
 }
 
 int main(int argc, char **arg, char **envp)
@@ -338,22 +342,26 @@ int main(int argc, char **arg, char **envp)
 	// init_all_vars(&all);
 	status = 0;
 	// split_path(&all);
-	while (ft_strcmp(str, "\4"))
+	// while (!&check_for_EOF)
+	// while (ft_strcmp(str, "\4"))
+	while (str)
 	{
 		set_terminal(&term);
 		// all.status = status;
 		// printf("status = %s\n", status);
-		all.line = malloc(1024);				//leak
+		// all.line = malloc(1024);				//leak
+		all.line = ft_calloc(1024, sizeof(char));
 		all.tline.print_line = malloc(1024); 	//leak - исправила с помощью free внизу
+		// all.tline.print_line = ft_calloc(1024, sizeof(char));
+		all.tline.print_line[0] = '\0';
 		all.tline.cursor = PROMPT;
 		all.tline.symb_num = PROMPT;
-		// all.tline.print_line = NULL;
 		tline.curr_line = tline.line_num;
 		write(1, "#minishell> ", PROMPT);
 		ft_putstr_fd(save_cursor, 1);
 		str[0] = 0;
 		count = 0;
-		while (ft_strcmp(str, "\n") && ft_strcmp(str, "\4"))
+		while (ft_strcmp(str, "\n"))// && ft_strcmp(str, "\4"))
 		{
 			if (all.tline.symb_num < all.tline.cursor)
 				all.tline.symb_num = all.tline.cursor;
@@ -452,7 +460,6 @@ int main(int argc, char **arg, char **envp)
 			// }
 			else if (ft_isprint(str[0]) || str[0] == '\n')
 			{
-				// printf("count = %i\n", count);
 				all.tline.cursor += write(1, str, l);
 				all.tline.print_line[count] = str[0];
 				all.tline.print_line[count + 1] = 0;
@@ -460,20 +467,32 @@ int main(int argc, char **arg, char **envp)
 				all.line[count + 1] = 0;
 				count++;
 			}
+			if (!all.tline.print_line[0] && !all.line[0]&& !ft_strcmp(str, "\4"))
+			{
+				write(1, "exit\n", 5);
+				close(fd);
+				exit (0);
+			}
 		}
-		if (!ft_strcmp(str, "\4"))
+		// int check_for_EOF() {
+    	// if (str[0] == '\4' && count != 0)
+// 		if (feof(stdin))
+// 		{
+// 			ungetc(str[0], stdin);
+//     		continue ;
+		// }
+		if (!all.tline.print_line[0] && !all.line[0]&& !ft_strcmp(str, "\4"))
 		{
 			write(1, "exit\n", 5);
+			close(fd);
 			exit (0);
 		}
 		if (all.line[0] != '\n')
 			write(fd, all.line, ft_strlen(all.line));
-			// write(fd, all.tline.print_line, ft_strlen(all.tline.print_line));
 		all.line[count - 1] = 0;
 		all.tline.print_line[count - 1] = 0;
 		res_terminal(&term);
 		parser(&all, arg, envp);
-//		__print_arr(all.cmd->arg);
 		i = 0;
 		while (i < (all.cmd_n - 1))
 		{
@@ -481,10 +500,11 @@ int main(int argc, char **arg, char **envp)
 			i++;
 		}
 		free (all.cmd);
-		// __free_arr(all.tline.env_arr); // new - были проблемы двойного очищения памяти
 		free(all.line);  //проверить
 		free(all.tline.print_line); //проверить
 		tline.line_num++;
+		// if (all.tline.print_line[0] && !ft_strcmp(str, "\4"))
+		// 	break;
 	}
 	close(fd);
 	write(1, "\n", 1);
