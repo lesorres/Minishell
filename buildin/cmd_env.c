@@ -19,7 +19,7 @@ void	get_envp(t_all *all, char **envp)
 	}
 	// all->tline.env_arr[line] = NULL;
 	check_shlvl(all, all->tline.env_arr);
-	write(1, "333\n", 4);  // debug
+	// write(1, "333\n", 4);  // debug
 //	while (1){}  // debug
 	split_path(all);
 }
