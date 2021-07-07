@@ -92,5 +92,6 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 		waitpid(pid, &status, 0);
 	WIFEXITED(status);
 	WEXITSTATUS(status);
+	WIFSIGNALED(status);
 	return (status);
 }

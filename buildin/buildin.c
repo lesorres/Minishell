@@ -38,6 +38,8 @@ void	executer(t_all *all, char **arg, char **envp, int i)
 	status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
 	if (status >= 256)
 		status /= 256;
+	else if (status == 2 || status == 3)
+		status += 128;
 	if (all->status != 0)
 	{
 		status = all->status;

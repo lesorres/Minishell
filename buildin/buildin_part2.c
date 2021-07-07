@@ -21,7 +21,8 @@ void	add_new_env_param(t_all *all, char *line)
 	if (!new_arr)
 		write(2, strerror(errno), ft_strlen(strerror(errno)));
 	new_arr[i] = NULL;
-	new_arr[--i] = line;
+	free(new_arr[i - 1]);
+	new_arr[--i] = ft_strdup(line);
 	while (i--)
 		new_arr[i] = all->tline.env_arr[i];
 	free(all->tline.env_arr);
