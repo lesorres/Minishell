@@ -88,7 +88,7 @@ char	*add_quotes(t_all *all, char *line)
 
 	if (all->tline.equal_sign == 0)
 		len = ft_strlen(line) + 3;
-	tmp = malloc(sizeof(len));
+	// tmp = malloc(sizeof(len));
 	if (all->tline.equal_sign == 0)
 		tmp = ft_strjoin(line, "=");
 	tmp[len] = '\0';
