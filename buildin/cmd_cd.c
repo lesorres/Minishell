@@ -24,7 +24,7 @@ void	srch_str_in_arr(t_all *all, char *tmp)
 	}
 }
 
-static int	find_var_in_arr(char **arr, char *str)
+int	find_var_in_arr(char **arr, char *str)
 {
 	int		i;
 
