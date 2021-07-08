@@ -25,6 +25,7 @@ void	add_oldpwd(t_all *all, char *path)
 			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i],
 					ft_strlen(all->builds.oldpwd) + 1);
 			ft_strcpy(all->tline.env_arr[i], all->builds.oldpwd);
+			free(all->builds.oldpwd);
 			break ;
 		}
 		i++;
@@ -33,6 +34,7 @@ void	add_oldpwd(t_all *all, char *path)
 	{
 		all->builds.oldpwd = ft_strjoin("OLDPWD=", path);
 		add_new_env_param(all, all->builds.oldpwd);
+		free(all->builds.oldpwd);
 	}
 }
 
@@ -40,7 +42,6 @@ char	*add_path(t_all *all, char **envp)
 {
 	char	*path;
 
-	// path = malloc(PATH_LEN + 1); //раньше сегалась
 	path = NULL;
 	path = getcwd(path, PATH_LEN);
 	return (path);
