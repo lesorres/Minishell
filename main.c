@@ -220,8 +220,6 @@ void	check_shlvl(t_all *all, char **envp)
 	{
 		add_new_env_param(all, "SHLVL=1");
 		all->tline.first_shlvl = 1;
-		write(1, "111\n", 4);  // debug
-//		while (1){}  // debug
 	}
 	else if (all->tline.env_arr[i])
 	{
@@ -240,8 +238,6 @@ void	check_shlvl(t_all *all, char **envp)
 		free(num_ch); // new line
 		free(value); // new line
 		all->tline.env_arr[i] = tmp;
-		write(1, "222\n", 4); // debug
-//		while (1){} // debug
 	}
 }
 
@@ -261,50 +257,18 @@ void res_terminal(struct  termios *term)
 
 void	init_all_vars(t_all *all)
 {
-	// all->line = malloc(1024);
-	// status = ft_calloc(4, sizeof(char));
-	// all->status = status;
-	// all->tline.print_line = malloc(1024);
-	// all->tline.cursor = PROMPT;
-	// all->tline.symb_num = PROMPT;
-	// all->tline.curr_line = all->tline.line_num;
+
 }
 
-// char *ft_incert_char(char *all_line, char c, int cursor)
-// {
-// 	char	*end;
-// 	int		i;
-
-// 	i = 0;
-// 	printf("all_line before = %s\n", all_line);
-// 	end = malloc(ft_strlen(&all_line[cursor - PROMPT]) + 1);
-// 	end = ft_strcpy(end, &all_line[cursor - PROMPT]);
-// 	all_line[(cursor++) - PROMPT] = c;
-// 	while(end[i])
-// 		all_line[(cursor++) - PROMPT] = end[i++];
-// 	free(end);
-// 	printf("all_line after = %s\n", all_line);
-// 	return(all_line);
-// }
-
-void __free_arr(char **arr) {
-	int i = 0;
+void __free_arr(char **arr) 
+{
+	int i;
+	
+	i = 0;
 	while (arr[i]) {
 		free(arr[i++]);
 	}
 	free(arr);
-}
-
-int check_for_EOF() 
-{
-	int c; // = getc(stdin);
-	if (feof(stdin)) 
-		ungetc(c, stdin);
-		// return 1;
-	if (c == EOF) 
-		exit (0);
-		// return 1;
-	return (0);
 }
 
 int main(int argc, char **arg, char **envp)
@@ -427,7 +391,6 @@ int main(int argc, char **arg, char **envp)
 					ft_putstr_fd(cursor_left, 1);
 					ft_putstr_fd(tgetstr("dc", 0), 1);
 				}
-
 			}
 			else if (!ft_strcmp(str, LEFT))
 			{
@@ -494,12 +457,15 @@ int main(int argc, char **arg, char **envp)
 		res_terminal(&term);
 		parser(&all, arg, envp);
 		i = 0;
-		while (i < (all.cmd_n - 1))
+		if (all.cmd)
 		{
-			__free_arr(all.cmd[i].arg); // new
-			i++;
+			while (!all.cmd[i].null && all.cmd[i].arg)
+			{
+				__free_arr(all.cmd[i].arg); // new
+				i++;
+			}
+			free (all.cmd);
 		}
-		free (all.cmd);
 		free(all.line);  //проверить
 		free(all.tline.print_line); //проверить
 		tline.line_num++;
