@@ -66,6 +66,7 @@ void	__free_arr(char **arr);
 char	*add_quotes(t_all *all, char *line);
 char	*add_path(t_all *all, char **envp);
 void	add_oldpwd(t_all *all, char *path);
+int		find_var_in_arr(char **arr, char *str);
 int		find_env_equal(char *line);
 void	check_shlvl(t_all *all, char **envp);
 void	int_sign(int sign);
