@@ -67,7 +67,8 @@ int	cmd_unset(t_all *all, int k)
 		return (0);
 	else
 	{
-		if (!ft_strncmp(all->cmd[k].arg[n], "PATH", 4))
+		if (!ft_strncmp(all->cmd[k].arg[n], "PATH", 4)
+			&& find_var_in_arr(all->tline.env_arr, "PATH") != -1)
 			free_path_arr(all);
 		check_cycle(all, k);
 	}
