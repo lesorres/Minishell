@@ -54,20 +54,41 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 	return (exec);
 }
 
+int	check_path_exist(t_all *all)
+{
+	int		i;
+
+	i = 0;
+	while (all->tline.env_arr[i])
+	{
+		if (ft_strncmp(all->tline.env_arr[i], "PATH=", 5) == 0)
+			return (0);
+		i++;
+	}
+	if (all->tline.env_arr[i] == NULL)
+		all->path_arr = NULL;
+	return (1);
+}
+
 void	child_process_cycle(t_all *all, char *name, char **arg)
 {
 	int		i;
 	int		exec;
 
 	i = 0;
-	while (all->path_arr)
+	if (!check_path_exist(all))
 	{
-		exec = cmp_cmd_path(all, all->path_arr[i], arg, name);
-		if (exec == -1)
-			i++;
-		if (all->path_arr[i] == NULL && exec == -1)
-			cmd_errors(all, name, arg);
+		while (all->path_arr)
+		{
+			exec = cmp_cmd_path(all, all->path_arr[i], arg, name);
+			if (exec == -1)
+				i++;
+			if (all->path_arr[i] == NULL && exec == -1)
+				cmd_errors(all, name, arg);
+		}
 	}
+	else
+		exit (status);
 }
 
 int	execute(t_all *all, char *name, char **arg, char **envp)
@@ -79,7 +100,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	signal(SIGQUIT, quit_sign);
 	if (!pid)
 	{
-		if (all->path_arr == NULL)
+		if (check_path_exist(all))
 		{
 			print_err2(arg[0], strerror(2));
 			status = 127;
