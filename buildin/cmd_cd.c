@@ -15,13 +15,14 @@ void	srch_str_in_arr(t_all *all, char *tmp)
 			break ;
 	}
 	if (all->tline.env_arr[i] == NULL)
-		add_new_line_to_arr(&all->tline.env_arr, pwd);
+		add_new_env_param(all, pwd);
 	else
 	{
 		all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i],
 				ft_strlen(pwd) + 1);
 		ft_strcpy(all->tline.env_arr[i], pwd);
 	}
+	free(pwd);
 }
 
 int	find_var_in_arr(char **arr, char *str)
