@@ -1,5 +1,44 @@
 #include "../minishell.h"
 
+void	change_shlvl(t_all *all, int i)
+{
+	char	*value;
+	int		num;
+	char	*tmp;
+	char	*num_ch;
+
+	num = ft_strlen(all->tline.env_arr[i]) - 6;
+	value = ft_substr(all->tline.env_arr[i], 6, num);
+	if (!isdigit_line(value))
+		num = ft_atoi(value) + 1;
+	else
+		num = 1;
+	num_ch = ft_itoa(num);
+	tmp = ft_strjoin("SHLVL=", num_ch);
+	free (all->tline.env_arr[i]);
+	free(num_ch);
+	free(value);
+	all->tline.env_arr[i] = tmp;
+}
+
+void	check_shlvl(t_all *all, char **envp)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	while (all->tline.env_arr[i] && ft_strnstr(all->tline.env_arr[i],
+			"SHLVL=", 6) == NULL)
+		i++;
+	if (all->tline.env_arr[i] && ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	{
+		add_new_env_param(all, "SHLVL=1");
+		all->tline.first_shlvl = 1;
+	}
+	else if (all->tline.env_arr[i])
+		change_shlvl(all, i);
+}
+
 void	get_envp(t_all *all, char **envp)
 {
 	int	line;
