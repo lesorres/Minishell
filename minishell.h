@@ -76,6 +76,7 @@ int		find_equal_sign(t_all *all, char *line);
 void	copy_env(t_all *all);
 void	sort_env(t_all *all);
 void	print_err2(char *cmd, char *err_name);
+int		check_path_exist(t_all *all);
 int		error_handler(char *arg1, char *arg2, char *err);
 
 /*  buildin commands  */
