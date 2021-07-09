@@ -45,10 +45,8 @@ typedef struct s_all
 	pid_t		*pid;
 	t_termline	tline;
 	int			status;
-	char		**hist_arr; //возможно можно будет удалить 
 	char		**path_arr;
 	int			p_num; // количество пайпов
-	// char		*tmp; //где используется?
 	char		*line;
 	int			cmd_i;
 	int			**fd;
@@ -56,6 +54,7 @@ typedef struct s_all
 	int			out;
 	int			set;			//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
 	char		*tmp;
+	int			line_len;
 }				t_all;
 
 int		status;
