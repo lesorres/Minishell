@@ -55,6 +55,8 @@ typedef struct s_all
 	int			set;			//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
 	char		*tmp;
 	int			line_len;
+	char		**arg;
+	char		**envp;
 }				t_all;
 
 int		status;
@@ -108,6 +110,7 @@ void	arr_mem_alloc(t_all *all, int j);
 void	cmd_mem_alloc(t_all *all);
 // int		compare_with_env(t_all *all, char *line, int i);
 int		compare_with_env(t_all *all, char *line, int i);
+void	process_dollar_sign(t_all *all, int *i, int *k);
 int		process_redirections(t_all *all, int i, int j, int line_len);
 int		skip_spaces(t_all *all, int i);
 
