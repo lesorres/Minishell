@@ -57,6 +57,7 @@ int	cmp_path(t_all *all, char *str, char *name)
 	len = ft_strlen(name);
 	tmp = ft_substr(name, 0, len - j);
 	cmp = ft_strncmp(str, tmp, ft_strlen(tmp));
+	free(tmp);
 	if (!cmp)
 	{
 		all->tline.new_name = malloc(sizeof(len - j));

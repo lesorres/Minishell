@@ -1,11 +1,5 @@
 #include "../minishell.h"
 
-void	status_exit(void)
-{
-	status = 1;
-	exit (status);
-}
-
 void	cmd_errors(t_all *all, char *name, char **arg)
 {
 	if (ft_strncmp(name, "/", 1) && ft_strncmp(name, "./", 2))
@@ -14,18 +8,19 @@ void	cmd_errors(t_all *all, char *name, char **arg)
 		all->status = 127;
 		exit(all->status);
 	}
-	else if (!ft_strncmp(name, "/", 1) && name[1] == '\0')
+	else if ((!ft_strncmp(name, "/", 1) && name[1] != '\0')
+		|| (!ft_strncmp(name, "./", 2) && name[2] != '\0'))
+	{
+		print_err2(arg[0], strerror(2));
+		status = 127;
+	}
+	else if ((!ft_strncmp(name, "/", 1) && name[1] == '\0')
+		|| (!ft_strncmp(name, "./", 2) && name[2] == '\0'))
 	{
 		print_err2(arg[0], strerror(21));
 		status = 126;
-		exit(status);
 	}
-	else if (!ft_strncmp(name, "/", 1) || !ft_strncmp(name, "./", 2))
-	{
-		print_err2(arg[0], strerror(2));
-		status = 1;
-		exit(status);
-	}
+	exit(status);
 }
 
 int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
@@ -39,7 +34,7 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 	{
 		exec = execve(name, arg, all->tline.env_arr);
 		if (!errno)
-			status_exit();
+			cmd_errors(all, name, arg);
 	}
 	else
 	{
@@ -49,7 +44,10 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 			cmd = ft_strjoin(line, all->tline.new_name);
 		exec = execve(cmd, arg, all->tline.env_arr);
 		if (!errno)
-			status_exit();
+		{
+			free (cmd);
+			cmd_errors(all, name, arg);
+		}
 	}
 	return (exec);
 }
@@ -72,7 +70,13 @@ void	child_process_cycle(t_all *all, char *name, char **arg)
 		}
 	}
 	else
+	{
+		exec = execve(name, arg, all->tline.env_arr);
+		if (exec == -1)
+			cmd_errors(all, name, arg);
+		status = 127;
 		exit (status);
+	}
 }
 
 int	execute(t_all *all, char *name, char **arg, char **envp)
@@ -83,14 +87,7 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	signal(SIGINT, int_sign);
 	signal(SIGQUIT, quit_sign);
 	if (!pid)
-	{
-		if (check_path_exist(all))
-		{
-			print_err2(arg[0], strerror(2));
-			status = 127;
-		}
 		child_process_cycle(all, name, arg);
-	}
 	else if (pid < 0)
 		printf("%s\n", strerror(errno));
 	else
