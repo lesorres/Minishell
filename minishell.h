@@ -51,6 +51,7 @@ typedef struct s_all
 	// char		*tmp; //где используется?
 	char		*line;
 	int			cmd_i;
+	int			**fd;
 	int			in;
 	int			out;
 	int			set;			//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
