@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 23:11:26 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/09 23:38:25 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 01:21:51 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	set_all_initial_params(t_all *all, int *i, int *j, int *n)
 	*i = 0;
 	*j = 0;
 	*n = 0;
+	all->redid_err = 0;
 	all->set = 0;
 	all->cmd_n = 1;
 	tmp = all->line;
