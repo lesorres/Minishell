@@ -60,7 +60,6 @@ int	cmp_path(t_all *all, char *str, char *name)
 	free(tmp);
 	if (!cmp)
 	{
-		all->tline.new_name = malloc(sizeof(len - j));
 		all->tline.new_name = ft_substr(name, (j + 1), len - j);
 		return (1);
 	}
