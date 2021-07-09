@@ -59,6 +59,7 @@ typedef struct s_all
 	int			line_len;
 	char		**arg;
 	char		**envp;
+	int			redid_err;
 }				t_all;
 
 int		status;
@@ -128,5 +129,6 @@ int		check_line_validity(char *line);
 void	semicolon_or_pipe(t_all *all, char **arg, char **envp);
 int		quotes_flags_switch(t_all *all, char *line, int i, int j);
 int		process_quotes(t_all *all, int i, int *k, int j);
+void	print_err3(t_all *all, char *cmd, char *err_name);
 
 #endif
