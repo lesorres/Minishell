@@ -6,13 +6,35 @@
 /*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:39:22 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/04 21:54:05 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/09 23:26:18 by kmeeseek         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len) //не работает с ненайденными переменными : echo $PWDklklk
+int	in_case_env_var_was_found(t_all *all, int i, int env_i, int name_len)
+{
+	char	*tmp;
+	char	*env_val;
+	int		line_len;
+	int		val_len;
+	int		t;
+
+	line_len = ft_strlen(all->line);
+	val_len = ft_strlen(all->tline.env_arr[env_i]) - name_len;
+	env_val = ft_substr(all->tline.env_arr[env_i], name_len, val_len);
+	tmp = ft_calloc((line_len - name_len + val_len + 1), sizeof(char));
+	t = ft_strlcpy(tmp, all->line, i + 1);
+	t = ft_strlcpy(&tmp[i], env_val, val_len + 1);
+	t = ft_strlcpy(&tmp[i + val_len], &all->line[i + name_len],
+			(line_len - i - name_len + 1));
+	free (all->line);
+	free (env_val);
+	all->line = tmp;
+	return (val_len);
+}
+
+static int	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len)
 {
 	char	*tmp;
 	char	*env_val;
@@ -27,33 +49,14 @@ static int	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len) 
 		t = ft_strlcpy(tmp, all->line, i + 1);
 		t = ft_strlcpy(&tmp[i], &all->line[i + name_len],
 				(line_len - i - name_len + 1));
-		// printf("tmp_3_trird = |%s|\n", tmp);
 		free (all->line);
 		all->line = tmp;
+		if (!all->tmp[0])
+			all->set = 0;
 		return (0);
 	}
 	else
-	{
-		line_len = ft_strlen(all->line);
-		val_len = ft_strlen(all->tline.env_arr[env_i]) - name_len;
-		env_val = ft_substr(all->tline.env_arr[env_i], name_len, val_len); //leak - исправила с помощью free внизу
-		// printf("\nenv_val = |%s|\n", env_val);
-		tmp = ft_calloc((line_len - name_len + val_len + 1), sizeof(char));
-		// printf("tmp_len = |%i|\n", (line_len - name_len + val_len + 1));
-		t = ft_strlcpy(tmp, all->line, i + 1);
-		// printf("line_len = |%i|\n\n", line_len);
-		// printf("tmp_1_trird = |%s|\n", tmp);
-		t = ft_strlcpy(&tmp[i], env_val, val_len + 1);
-		// printf("tmp_2_trird = |%s|\n", tmp);
-		t = ft_strlcpy(&tmp[i + val_len], &all->line[i + name_len],
-				(line_len - i - name_len + 1));
-		// printf("tmp_3_trird = |%s|\n", tmp);
-		free (all->line);
-		free (env_val);
-		all->line = tmp;
-		// printf("line after f= |%s|\n", all->line);
-		return (val_len);
-	}
+		return (in_case_env_var_was_found(all, i, env_i, name_len));
 }
 
 static int	find_env_index_in_arr(char **arr, char *str)
@@ -68,7 +71,7 @@ static int	find_env_index_in_arr(char **arr, char *str)
 		i++;
 	}
 	if (arr[i] == NULL)
-		i = -1;			// если переменную не нашли нужную переменную окружения
+		i = -1;
 	return (i);
 }
 
@@ -77,23 +80,55 @@ int	compare_with_env(t_all *all, char *line, int i)
 	char	*tmp;
 	char	*tmp2;
 	int		val_len;
-	int		k;		//длина имени переменной окружения с $
-	int		n;		//индекс нужной переменной в массиве
+	int		k;
+	int		n;
 
 	k = 1;
 	tmp = ft_strdup(&line[i]);
-	// while (tmp[k] != ' ' && tmp[k] != '\0' && tmp[k] != '\"' && tmp[k] != '\'')
 	while ((tmp[k] > 64 && tmp[k] < 91) || (tmp[k] > 96 && tmp[k] < 123)
 		|| (tmp[k] > 47 && tmp[k] < 58) || tmp[k] == '_')
 		k++;
 	if (k == 1)
-		return (1);			//ничего не меняется если подается просто $
-	tmp2 = ft_substr(tmp, 1, k - 1); //HOME //leak - исправила с помощью free внизу
+	{
+		free(tmp);
+		return (1);
+	}
+	tmp2 = ft_substr(tmp, 1, k - 1);
 	free(tmp);
-	tmp = ft_strjoin(tmp2, "="); //HOME=  //leak - исправила с помощью free внизу
+	tmp = ft_strjoin(tmp2, "=");
 	n = find_env_index_in_arr(all->tline.env_arr, tmp);
 	val_len = repl_env_name_with_value(all, i, n, k);
 	free (tmp);
 	free (tmp2);
+	all->tmp = ft_realloc(all->tmp, ft_strlen(all->line));
 	return (val_len);
+}
+
+void	process_dollar_sign(t_all *all, int *i, int *k)
+{
+	int		z;
+	int		val_len;
+	char	*loc_stat;
+
+	loc_stat = ft_itoa(status);
+	if (all->line[*i] == '$' && all->line[*i + 1] == '?')
+	{
+		*i = *i + 2;
+		z = 0;
+		while (loc_stat[z])
+			all->tmp[(*k)++] = loc_stat[z++];
+	}
+	else if (all->line[*i] == '$' && 47 < all->line[*i + 1]
+		&& all->line[*i + 1] < 58)
+		*i = *i + 2;
+	else if (all->line[*i] == '$')
+	{
+		val_len = compare_with_env(all, all->line, *i);
+		while (all->line[*i] && val_len > 0)
+		{
+			all->tmp[(*k)++] = all->line[(*i)++];
+			val_len--;
+		}
+	}
+	free(loc_stat);
 }
