@@ -50,6 +50,8 @@ typedef struct s_all
 	char		*line;
 	int			cmd_i;
 	int			**fd;
+	char		*file_name;
+	int			count;
 	int			in;
 	int			out;
 	int			set;			//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
@@ -84,6 +86,11 @@ int		hist_line_num(int fd);
 char	*get_hist_line(int num, int fd);
 void	set_terminal(struct  termios *term);
 void	res_terminal(struct  termios *term);
+void	up_arrow(t_all *all);
+void	down_arrow(t_all *all);
+void	left_arrow(t_all *all);
+void	right_arrow(t_all *all);
+void	backspace_arrow(t_all *all);
 
 /*  buildin commands  */
 
