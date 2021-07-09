@@ -78,6 +78,10 @@ void	sort_env(t_all *all);
 void	print_err2(char *cmd, char *err_name);
 int		check_path_exist(t_all *all);
 int		error_handler(char *arg1, char *arg2, char *err);
+int		hist_line_num(int fd);
+char	*get_hist_line(int num, int fd);
+void	set_terminal(struct  termios *term);
+void	res_terminal(struct  termios *term);
 
 /*  buildin commands  */
 
