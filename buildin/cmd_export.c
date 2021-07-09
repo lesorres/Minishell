@@ -113,6 +113,9 @@ void	cmd_export(t_all *all, int k)
 	export_check_cycle(all, k, j);
 	copy_env(all);
 	sort_env(all);
+	if (!ft_strncmp(all->cmd[all->cmd_i].arg[j], "PATH", 4)
+			&& find_var_in_arr(all->tline.env_arr, "PATH") != -1)
+		split_path(all);
 	if (!all->cmd[k].arg[1])
 	{
 		while (all->tline.export_arr[i])
