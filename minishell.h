@@ -113,6 +113,7 @@ void	pipe_exec(t_all *all, char**argv, char **envp);
 /*  parser functions  */
 
 // void	parser(t_all *all);
+int		set_all_initial_params(t_all *all, int *i, int *j, int *n);
 void	parser(t_all *all, char **arg, char **envp);
 void	arr_mem_alloc(t_all *all, int j);
 void	cmd_mem_alloc(t_all *all);
@@ -121,5 +122,11 @@ int		compare_with_env(t_all *all, char *line, int i);
 void	process_dollar_sign(t_all *all, int *i, int *k);
 int		process_redirections(t_all *all, int i, int j, int line_len);
 int		skip_spaces(t_all *all, int i);
+void	free_arr(char ***arr);
+int		error(char *str, char c, char c2);
+int		check_line_validity(char *line);
+void	semicolon_or_pipe(t_all *all, char **arg, char **envp);
+int		quotes_flags_switch(t_all *all, char *line, int i, int j);
+int		process_quotes(t_all *all, int i, int *k, int j);
 
 #endif
