@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 23:34:38 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/09 23:35:34 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 01:20:52 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,14 @@ int	process_quotes(t_all *all, int i, int *k, int j)
 		}
 	}
 	return (i);
+}
+
+void	print_err3(t_all *all, char *cmd, char *err_name)
+{
+	write(2, "minishell: ", 11);
+	write(2, cmd, ft_strlen(cmd));
+	write(2, ": ", 2);
+	write(2, err_name, ft_strlen(err_name));
+	write(2, "\n", 1);
+	all->redid_err = 1;
 }
