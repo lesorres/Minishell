@@ -48,6 +48,8 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 			free (cmd);
 			cmd_errors(all, name, arg);
 		}
+		if (cmd)
+			free (cmd);
 	}
 	return (exec);
 }
