@@ -1,5 +1,21 @@
 #include "../minishell.h"
 
+int	check_path_exist(t_all *all)
+{
+	int		i;
+
+	i = 0;
+	while (all->tline.env_arr[i])
+	{
+		if (ft_strncmp(all->tline.env_arr[i], "PATH=", 5) == 0)
+			return (0);
+		i++;
+	}
+	if (all->tline.env_arr[i] == NULL)
+		all->path_arr = NULL;
+	return (1);
+}
+
 void	replace_fd(t_all *all, int i)
 {
 	int	dp1;

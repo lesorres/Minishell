@@ -54,22 +54,6 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 	return (exec);
 }
 
-int	check_path_exist(t_all *all)
-{
-	int		i;
-
-	i = 0;
-	while (all->tline.env_arr[i])
-	{
-		if (ft_strncmp(all->tline.env_arr[i], "PATH=", 5) == 0)
-			return (0);
-		i++;
-	}
-	if (all->tline.env_arr[i] == NULL)
-		all->path_arr = NULL;
-	return (1);
-}
-
 void	child_process_cycle(t_all *all, char *name, char **arg)
 {
 	int		i;
