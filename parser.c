@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/09 23:41:00 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 01:41:20 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,6 +138,11 @@ void	parser(t_all *all, char **arg, char **envp)
 		all->tmp = ft_calloc(all->line_len + 1, sizeof(char));
 		i = skip_spaces(all, i);
 		i = extract_tokens(all, i, &j, &k);
+		if (all->redid_err == 1)
+		{
+			free (all->tmp);
+			return ;
+		}
 		write_tokens_to_cmd_and_process(all, i, &j, &n);
 	}
 	if (!all->cmd[j].null && all->cmd[j].arg)
