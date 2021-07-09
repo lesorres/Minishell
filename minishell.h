@@ -91,6 +91,7 @@ void	down_arrow(t_all *all);
 void	left_arrow(t_all *all);
 void	right_arrow(t_all *all);
 void	backspace_arrow(t_all *all);
+void	exit_key(t_all *all, char *str, int fd);
 
 /*  buildin commands  */
 
