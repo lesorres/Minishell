@@ -6,7 +6,7 @@
 #    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/07/09 23:44:05 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/07/09 23:46:54 by kmeeseek         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ BUILDINS = ./buildin/buildin.c ./buildin/cmd_exit.c ./buildin/cmd_export.c ./bui
 
 HEAD = *.h
 
-INPUT = main.c parser.c parser_dollar_sign.c signals.c pipe_exec.c parser_redirections.c parser_mem_alloc.c parser_quotes.c parser_utils.c 
+INPUT = main.c parser.c parser_dollar_sign.c signals.c pipe_exec.c parser_redirections.c parser_mem_alloc.c parser_quotes.c parser_utils.c
 
 FLAGS = -ltermcap -Wall -Werror -Wextra
 
