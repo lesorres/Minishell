@@ -6,7 +6,8 @@ int	exit_error(t_all *all, char *cmd, char *arg, int k)
 	write(1, "minishell: ", PROMPT);
 	printf("%s: %s: %s\n", cmd, arg, "numeric argument required");
 	status = 255;
-	exit (1);
+	all->status = 255;
+	exit (255);
 }
 
 void	print_exit(char *cmd)
@@ -48,7 +49,7 @@ void	cmd_exit(t_all *all, char **arg, int k)
 		if (!isdigit_line(all->cmd[k].arg[1]))
 		{
 			if (!all->cmd[k].arg[2])
-				print_exit(all->cmd[k].arg[1]);
+				print_exit(all->cmd[k].arg[0]);
 			else
 			{
 				printf("%s\n", all->cmd[k].arg[0]);
