@@ -16,17 +16,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 
-
-typedef struct s_lst
+typedef struct s_cmd
 {
-	char	*oldpwd;
-	int		export_new_arg;
-	int		get_env;
-}	t_lst;
-
-typedef struct	s_cmd
-{
-	// char	*name;
 	int		arg_n;
 	char	**arg;
 	int		echo_n;
@@ -41,12 +32,12 @@ typedef struct s_all
 {
 	int			cmd_n;
 	t_cmd		*cmd;
-	t_lst		builds;
+	t_lst		trm;
 	pid_t		*pid;
 	t_termline	tline;
 	int			status;
 	char		**path_arr;
-	int			p_num; // количество пайпов
+	int			p_num;
 	char		*line;
 	int			cmd_i;
 	int			**fd;
@@ -54,7 +45,7 @@ typedef struct s_all
 	int			count;
 	int			in;
 	int			out;
-	int			set;			//зашла ли функция во второй цикл и нужно ли создавать аргумент по пустому tmp
+	int			set;
 	char		*tmp;
 	int			line_len;
 	char		**arg;
@@ -62,7 +53,7 @@ typedef struct s_all
 	int			redid_err;
 }				t_all;
 
-int		status;
+int		g_status;
 
 int		ft_putchar(char c);
 char	*read_line(int fd);
@@ -83,16 +74,22 @@ void	sort_env(t_all *all);
 void	print_err2(char *cmd, char *err_name);
 int		check_path_exist(t_all *all);
 int		error_handler(char *arg1, char *arg2, char *err);
+void	free_cmd_lines(t_all *all);
+void	free_path_arr(t_all *all);
+void	check_if_path_arr_exists(t_all *all);
 int		hist_line_num(int fd);
 char	*get_hist_line(int num, int fd);
-void	set_terminal(struct  termios *term);
-void	res_terminal(struct  termios *term);
-void	up_arrow(t_all *all);
-void	down_arrow(t_all *all);
+void	set_terminal(struct termios *term);
+void	res_terminal(struct termios *term);
+void	line_init(t_all *all, struct termios *term);
+void	up_arrow(struct termios *term, t_all *all);
+void	down_arrow(struct termios *term, t_all *all);
 void	left_arrow(t_all *all);
 void	right_arrow(t_all *all);
 void	backspace_arrow(t_all *all);
-void	exit_key(t_all *all, char *str, int fd);
+void	exit_key(int fd);
+void	write_line(t_all *all);
+void	ctrl_c(t_all *all);
 
 /*  buildin commands  */
 
@@ -113,12 +110,10 @@ void	pipe_exec(t_all *all, char**argv, char **envp);
 
 /*  parser functions  */
 
-// void	parser(t_all *all);
 int		set_all_initial_params(t_all *all, int *i, int *j, int *n);
 void	parser(t_all *all, char **arg, char **envp);
 void	arr_mem_alloc(t_all *all, int j);
 void	cmd_mem_alloc(t_all *all);
-// int		compare_with_env(t_all *all, char *line, int i);
 int		compare_with_env(t_all *all, char *line, int i);
 void	process_dollar_sign(t_all *all, int *i, int *k);
 int		process_redirections(t_all *all, int i, int j, int line_len);
@@ -129,6 +124,7 @@ int		check_line_validity(char *line);
 void	semicolon_or_pipe(t_all *all, char **arg, char **envp);
 int		quotes_flags_switch(t_all *all, char *line, int i, int j);
 int		process_quotes(t_all *all, int i, int *k, int j);
+int		check_redir_err(t_all *all);
 void	print_err3(t_all *all, char *cmd, char *err_name);
 
 #endif
