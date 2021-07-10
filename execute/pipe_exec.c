@@ -1,4 +1,4 @@
-#include  "minishell.h"
+#include  "../minishell.h"
 
 void	free_int_arr(int **arr)
 {
@@ -38,7 +38,6 @@ void	pipe_cycle(t_all *all, char**argv, char **envp, int i)
 
 void	pipe_exec(t_all *all, char**argv, char **envp)
 {
-	char	c;
 	int		k;
 	int		i;
 

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	split_path_line(t_all *all, int i)
 {
@@ -29,9 +29,6 @@ void	split_path_line(t_all *all, int i)
 
 void	split_path(t_all *all)
 {
-	char	*tmp;
-	char	*tmp_2;
-	int		line_len;
 	int		i;
 
 	i = 0;

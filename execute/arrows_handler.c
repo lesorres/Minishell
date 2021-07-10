@@ -1,6 +1,6 @@
-#include "minishell.h"
+#include "../minishell.h"
 
-void	up_arrow(struct termios *term, t_all *all)
+void	up_arrow(t_all *all)
 {
 	int		hist_fd;
 	char	*tmp;
@@ -22,7 +22,7 @@ void	up_arrow(struct termios *term, t_all *all)
 	close(hist_fd);
 }
 
-void	down_arrow_2(struct termios *term, t_all *all)
+void	down_arrow_2(t_all *all)
 {
 	write(1, all->tline.print_line, ft_strlen(all->tline.print_line));
 	free(all->line);
@@ -31,7 +31,7 @@ void	down_arrow_2(struct termios *term, t_all *all)
 	all->count = ft_strlen(all->line);
 }
 
-void	down_arrow(struct termios *term, t_all *all)
+void	down_arrow(t_all *all)
 {
 	int		hist_fd;
 	char	*tmp;
@@ -51,7 +51,7 @@ void	down_arrow(struct termios *term, t_all *all)
 		write(1, all->line, ft_strlen(all->line));
 	}
 	else if (all->tline.curr_line == all->tline.line_num)
-		down_arrow_2(term, all);
+		down_arrow_2(all);
 	close(hist_fd);
 }
 

@@ -1,4 +1,4 @@
-#include "minishell.h"
+#include "../minishell.h"
 
 void	backspace_arrow(t_all *all)
 {
@@ -28,6 +28,7 @@ void	ctrl_c(t_all *all)
 {
 	write(1, "\n#minishell> ", PROMPT + 1);
 	ft_putstr_fd(save_cursor, 1);
+	all = (void *)all;
 }
 
 void	write_line(t_all *all)

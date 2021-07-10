@@ -1,15 +1,15 @@
-#include "minishell.h"
+#include "../minishell.h"
 
-void	cmp_char(t_all *all, struct termios *term)
+void	cmp_char(t_all *all)
 {
 	if (all->tline.symb_num < all->tline.cursor)
 		all->tline.symb_num = all->tline.cursor;
 	all->trm.l = read(1, all->trm.str, 10);
 	all->trm.str[all->trm.l] = 0;
 	if (!ft_strcmp(all->trm.str, UP))
-		up_arrow(term, all);
+		up_arrow(all);
 	else if (!ft_strcmp(all->trm.str, DWN))
-		down_arrow(term, all);
+		down_arrow(all);
 	else if (!ft_strcmp(all->trm.str, key_backspace)
 		|| !ft_strcmp(all->trm.str, "\177"))
 		backspace_arrow(all);
@@ -30,7 +30,7 @@ void	write_ch(t_all *all, struct termios *term, char **arg, char **envp)
 {
 	line_init(all, term);
 	while (ft_strcmp(all->trm.str, "\n"))
-		cmp_char(all, term);
+		cmp_char(all);
 	if (!all->tline.print_line[0] && !all->line[0]
 		&& !ft_strcmp(all->trm.str, "\4"))
 		exit_key(all->trm.fd);
@@ -86,13 +86,11 @@ void	find_line_in_arr(char **arr, char *line)
 int	main(int argc, char **arg, char **envp)
 {
 	struct termios	term;
-	t_cmd			cmd;
 	t_all			all;
-	t_termline		tline;
-	t_lst			trm;
 
 	tcgetattr(0, &term);
 	tgetent(0, TERM_NAME);
 	init_all_var(&all, &term, arg, envp);
 	return (0);
+	argc = 0;
 }
