@@ -50,7 +50,7 @@ void	check_home(t_all *all, int k, char	*tmp)
 	if (find_var_in_arr(all->tline.env_arr, "HOME=") == -1)
 	{
 		print_err2(all->cmd[k].arg[0], "HOME not set");
-		status = 1;
+		g_status = 1;
 	}
 	getcwd(tmp, PATH_LEN);
 	srch_str_in_arr(all, tmp);
@@ -64,23 +64,23 @@ void	check_cd_args(t_all *all, int k, char *tmp)
 	if (dir == -1)
 	{
 		error_handler(all->cmd[k].arg[0], all->cmd[k].arg[1], strerror(errno));
-		status = 1;
+		g_status = 1;
 	}
 	else
 	{
 		getcwd(tmp, PATH_LEN);
 		srch_str_in_arr(all, tmp);
-		status = 0;
+		g_status = 0;
 	}
 }
 
-void	cmd_cd(t_all *all, char **envp, int k)
+void	cmd_cd(t_all *all, int k)
 {
 	char	*path;
 	char	*tmp;
 
-	path = add_path(all, envp);
-	all->builds.oldpwd = NULL;
+	path = add_path(all);
+	all->trm.oldpwd = NULL;
 	tmp = malloc(sizeof(char) * PATH_LEN);
 	if (all->cmd[k].arg[1] && ft_strcmp(all->cmd[k].arg[1], "."))
 		check_cd_args(all, k, tmp);
@@ -90,7 +90,7 @@ void	cmd_cd(t_all *all, char **envp, int k)
 	{
 		getcwd(tmp, PATH_LEN);
 		srch_str_in_arr(all, tmp);
-		status = 0;
+		g_status = 0;
 	}
 	add_oldpwd(all, path);
 	free(path);

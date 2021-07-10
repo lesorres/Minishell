@@ -6,11 +6,11 @@
 /*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/27 17:30:45 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/10 01:22:30 by fhyman           ###   ########.fr       */
+/*   Updated: 2021/07/10 22:27:33 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	skip_spaces(t_all *all, int i)
 {

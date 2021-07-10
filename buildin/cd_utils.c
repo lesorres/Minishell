@@ -21,28 +21,29 @@ void	add_oldpwd(t_all *all, char *path)
 	{
 		if (ft_strncmp(all->tline.env_arr[i], "OLDPWD=", 7) == 0)
 		{
-			all->builds.oldpwd = ft_strjoin("OLDPWD=", path);
+			all->trm.oldpwd = ft_strjoin("OLDPWD=", path);
 			all->tline.env_arr[i] = ft_realloc(all->tline.env_arr[i],
-					ft_strlen(all->builds.oldpwd) + 1);
-			ft_strcpy(all->tline.env_arr[i], all->builds.oldpwd);
-			free(all->builds.oldpwd);
+					ft_strlen(all->trm.oldpwd) + 1);
+			ft_strcpy(all->tline.env_arr[i], all->trm.oldpwd);
+			free(all->trm.oldpwd);
 			break ;
 		}
 		i++;
 	}
-	if (all->tline.env_arr[i] == NULL && all->builds.oldpwd == NULL)
+	if (all->tline.env_arr[i] == NULL && all->trm.oldpwd == NULL)
 	{
-		all->builds.oldpwd = ft_strjoin("OLDPWD=", path);
-		add_new_env_param(all, all->builds.oldpwd);
-		free(all->builds.oldpwd);
+		all->trm.oldpwd = ft_strjoin("OLDPWD=", path);
+		add_new_env_param(all, all->trm.oldpwd);
+		free(all->trm.oldpwd);
 	}
 }
 
-char	*add_path(t_all *all, char **envp)
+char	*add_path(t_all *all)
 {
 	char	*path;
 
 	path = NULL;
 	path = getcwd(path, PATH_LEN);
 	return (path);
+	all = (void *)all;
 }

@@ -5,7 +5,7 @@ int	exit_error(t_all *all, char *cmd, char *arg, int k)
 	printf("%s\n", all->cmd[k].arg[0]);
 	write(1, "minishell: ", PROMPT);
 	printf("%s: %s: %s\n", cmd, arg, "numeric argument required");
-	status = 255;
+	g_status = 255;
 	all->status = 255;
 	exit (255);
 }
@@ -22,9 +22,9 @@ void	print_exit(char *cmd)
 		stts %= 256;
 		stts = 256 + stts;
 	}
-	status = stts;
+	g_status = stts;
 	printf("%s\n", cmd);
-	exit (status);
+	exit (g_status);
 }
 
 int	isdigit_line(char *str)
@@ -42,7 +42,7 @@ int	isdigit_line(char *str)
 	return (0);
 }
 
-void	cmd_exit(t_all *all, char **arg, int k)
+void	cmd_exit(t_all *all, int k)
 {
 	if (all->cmd[k].arg[1])
 	{
@@ -55,7 +55,7 @@ void	cmd_exit(t_all *all, char **arg, int k)
 				printf("%s\n", all->cmd[k].arg[0]);
 				write(1, "minishell: ", PROMPT);
 				printf("%s: %s \n", all->cmd[k].arg[0], "too many arguments");
-				status = 1;
+				g_status = 1;
 			}
 		}
 		else
@@ -64,7 +64,7 @@ void	cmd_exit(t_all *all, char **arg, int k)
 	else
 	{
 		printf("%s\n", all->cmd[k].arg[0]);
-		status = 0;
+		g_status = 0;
 		exit (0);
 	}
 }

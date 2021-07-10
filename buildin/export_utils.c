@@ -1,30 +1,5 @@
 #include "../minishell.h"
 
-void	copy_env(t_all *all)
-{
-	int		i;
-	int		j;
-
-	j = 0;
-	i = 0;
-	while (all->tline.env_arr[j])
-		j++;
-	if (all->tline.export_arr != NULL)
-	{
-		while (all->tline.export_arr[i])
-			free (all->tline.export_arr[i++]);
-		free (all->tline.export_arr);
-	}
-	i = 0;
-	all->tline.export_arr = (char **)malloc(sizeof(char *) * (j + 1));
-	all->tline.export_arr[j] = NULL;
-	while (all->tline.env_arr[i])
-	{
-		all->tline.export_arr[i] = ft_strdup(all->tline.env_arr[i]);
-		i++;
-	}
-}
-
 void	sort_env(t_all *all)
 {
 	int		j;
@@ -50,6 +25,32 @@ void	sort_env(t_all *all)
 			j++;
 		}
 	}
+}
+
+void	copy_env(t_all *all)
+{
+	int		i;
+	int		j;
+
+	j = 0;
+	i = 0;
+	while (all->tline.env_arr[j])
+		j++;
+	if (all->tline.export_arr != NULL)
+	{
+		while (all->tline.export_arr[i])
+			free (all->tline.export_arr[i++]);
+		free (all->tline.export_arr);
+	}
+	i = 0;
+	all->tline.export_arr = (char **)malloc(sizeof(char *) * (j + 1));
+	all->tline.export_arr[j] = NULL;
+	while (all->tline.env_arr[i])
+	{
+		all->tline.export_arr[i] = ft_strdup(all->tline.env_arr[i]);
+		i++;
+	}
+	sort_env(all);
 }
 
 int	find_equal_sign(t_all *all, char *line)
@@ -86,10 +87,13 @@ char	*add_quotes(t_all *all, char *line)
 	char	*tmp;
 	int		len;
 
+	len = 0;
+	tmp = NULL;
 	if (all->tline.equal_sign == 0)
 		len = ft_strlen(line) + 3;
 	if (all->tline.equal_sign == 0)
 		tmp = ft_strjoin(line, "=");
-	tmp[len] = '\0';
+	if (tmp)
+		tmp[len] = '\0';
 	return (tmp);
 }

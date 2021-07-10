@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_dollar_sign.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/14 15:39:22 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/09 23:26:18 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 22:29:57 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	in_case_env_var_was_found(t_all *all, int i, int env_i, int name_len)
 {
@@ -37,9 +37,7 @@ int	in_case_env_var_was_found(t_all *all, int i, int env_i, int name_len)
 static int	repl_env_name_with_value(t_all *all, int i, int env_i, int name_len)
 {
 	char	*tmp;
-	char	*env_val;
 	int		line_len;
-	int		val_len;
 	int		t;
 
 	if (env_i == -1)
@@ -110,7 +108,7 @@ void	process_dollar_sign(t_all *all, int *i, int *k)
 	int		val_len;
 	char	*loc_stat;
 
-	loc_stat = ft_itoa(status);
+	loc_stat = ft_itoa(g_status);
 	if (all->line[*i] == '$' && all->line[*i + 1] == '?')
 	{
 		*i = *i + 2;

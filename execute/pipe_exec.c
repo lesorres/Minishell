@@ -10,7 +10,7 @@ void	free_int_arr(int **arr)
 	free(arr);
 }
 
-void	pipe_cycle(t_all *all, char**argv, char **envp, int i)
+void	pipe_cycle(t_all *all, int i)
 {
 	pid_t	pid;
 
@@ -23,7 +23,7 @@ void	pipe_cycle(t_all *all, char**argv, char **envp, int i)
 			dup2(all->fd[i][1], 1);
 		if (i != 0)
 			dup2(all->fd[i - 1][0], 0);
-		buildin_func(all, argv, envp);
+		buildin_func(all);
 		exit(0);
 	}
 	else
@@ -36,7 +36,7 @@ void	pipe_cycle(t_all *all, char**argv, char **envp, int i)
 	}
 }
 
-void	pipe_exec(t_all *all, char**argv, char **envp)
+void	pipe_exec(t_all *all)
 {
 	int		k;
 	int		i;
@@ -49,7 +49,7 @@ void	pipe_exec(t_all *all, char**argv, char **envp)
 	i = 0;
 	while (i < k + 1)
 	{
-		pipe_cycle(all, argv, envp, i);
+		pipe_cycle(all, i);
 		all->cmd_i++;
 		i++;
 	}

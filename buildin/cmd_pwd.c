@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	cmd_pwd(t_all *all, char **envp)
+void	cmd_pwd(t_all *all)
 {
 	char	*path;
 	char	*tmp;
@@ -10,5 +10,6 @@ void	cmd_pwd(t_all *all, char **envp)
 	write(1, tmp, ft_strlen(tmp));
 	write(1, "\n", 1);
 	free(path);
-	status = 0;
+	g_status = 0;
+	all = (void *)all;
 }

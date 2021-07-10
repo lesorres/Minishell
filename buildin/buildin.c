@@ -49,21 +49,21 @@ void	close_fds(t_all *all, int i)
 	}
 }
 
-void	executer(t_all *all, char **arg, char **envp, int i)
+void	executer(t_all *all, int i)
 {
-	status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg, envp);
-	if (status >= 256)
-		status /= 256;
-	else if (status == 2 || status == 3)
-		status += 128;
+	g_status = execute(all, all->cmd[i].arg[0], all->cmd[i].arg);
+	if (g_status >= 256)
+		g_status /= 256;
+	else if (g_status == 2 || g_status == 3)
+		g_status += 128;
 	if (all->status != 0)
 	{
-		status = all->status;
+		g_status = all->status;
 		all->status = 0;
 	}
 }
 
-void	buildin_func(t_all *all, char **arg, char **envp)
+void	buildin_func(t_all *all)
 {
 	int	i;
 
@@ -71,11 +71,11 @@ void	buildin_func(t_all *all, char **arg, char **envp)
 	all->cmd_i++;
 	replace_fd(all, i);
 	if (!ft_strcmp(all->cmd[i].arg[0], "cd"))
-		cmd_cd(all, all->tline.env_arr, i);
+		cmd_cd(all, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "echo"))
-		cmd_echo(all, arg, i);
+		cmd_echo(all, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "pwd"))
-		cmd_pwd(all, envp);
+		cmd_pwd(all);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "export"))
 		cmd_export(all, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "unset"))
@@ -83,8 +83,8 @@ void	buildin_func(t_all *all, char **arg, char **envp)
 	else if (!ft_strcmp(all->cmd[i].arg[0], "env"))
 		cmd_env(all, i);
 	else if (!ft_strcmp(all->cmd[i].arg[0], "exit"))
-		cmd_exit(all, arg, i);
+		cmd_exit(all, i);
 	else
-		executer(all, all->cmd[i].arg, envp, i);
+		executer(all, i);
 	close_fds(all, i);
 }

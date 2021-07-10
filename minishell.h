@@ -60,11 +60,11 @@ char	*read_line(int fd);
 int		len(char **str);
 void	__free_arr(char **arr);
 char	*add_quotes(t_all *all, char *line);
-char	*add_path(t_all *all, char **envp);
+char	*add_path(t_all *all);
 void	add_oldpwd(t_all *all, char *path);
 int		find_var_in_arr(char **arr, char *str);
 int		find_env_equal(char *line);
-void	check_shlvl(t_all *all, char **envp);
+void	check_shlvl(t_all *all);
 void	int_sign(int sign);
 void	quit_sign(int sign);
 int		check_valid_id(char *cmd, char *line);
@@ -93,20 +93,20 @@ void	ctrl_c(t_all *all);
 
 /*  buildin commands  */
 
-void	buildin_func(t_all *all, char **arg, char **envp);
-void	cmd_cd(t_all *all, char **envp, int k);
-void	cmd_echo(t_all *all, char **argv, int k);
+void	buildin_func(t_all *all);
+void	cmd_cd(t_all *all, int k);
+void	cmd_echo(t_all *all, int k);
 void	cmd_env(t_all *all, int k);
 void	cmd_export(t_all *all, int k);
-void	cmd_pwd(t_all *all, char **envp);
+void	cmd_pwd(t_all *all);
 int		cmd_unset(t_all *all, int k);
-void	cmd_exit(t_all *all, char **arg, int k);
+void	cmd_exit(t_all *all, int k);
 int		cmp_path(t_all *all, char *str, char *name);
-int		execute(t_all *all, char *name, char **arg, char **envp);
+int		execute(t_all *all, char *name, char **arg);
 void	add_new_env_param(t_all *all, char *line);
 void	get_envp(t_all *all, char **envp);
 void	split_path(t_all *all);
-void	pipe_exec(t_all *all, char**argv, char **envp);
+void	pipe_exec(t_all *all);
 
 /*  parser functions  */
 
@@ -121,7 +121,7 @@ int		skip_spaces(t_all *all, int i);
 void	free_arr(char ***arr);
 int		error(char *str, char c, char c2);
 int		check_line_validity(char *line);
-void	semicolon_or_pipe(t_all *all, char **arg, char **envp);
+void	semicolon_or_pipe(t_all *all);
 int		quotes_flags_switch(t_all *all, char *line, int i, int j);
 int		process_quotes(t_all *all, int i, int *k, int j);
 int		check_redir_err(t_all *all);

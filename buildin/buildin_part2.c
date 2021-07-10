@@ -51,7 +51,6 @@ int	cmp_path(t_all *all, char *str, char *name)
 	int		len;
 	int		cmp;
 	char	*tmp;
-	char	*new_name;
 
 	j = int_strrchr(name, 47);
 	len = ft_strlen(name);

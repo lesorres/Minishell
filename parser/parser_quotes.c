@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_quotes.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 23:34:38 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/10 19:48:59 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 22:27:30 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 int	quotes_flags_switch(t_all *all, char *line, int i, int j)
 {

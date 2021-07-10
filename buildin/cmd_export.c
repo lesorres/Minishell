@@ -24,18 +24,18 @@ int	check_valid_id(char *cmd, char *line)
 		&& line[0] != '\"')
 	{
 		printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
-		status = 1;
+		g_status = 1;
 		return (1);
 	}
 	while (line[i])
 	{
 		if (ft_isalpha(line[i]) || ft_isdigit(line[i]) || line[i] == '_'
 			|| line[0] != '\'' || line[0] != '\"')
-			status = 0;
+			g_status = 0;
 		else
 		{
 			printf("minishell: %s: %s: %s\n", cmd, line, EXP_NOT_VAL);
-			status = 1;
+			g_status = 1;
 			return (1);
 		}
 		i++;
@@ -43,7 +43,7 @@ int	check_valid_id(char *cmd, char *line)
 	return (0);
 }
 
-int	check_val(t_all *all, char *line, int k)
+int	check_val(t_all *all, char *line)
 {
 	char	*tmp;
 	char	*env_tmp;
@@ -78,23 +78,23 @@ void	export_check_cycle(t_all *all, int k, int j)
 
 	while (all->cmd[k].arg[j])
 	{
-		if (!check_val(all, all->cmd[k].arg[j], k))
+		if (!check_val(all, all->cmd[k].arg[j]))
 		{
 			if (all->tline.equal_sign == 0)
 			{
-				if (!check_val(all, all->cmd[k].arg[j], k)
+				if (!check_val(all, all->cmd[k].arg[j])
 					&& !check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))
 				{
 					tmp = add_quotes(all, all->cmd[k].arg[j]);
 					add_new_env_param(all, tmp);
-					status = 0;
+					g_status = 0;
 					free (tmp);
 				}
 			}
 			else if (!check_valid_id(all->cmd[k].arg[0], all->cmd[k].arg[j]))
 			{
 				add_new_env_param(all, all->cmd[k].arg[j]);
-				status = 0;
+				g_status = 0;
 			}
 		}
 		j++;
@@ -104,18 +104,21 @@ void	export_check_cycle(t_all *all, int k, int j)
 void	cmd_export(t_all *all, int k)
 {
 	int		i;
-	int		arr_len;
-	int		j;
 
-	j = 1;
 	i = 0;
-	arr_len = len(all->tline.export_arr);
-	export_check_cycle(all, k, j);
+	export_check_cycle(all, k, 1);
 	copy_env(all);
-	sort_env(all);
-	if (!ft_strncmp(all->cmd[all->cmd_i].arg[j], "PATH", 4)
-			&& find_var_in_arr(all->tline.env_arr, "PATH") != -1)
-		split_path(all);
+	if (all->cmd[all->cmd_i - 1].arg[1])
+	{
+		if (all->tline.unset_path == 1
+			|| ((!ft_strncmp(all->cmd[all->cmd_i - 1].arg[1], "PATH", 4)
+					|| find_var_in_arr(all->tline.env_arr, "PATH=") != -1)))
+		{
+			if (all->path_arr && all->path_arr[0])
+				free_path_arr(all);
+			split_path(all);
+		}
+	}
 	if (!all->cmd[k].arg[1])
 	{
 		while (all->tline.export_arr[i])
@@ -123,6 +126,6 @@ void	cmd_export(t_all *all, int k)
 			printf("declare -x %s\n", all->tline.export_arr[i]);
 			i++;
 		}
-		status = 0;
+		g_status = 0;
 	}
 }

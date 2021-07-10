@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 16:04:37 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/10 19:50:22 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 22:44:10 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	clean_echo_from_flags(t_all *all, int i, int j)
 {
@@ -40,7 +40,6 @@ void	check_echo_n_flag(t_all *all, int j)
 {
 	int	i;
 	int	k;
-	int	flag;
 
 	if (!ft_strcmp(all->cmd[j].arg[0], "echo"))
 	{
@@ -105,7 +104,7 @@ void	write_tokens_to_cmd_and_process(t_all *all, int i, int *j, int *n)
 	if (all->line[i - 1] == ';')
 	{
 		check_echo_n_flag(all, (*j));
-		semicolon_or_pipe(all, all->arg, all->envp);
+		semicolon_or_pipe(all);
 		(*j)++;
 		cmd_mem_alloc(all);
 		(*n) = 0;
@@ -145,6 +144,6 @@ void	parser(t_all *all, char **arg, char **envp)
 	if (!all->cmd[j].null && all->cmd[j].arg)
 	{
 		check_echo_n_flag(all, j);
-		semicolon_or_pipe(all, arg, envp);
+		semicolon_or_pipe(all);
 	}
 }

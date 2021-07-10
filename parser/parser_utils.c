@@ -6,11 +6,11 @@
 /*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 23:11:26 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/10 01:21:51 by fhyman           ###   ########.fr       */
+/*   Updated: 2021/07/10 22:41:48 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	free_arr(char ***arr)
 {
@@ -83,19 +83,17 @@ int	check_line_validity(char *line)
 	return (0);
 }
 
-void	semicolon_or_pipe(t_all *all, char **arg, char **envp)
+void	semicolon_or_pipe(t_all *all)
 {
-	int	i;
-
 	if (all->p_num == 0)
 	{
 		all->cmd_i = all->cmd_n - 2;
-		buildin_func(all, arg, envp);
+		buildin_func(all);
 	}
 	else
 	{
 		all->cmd_i = all->cmd_n - 2 - all->p_num;
-		pipe_exec(all, arg, envp);
+		pipe_exec(all);
 	}
 	all->p_num = 0;
 }

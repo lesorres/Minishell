@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void	cmd_echo(t_all *all, char **argv, int k)
+void	cmd_echo(t_all *all, int k)
 {
 	int	i;
 
@@ -22,5 +22,5 @@ void	cmd_echo(t_all *all, char **argv, int k)
 	}
 	if (all->cmd[k].echo_n != 1)
 		write(1, "\n", 1);
-	status = 0;
+	g_status = 0;
 }

@@ -12,23 +12,29 @@ void	cmd_errors(t_all *all, char *name, char **arg)
 		|| (!ft_strncmp(name, "./", 2) && name[2] != '\0'))
 	{
 		print_err2(arg[0], strerror(2));
-		status = 127;
+		g_status = 127;
 	}
 	else if ((!ft_strncmp(name, "/", 1) && name[1] == '\0')
 		|| (!ft_strncmp(name, "./", 2) && name[2] == '\0'))
 	{
 		print_err2(arg[0], strerror(21));
-		status = 126;
+		g_status = 126;
 	}
-	exit(status);
+	exit(g_status);
+}
+
+void	error_handler2(char *cmd, t_all *all, char *name, char **arg)
+{
+	free (cmd);
+	cmd_errors(all, name, arg);
 }
 
 int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 {
 	char	*cmd;
 	int		exec;
-	char	*path;
 
+	cmd = NULL;
 	if (ft_strncmp(name, "./", 2) == 0
 		|| ft_strrncmp(name, "/minishell", 10) == 0)
 	{
@@ -44,10 +50,7 @@ int	cmp_cmd_path(t_all *all, char *line, char **arg, char *name)
 			cmd = ft_strjoin(line, all->tline.new_name);
 		exec = execve(cmd, arg, all->tline.env_arr);
 		if (!errno)
-		{
-			free (cmd);
-			cmd_errors(all, name, arg);
-		}
+			error_handler2(cmd, all, name, arg);
 		if (cmd)
 			free (cmd);
 	}
@@ -70,18 +73,20 @@ void	child_process_cycle(t_all *all, char *name, char **arg)
 			if (all->path_arr[i] == NULL && exec == -1)
 				cmd_errors(all, name, arg);
 		}
+		if (all->path_arr == NULL)
+			cmd_errors(all, name, arg);
 	}
 	else
 	{
 		exec = execve(name, arg, all->tline.env_arr);
 		if (exec == -1)
 			cmd_errors(all, name, arg);
-		status = 127;
-		exit (status);
+		g_status = 127;
+		exit (g_status);
 	}
 }
 
-int	execute(t_all *all, char *name, char **arg, char **envp)
+int	execute(t_all *all, char *name, char **arg)
 {
 	pid_t	pid;
 
@@ -93,9 +98,9 @@ int	execute(t_all *all, char *name, char **arg, char **envp)
 	else if (pid < 0)
 		printf("%s\n", strerror(errno));
 	else
-		waitpid(pid, &status, 0);
-	WIFEXITED(status);
-	WEXITSTATUS(status);
-	WIFSIGNALED(status);
-	return (status);
+		waitpid(pid, &g_status, 0);
+	WIFEXITED(g_status);
+	WEXITSTATUS(g_status);
+	WIFSIGNALED(g_status);
+	return (g_status);
 }

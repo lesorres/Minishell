@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   parser_mem_alloc.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+        */
+/*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/30 22:31:05 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/07/09 20:31:56 by kmeeseek         ###   ########.fr       */
+/*   Updated: 2021/07/10 22:27:26 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 void	arr_mem_alloc(t_all *all, int j)
 {

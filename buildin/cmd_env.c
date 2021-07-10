@@ -21,16 +21,16 @@ void	change_shlvl(t_all *all, int i)
 	all->tline.env_arr[i] = tmp;
 }
 
-void	check_shlvl(t_all *all, char **envp)
+void	check_shlvl(t_all *all)
 {
 	int		i;
-	int		j;
 
 	i = 0;
 	while (all->tline.env_arr[i] && ft_strnstr(all->tline.env_arr[i],
 			"SHLVL=", 6) == NULL)
 		i++;
-	if (all->tline.env_arr[i] && ft_strncmp(all->tline.env_arr[i], "SHLVL=", 6))
+	if (find_var_in_arr(all->tline.env_arr, "SHLVL=") == -1
+		&& all->tline.env_arr[i] == NULL)
 	{
 		add_new_env_param(all, "SHLVL=1");
 		all->tline.first_shlvl = 1;
@@ -54,7 +54,7 @@ void	get_envp(t_all *all, char **envp)
 		all->tline.env_arr[line] = ft_strdup(envp[line]);
 		line++;
 	}
-	check_shlvl(all, all->tline.env_arr);
+	check_shlvl(all);
 	split_path(all);
 }
 
@@ -67,7 +67,7 @@ void	cmd_env(t_all *all, int k)
 	{
 		printf("%s: %s: %s\n", all->cmd[k].arg[0], all->cmd[k].arg[1],
 			"No such file or directory");
-		status = 127;
+		g_status = 127;
 	}
 	else
 	{
@@ -76,6 +76,6 @@ void	cmd_env(t_all *all, int k)
 			printf("%s\n", all->tline.env_arr[i]);
 			i++;
 		}
-		status = 0;
+		g_status = 0;
 	}
 }
