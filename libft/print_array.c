@@ -1,9 +1,9 @@
 #include "libft.h"
 #include <stdio.h>
 
-void		print_arr(char **args)
+void	print_arr(char **args)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (args[i])

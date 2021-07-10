@@ -6,7 +6,7 @@
 /*   By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/04 20:49:46 by kmeeseek          #+#    #+#             */
-/*   Updated: 2021/06/17 14:28:08 by fhyman           ###   ########.fr       */
+/*   Updated: 2021/07/10 22:54:50 by fhyman           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ void				ft_putstr_fd(char *s, int fd);
 void				ft_putendl_fd(char *s, int fd);
 void				ft_putnbr_fd(int n, int fd);
 int					ft_strrncmp(char *s1, char *s2, size_t n);
-void    			add_new_line_to_arr(char ***arr, char *line);
+void				add_new_line_to_arr(char ***arr, char *line);
 void				print_arr(char **args);
 
 #endif
