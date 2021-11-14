@@ -10,11 +10,11 @@ int	exit_error(t_all *all, char *cmd, char *arg, int k)
 	exit (255);
 }
 
-void	print_exit(char *cmd)
+void	print_exit(char *cmd, char *exit_code)
 {
 	int		stts;
 
-	stts = ft_atoi(cmd);
+	stts = ft_atoi(exit_code);
 	if (stts > 256)
 		stts %= 256;
 	else if (stts < 0)
@@ -49,7 +49,7 @@ void	cmd_exit(t_all *all, int k)
 		if (!isdigit_line(all->cmd[k].arg[1]))
 		{
 			if (!all->cmd[k].arg[2])
-				print_exit(all->cmd[k].arg[0]);
+				print_exit(all->cmd[k].arg[0], all->cmd[k].arg[1]);
 			else
 			{
 				printf("%s\n", all->cmd[k].arg[0]);

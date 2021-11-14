@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: kmeeseek <kmeeseek@student.42.fr>          +#+  +:+       +#+         #
+#    By: fhyman <fhyman@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/16 20:26:07 by kmeeseek          #+#    #+#              #
-#    Updated: 2021/07/10 21:47:33 by kmeeseek         ###   ########.fr        #
+#    Updated: 2021/07/10 22:45:20 by fhyman           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,11 +25,12 @@ RM = rm -f
 AR = ar rc
 OBJS = $(INPUT:.c=.o)
 OBJS_BUILDIN = $(BUILDINS:.c=.o)
-NORM = norminette *.[ch]
+OBJS_PARSER = $(PARSER:.c=.o)
+NORM = norminette *.[h] ./parser/*.[ch] ./buildin/*.[ch] ./execute/*.[ch] ./libft/*.[ch]
 
 all: lib $(NAME)
-$(NAME): $(OBJS) $(OBJS_BUILDIN) $(LIB) 
-	gcc -g $(OBJS) $(OBJS_BUILDIN) $(LIB) $(FLAGS) $(CFLAGS) -o $(NAME)
+$(NAME): $(OBJS) $(OBJS_BUILDIN) $(OBJS_PARSER) $(LIB) 
+	gcc -g $(OBJS) $(OBJS_BUILDIN) $(OBJS_PARSER) $(LIB) $(FLAGS) $(CFLAGS) -o $(NAME)
 lib:
 	@$(MAKE) -C ./libft
 %.o: %.c %.h
@@ -38,7 +39,7 @@ norm:
 	@$(NORM)
 clean:
 	@$(MAKE) clean -C ./libft
-	@$(RM) $(OBJS) $(OBJS_BUILDIN)
+	@$(RM) $(OBJS) $(OBJS_BUILDIN) $(OBJS_PARSER)
 fclean: clean
 	@$(MAKE) fclean -C ./libft
 	@$(RM) $(NAME)
